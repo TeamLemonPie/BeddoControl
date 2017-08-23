@@ -1,5 +1,7 @@
 package de.lemonpie.beddocontrol.network;
 
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -64,6 +66,11 @@ public class ControlSocket implements Runnable {
 		inputStream.close();
 		outputStream.close();
 		socket.close();
+	}
+
+	public void write(ControlCommand command) {
+		Gson gson = new Gson();
+		write(gson.toJson(command));
 	}
 
 	public void write(String data) {
