@@ -1,6 +1,6 @@
 package de.lemonpie.beddocontrol.network;
 
-public interface ControlListener {
+public interface Command {
     String name();
     void execute(ControlCommandData data);
 }

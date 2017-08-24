@@ -1,9 +1,9 @@
-package de.lemonpie.beddocontrol.network.command;
+package de.lemonpie.beddocontrol.network.command.send;
 
 import com.google.gson.JsonPrimitive;
 import de.lemonpie.beddocontrol.network.ControlCommandData;
 
-public class PlayerOpOutputCommand extends ControlCommandData {
+public class PlayerOpSendCommand extends ControlCommandData {
 
     public enum Type {
         ADD("add"),
@@ -23,7 +23,7 @@ public class PlayerOpOutputCommand extends ControlCommandData {
     /**
      * Add command.
      */
-    public PlayerOpOutputCommand() {
+    public PlayerOpSendCommand() {
         super("admin", "player-op", 0);
         setValue(new JsonPrimitive(Type.ADD.command));
     }
@@ -33,7 +33,7 @@ public class PlayerOpOutputCommand extends ControlCommandData {
      *
      * @param playerId player to remove
      */
-    public PlayerOpOutputCommand(int playerId) {
+    public PlayerOpSendCommand(int playerId) {
         super("admin", "player-op", playerId);
         setValue(new JsonPrimitive(Type.REMOVE.command));
     }

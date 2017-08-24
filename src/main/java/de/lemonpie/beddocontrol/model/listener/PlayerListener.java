@@ -1,11 +1,12 @@
 package de.lemonpie.beddocontrol.model.listener;
 
+import de.lemonpie.beddocontrol.model.Player;
 import de.lemonpie.beddocontrol.model.card.Card;
 
 public interface PlayerListener {
-    void nameDidChange(String name);
+    void nameDidChange(Player player, String name);
 
-    void twitchNameDidChange(String twitchName);
+    void twitchNameDidChange(Player player, String twitchName);
 
     /**
      * Update player card.
@@ -13,7 +14,7 @@ public interface PlayerListener {
      * @param index index of card (0 based)
      * @param card  new card
      */
-    void cardDidChangeAtIndex(int index, Card card);
+    void cardDidChangeAtIndex(Player player, int index, Card card);
 
-    void chipsDidChange(int chips);
+    void chipsDidChange(Player player, int chips);
 }

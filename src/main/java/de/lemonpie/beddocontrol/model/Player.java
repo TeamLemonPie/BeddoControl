@@ -40,7 +40,7 @@ public class Player {
 
     public void setName(String name) {
         this.name = name;
-        fireListener(listener -> listener.nameDidChange(name));
+        fireListener(listener -> listener.nameDidChange(this, name));
     }
 
     public String getTwitchName() {
@@ -49,7 +49,7 @@ public class Player {
 
     public void setTwitchName(String twitchName) {
         this.twitchName = twitchName;
-        fireListener(listener -> listener.twitchNameDidChange(twitchName));
+        fireListener(listener -> listener.twitchNameDidChange(this, twitchName));
     }
 
     public Card getCard1() {
@@ -58,7 +58,7 @@ public class Player {
 
     public void setCard1(Card card1) {
         this.card1 = card1;
-        fireListener(listener -> listener.cardDidChangeAtIndex(0, card1));
+        fireListener(listener -> listener.cardDidChangeAtIndex(this, 0, card1));
     }
 
     public Card getCard2() {
@@ -67,7 +67,7 @@ public class Player {
 
     public void setCard2(Card card2) {
         this.card2 = card2;
-        fireListener(listener -> listener.cardDidChangeAtIndex(1, card2));
+        fireListener(listener -> listener.cardDidChangeAtIndex(this, 1, card2));
     }
 
     public int getChips() {
@@ -76,7 +76,7 @@ public class Player {
 
     public void setChips(int chips) {
         this.chips = chips;
-        fireListener(listener -> listener.chipsDidChange(chips));
+        fireListener(listener -> listener.chipsDidChange(this, chips));
     }
 
     public void addListener(PlayerListener playerListener) {

@@ -1,11 +1,11 @@
-package de.lemonpie.beddocontrol.network.command;
+package de.lemonpie.beddocontrol.network.command.send;
 
 import com.google.gson.JsonObject;
 import de.lemonpie.beddocontrol.network.ControlCommandData;
 
-public class ReaderOutputCommand extends ControlCommandData {
+public class ReaderSendCommand extends ControlCommandData {
 
-    public ReaderOutputCommand(int readerId, int boardId) {
+    public ReaderSendCommand(int readerId, int boardId) {
         super("admin", "reader", readerId);
         JsonObject object = new JsonObject();
         object.addProperty("type", 1);
@@ -13,7 +13,7 @@ public class ReaderOutputCommand extends ControlCommandData {
         setValue(object);
     }
 
-    public ReaderOutputCommand(int readerId, int playerId, int index) {
+    public ReaderSendCommand(int readerId, int playerId, int index) {
         super("admin", "reader", readerId);
         JsonObject object = new JsonObject();
         object.addProperty("type", 0);
