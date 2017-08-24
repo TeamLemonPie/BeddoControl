@@ -68,7 +68,7 @@ public class ControlSocket implements Runnable {
 		socket.close();
 	}
 
-	public void write(ControlCommand command) {
+	public void write(ControlCommandData command) {
 		Gson gson = new Gson();
 		write(gson.toJson(command));
 	}

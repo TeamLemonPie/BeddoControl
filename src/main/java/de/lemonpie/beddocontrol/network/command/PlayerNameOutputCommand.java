@@ -1,9 +1,9 @@
 package de.lemonpie.beddocontrol.network.command;
 
 import com.google.gson.JsonPrimitive;
-import de.lemonpie.beddocontrol.network.ControlCommand;
+import de.lemonpie.beddocontrol.network.ControlCommandData;
 
-public class PlayerNameCommand extends ControlCommand {
+public class PlayerNameOutputCommand extends ControlCommandData {
 
     public enum NameType {
         NAME("name"),
@@ -20,7 +20,7 @@ public class PlayerNameCommand extends ControlCommand {
         }
     }
 
-    public PlayerNameCommand(NameType nameType, int playerId, String value) {
+    public PlayerNameOutputCommand(NameType nameType, int playerId, String value) {
         super("admin", nameType.getCommand(), playerId);
         setValue(new JsonPrimitive(value));
     }

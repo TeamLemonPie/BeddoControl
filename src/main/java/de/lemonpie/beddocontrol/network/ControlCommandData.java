@@ -2,13 +2,13 @@ package de.lemonpie.beddocontrol.network;
 
 import com.google.gson.JsonElement;
 
-public class ControlCommand {
+public class ControlCommandData {
     private final String scope;
     private final String command;
     private final int key;
     private JsonElement value;
 
-    public ControlCommand(String scope, String command, int key) {
+    public ControlCommandData(String scope, String command, int key) {
         this.scope = scope;
         this.command = command;
         this.key = key;
