@@ -5,20 +5,20 @@ import de.lemonpie.beddocontrol.network.ControlCommandData;
 
 public class ReaderSendCommand extends ControlCommandData {
 
-    public ReaderSendCommand(int readerId, int boardId) {
-        super("admin", "reader", readerId);
-        JsonObject object = new JsonObject();
-        object.addProperty("type", 1);
-        object.addProperty("index", boardId);
-        setValue(object);
+    public enum ReaderType {
+        PLAYER,
+        BOARD
     }
 
-    public ReaderSendCommand(int readerId, int playerId, int index) {
+    public ReaderSendCommand(ReaderType type, int readerId, int id) {
         super("admin", "reader", readerId);
         JsonObject object = new JsonObject();
-        object.addProperty("type", 0);
-        object.addProperty("playerId", playerId);
-        object.addProperty("index", index);
+        object.addProperty("type", type.ordinal());
+        if (type == ReaderType.PLAYER) {
+            object.addProperty("playerId", id);
+        } else if (type == ReaderType.BOARD) {
+            object.addProperty("index", id);
+        }
         setValue(object);
     }
 }
