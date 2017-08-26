@@ -6,6 +6,8 @@ import de.lemonpie.beddocontrol.model.listener.PlayerListener;
 import de.lemonpie.beddocontrol.network.ControlSocket;
 import de.lemonpie.beddocontrol.network.command.send.PlayerNameSendCommand;
 
+import java.net.SocketException;
+
 public class PlayerListenerImpl implements PlayerListener {
 
     private ControlSocket socket;
@@ -17,13 +19,21 @@ public class PlayerListenerImpl implements PlayerListener {
     @Override
     public void nameDidChange(Player player, String name) {
         PlayerNameSendCommand cmd = new PlayerNameSendCommand(PlayerNameSendCommand.NameType.NAME, player.getId(), name);
-        socket.write(cmd);
+        try {
+            socket.write(cmd);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void twitchNameDidChange(Player player, String twitchName) {
         PlayerNameSendCommand cmd = new PlayerNameSendCommand(PlayerNameSendCommand.NameType.TWITCH, player.getId(), twitchName);
-        socket.write(cmd);
+        try {
+            socket.write(cmd);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

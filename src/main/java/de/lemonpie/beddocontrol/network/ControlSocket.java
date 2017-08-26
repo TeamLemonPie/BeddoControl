@@ -1,8 +1,6 @@
 package de.lemonpie.beddocontrol.network;
 
 import com.google.gson.Gson;
-import de.lemonpie.beddocontrol.network.command.read.CardReadCommand;
-import de.lemonpie.beddocontrol.network.command.read.PlayerOpReadCommand;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,12 +8,13 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ControlSocket implements Runnable {
 
-	private static final int MAX = 10;
+    private static final int MAX = 10;
 
     private static Gson gson;
 
@@ -25,87 +24,111 @@ public class ControlSocket implements Runnable {
 
     private Map<String, Command> commands;
 
-	private String host;
-	private int port;
+    private String host;
+    private int port;
 
-	private Socket socket;
-	private BufferedReader inputStream;
-	private PrintWriter outputStream;
+    private Socket socket;
+    private BufferedReader inputStream;
+    private PrintWriter outputStream;
 
-	private Thread readerThread;
+    private ControlSocketDelegate delegate;
 
-    public ControlSocket(String host, int port) {
+    private Thread readerThread;
+
+    public ControlSocket(String host, int port, ControlSocketDelegate delegate) {
         this.host = host;
         this.port = port;
+        this.delegate = delegate;
 
         commands = new HashMap<>();
         init();
     }
 
     private void init() {
-        addCommand(new PlayerOpReadCommand());
-        addCommand(new CardReadCommand());
+        if (delegate != null) {
+            delegate.init(this);
+        }
     }
 
-    private void addCommand(Command command) {
+    public void addCommand(Command command) {
         commands.put(command.name(), command);
     }
 
-	public boolean connect() {
-		int counter = 0;
-		while (counter < MAX) {
-			try {
-				initConnection();
-				break;
-			} catch (IOException e) {
-				e.printStackTrace();
-				try {
-					Thread.sleep(5 * 1000);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-					break;
-				}
-			}
-			counter++;
-		}
-		return socket.isConnected();
-	}
+    public boolean connect() {
+        int counter = 0;
+        while (counter < MAX) {
+            try {
+                initConnection();
 
-	private void initConnection() throws IOException {
-		socket = new Socket();
-		socket.connect(new InetSocketAddress(host, port));
+                if (delegate != null) {
+                    delegate.onConnectionEstablished();
+                }
+                break;
+            } catch (IOException e) {
+                e.printStackTrace();
+                try {
+                    Thread.sleep(5 * 1000);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                    break;
+                }
+            }
+            counter++;
+        }
+        return socket.isConnected();
+    }
 
-		inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		outputStream = new PrintWriter(socket.getOutputStream(), true);
+    private void initConnection() throws IOException {
+        socket = new Socket();
+        socket.connect(new InetSocketAddress(host, port));
 
-		readerThread = new Thread(this);
-		readerThread.start();
-	}
+        inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        outputStream = new PrintWriter(socket.getOutputStream(), true);
 
-	public void interrupt() {
-		readerThread.interrupt();
-	}
+        readerThread = new Thread(this);
+        readerThread.start();
+    }
 
-	public void close() throws IOException {
-		inputStream.close();
-		outputStream.close();
-		socket.close();
-	}
+    public void interrupt() {
+        readerThread.interrupt();
+    }
 
-	public void write(ControlCommandData command) {
-		write(gson.toJson(command));
-	}
+    public void close() throws IOException {
+        if (readerThread != null) {
+            readerThread.interrupt();
+        }
 
-	public void write(String data) {
-		outputStream.println(data); // AutoFlush is enable
-	}
+        inputStream.close();
+        outputStream.close();
+        socket.close();
 
-	@Override
-	public void run() {
-		try {
-			String line;
-			while ((line = inputStream.readLine()) != null) {
-				System.out.println(line);
+        if (delegate != null) {
+            delegate.onConnectionClosed();
+        }
+    }
+
+    public void write(ControlCommandData command) throws SocketException {
+        write(gson.toJson(command));
+    }
+
+    public void write(String data) throws SocketException {
+        if (!socket.isClosed()) {
+            outputStream.println(data); // AutoFlush is enable
+        } else {
+            if (connect()) {
+                write(data);
+            } else {
+                throw new SocketException("Socket closed");
+            }
+        }
+    }
+
+    @Override
+    public void run() {
+        try {
+            String line;
+            while ((line = inputStream.readLine()) != null) {
+                System.out.println(line);
 
                 ControlCommandData commandData = gson.fromJson(line, ControlCommandData.class);
 
@@ -116,18 +139,18 @@ public class ControlSocket implements Runnable {
                 });
 
 
-				if (Thread.interrupted()) {
-					break;
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+                if (Thread.interrupted()) {
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
