@@ -2,13 +2,13 @@ package de.lemonpie.beddocontrol.network.command.send;
 
 import de.lemonpie.beddocontrol.network.ControlCommandData;
 
-public class ClearCommand extends ControlCommandData {
+public class ClearSendCommand extends ControlCommandData {
 
-    public ClearCommand() {
+    public ClearSendCommand() {
         super("admin", "clear", -1);
     }
 
-    public ClearCommand(int key) {
+    public ClearSendCommand(int key) {
         super("admin", "clear", key);
     }
 }
