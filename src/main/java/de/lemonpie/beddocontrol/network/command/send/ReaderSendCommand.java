@@ -17,7 +17,7 @@ public class ReaderSendCommand extends ControlCommandData {
         if (type == ReaderType.PLAYER) {
             object.addProperty("playerId", id);
         } else if (type == ReaderType.BOARD) {
-            object.addProperty("index", id);
+            object.addProperty("boardId", id);
         }
         setValue(object);
     }
