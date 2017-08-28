@@ -1,6 +1,7 @@
 package de.lemonpie.beddocontrol.network;
 
 import com.google.gson.Gson;
+import de.lemonpie.beddocontrol.CommandName;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,7 +23,7 @@ public class ControlSocket implements Runnable {
         gson = new Gson();
     }
 
-    private Map<String, Command> commands;
+    private Map<CommandName, Command> commands;
 
     private String host;
     private int port;
@@ -133,7 +134,7 @@ public class ControlSocket implements Runnable {
                 ControlCommandData commandData = gson.fromJson(line, ControlCommandData.class);
 
                 commands.forEach((name, command) -> {
-                    if (name.equals(commandData.getCommand())) {
+                    if (name.getName().equals(commandData.getCommand())) {
                         command.execute(commandData);
                     }
                 });

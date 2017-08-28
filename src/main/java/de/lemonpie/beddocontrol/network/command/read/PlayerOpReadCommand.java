@@ -1,5 +1,6 @@
 package de.lemonpie.beddocontrol.network.command.read;
 
+import de.lemonpie.beddocontrol.CommandName;
 import de.lemonpie.beddocontrol.main.BeddoControlMain;
 import de.lemonpie.beddocontrol.model.Player;
 import de.lemonpie.beddocontrol.network.Command;
@@ -7,8 +8,8 @@ import de.lemonpie.beddocontrol.network.ControlCommandData;
 
 public class PlayerOpReadCommand implements Command {
     @Override
-    public String name() {
-        return "player-op";
+    public CommandName name() {
+        return CommandName.PLAYER_OP;
     }
 
     @Override

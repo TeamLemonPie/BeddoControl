@@ -1,6 +1,7 @@
 package de.lemonpie.beddocontrol.network.command.read;
 
 import com.google.gson.JsonObject;
+import de.lemonpie.beddocontrol.CommandName;
 import de.lemonpie.beddocontrol.main.BeddoControlMain;
 import de.lemonpie.beddocontrol.model.card.Card;
 import de.lemonpie.beddocontrol.network.Command;
@@ -14,8 +15,8 @@ import de.lemonpie.beddocontrol.network.ControlCommandData;
  */
 public class CardReadCommand implements Command {
     @Override
-    public String name() {
-        return "card";
+    public CommandName name() {
+        return CommandName.CARD;
     }
 
     @Override

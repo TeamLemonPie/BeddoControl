@@ -1,6 +1,8 @@
 package de.lemonpie.beddocontrol.network;
 
+import de.lemonpie.beddocontrol.CommandName;
+
 public interface Command {
-    String name();
+    CommandName name();
     void execute(ControlCommandData data);
 }

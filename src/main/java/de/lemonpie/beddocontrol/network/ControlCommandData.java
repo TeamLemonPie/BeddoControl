@@ -1,20 +1,22 @@
 package de.lemonpie.beddocontrol.network;
 
 import com.google.gson.JsonElement;
+import de.lemonpie.beddocontrol.CommandName;
+import de.lemonpie.beddocontrol.Scope;
 
 public class ControlCommandData {
-    private final String scope;
+    private final Scope scope;
     private final String command;
     private final int key;
     private JsonElement value;
 
-    public ControlCommandData(String scope, String command, int key) {
+    public ControlCommandData(Scope scope, CommandName command, int key) {
         this.scope = scope;
-        this.command = command;
+        this.command = command.getName();
         this.key = key;
     }
 
-    public String getScope() {
+    public Scope getScope() {
         return scope;
     }
 
