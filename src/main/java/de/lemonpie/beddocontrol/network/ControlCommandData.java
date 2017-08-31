@@ -1,8 +1,6 @@
 package de.lemonpie.beddocontrol.network;
 
 import com.google.gson.JsonElement;
-import de.lemonpie.beddocontrol.CommandName;
-import de.lemonpie.beddocontrol.Scope;
 
 public class ControlCommandData {
     private final Scope scope;

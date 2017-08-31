@@ -1,19 +1,18 @@
 package de.lemonpie.beddocontrol.model;
 
-import de.lemonpie.beddocontrol.model.card.Card;
-import de.lemonpie.beddocontrol.model.listener.PlayerListener;
-
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
+
+import de.lemonpie.beddocontrol.model.card.Card;
+import de.lemonpie.beddocontrol.model.listener.PlayerListener;
 
 public class Player {
 
     private List<PlayerListener> listeners;
 
     private final int id;
+    private int readerId;
     private String name;
     private String twitchName;
 
@@ -21,20 +20,33 @@ public class Player {
     private Card card2;
 
     private int chips;
+    private PlayerState playerState;
 
     public Player(int id) {
         listeners = new LinkedList<>();
 
         this.id = id;
+        this.readerId = -1;
         this.name = "[Player]";
         this.twitchName = "[TwitchName]";
+        this.playerState = PlayerState.ACTIVE;
     }
 
     public int getId() {
         return id;
-    }
+    }  
 
-    public String getName() {
+    public int getReaderId()
+	{
+		return readerId;
+	}
+
+	public void setReaderId(int readerId)
+	{
+		this.readerId = readerId;
+	}
+
+	public String getName() {
         return name;
     }
 
@@ -79,7 +91,17 @@ public class Player {
         fireListener(listener -> listener.chipsDidChange(this, chips));
     }
 
-    public void addListener(PlayerListener playerListener) {
+    public PlayerState getPlayerState()
+	{
+		return playerState;
+	}
+
+	public void setPlayerState(PlayerState playerState)
+	{
+		this.playerState = playerState;
+	}
+
+	public void addListener(PlayerListener playerListener) {
         this.listeners.add(playerListener);
     }
 
@@ -93,15 +115,6 @@ public class Player {
         }
     }
 
-    public Map<String, Object> toMap() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("name", name);
-        map.put("twitchName", twitchName);
-        map.put("card1", card1 != null ? card1.toString() : "back");
-        map.put("card2", card2 != null ? card2.toString() : "back");
-        return map;
-    }
-
     public void setCard(int index, Card card) {
         if (index == 0) {
             setCard1(card);
@@ -111,4 +124,10 @@ public class Player {
             throw new IllegalArgumentException("Index is " + index + " should be 0 or 1");
         }
     }
+
+	@Override
+	public String toString()
+	{
+		return "Player [listeners=" + listeners + ", id=" + id + ", name=" + name + ", twitchName=" + twitchName + ", card1=" + card1 + ", card2=" + card2 + ", chips=" + chips + ", playerState=" + playerState + "]";
+	}
 }

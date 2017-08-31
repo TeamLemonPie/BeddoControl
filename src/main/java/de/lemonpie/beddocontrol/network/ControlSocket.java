@@ -1,8 +1,5 @@
 package de.lemonpie.beddocontrol.network;
 
-import com.google.gson.Gson;
-import de.lemonpie.beddocontrol.CommandName;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,9 +10,14 @@ import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gson.Gson;
+
+import logger.Logger;
+
 public class ControlSocket implements Runnable {
 
     private static final int MAX = 10;
+    private static final int SLEEP_TIME = 5000;
 
     private static Gson gson;
 
@@ -41,7 +43,7 @@ public class ControlSocket implements Runnable {
         this.port = port;
         this.delegate = delegate;
 
-        commands = new HashMap<>();
+        commands = new HashMap<>();      
         init();
     }
 
@@ -66,11 +68,11 @@ public class ControlSocket implements Runnable {
                 }
                 break;
             } catch (IOException e) {
-                e.printStackTrace();
+               Logger.error(e.getMessage() + " Retry " + (counter + 1) + "/" + MAX + ". Next Retry in " + (SLEEP_TIME/1000) + " seconds...");
                 try {
-                    Thread.sleep(5 * 1000);
+                    Thread.sleep(SLEEP_TIME);
                 } catch (InterruptedException e1) {
-                    e1.printStackTrace();
+                    Logger.error(e1.getMessage());
                     break;
                 }
             }

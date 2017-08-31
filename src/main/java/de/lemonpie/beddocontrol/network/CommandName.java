@@ -1,4 +1,4 @@
-package de.lemonpie.beddocontrol;
+package de.lemonpie.beddocontrol.network;
 
 public enum CommandName {
 

@@ -1,9 +1,10 @@
 package de.lemonpie.beddocontrol.network.command.send;
 
 import com.google.gson.JsonObject;
-import de.lemonpie.beddocontrol.CommandName;
-import de.lemonpie.beddocontrol.Scope;
+
+import de.lemonpie.beddocontrol.network.CommandName;
 import de.lemonpie.beddocontrol.network.ControlCommandData;
+import de.lemonpie.beddocontrol.network.Scope;
 
 public class ReaderSendCommand extends ControlCommandData {
 
