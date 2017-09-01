@@ -58,6 +58,7 @@ public class ControlSocket implements Runnable {
     }
 
     public boolean connect() {
+    	Logger.debug("Trying to connect to " + host + ":" + port + "...");
         int counter = 0;
         while (counter < MAX) {
             try {

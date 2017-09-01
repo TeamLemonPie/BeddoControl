@@ -55,21 +55,20 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		board = new Board();
 		players = new ArrayList<>();
 		//TODO externalize in config file
-		socket = new ControlSocket("192.168.1.43", 9998, new ControlSocketDelegate()
-		{
-			
+		socket = new ControlSocket("localhost", 9998, new ControlSocketDelegate()
+		{			
 			@Override
 			public void onConnectionEstablished()
 			{
 				// TODO Auto-generated method stub
-				
+				Logger.debug("Connection established.");
 			}
 			
 			@Override
 			public void onConnectionClosed()
 			{
 				// TODO Auto-generated method stub
-				
+				Logger.debug("Connection closed.");
 			}
 			
 			@Override
@@ -85,7 +84,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		p.setChips(1573);
 		p.setTwitchName("Papaplatte");
 		p.setName("Kevin");
-		p.setCard1(Card.fromString("Pi-7"));
+		p.setCardLeft(Card.fromString("Pi-7"));
 		p.setPlayerState(PlayerState.OUT_OF_GAME);
 		p.addListener(this);
 		players.add(p);
@@ -98,13 +97,16 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		else
 		{
 			//ERRORHANDLING
+			Logger.debug("Couldn't connect.");
+			System.exit(1);
 		}
 	}	
 	
 	private Image getImageForCard(Card card)
 	{
-		//TODO
-		return null;
+		String base = "/de/lemonpie/beddocontrol/resources/cards/";				
+		
+		return new Image(base + card.getSymbol() + "-" + card.getValue() + ".png");
 	}
 	
 	private void initTableView()
@@ -113,7 +115,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		labelPlaceholder.setStyle("-fx-font-size: 16");
 		tableView.setPlaceholder(labelPlaceholder);
 
-		tableView.setFixedCellSize(26);
+		tableView.setFixedCellSize(50);
 		tableView.setEditable(true);
 		
 		TableColumn<Player, Integer>  columnID = new TableColumn<>();
@@ -159,26 +161,29 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	                        	hboxCards.setAlignment(Pos.CENTER);
 	                        	hboxCards.setSpacing(10);                        	
 	                        	
-	                        	Image imageCardLeft = getImageForCard(currentPlayer.getCard1());                        	
+	                        	Image imageCardLeft = getImageForCard(currentPlayer.getCardLeft());                        	
 	                        	ImageView imageViewCardLeft = new ImageView(imageCardLeft);
-	                        	imageViewCardLeft.setFitHeight(100);                        	
-	                        	hboxCards.getChildren().add(imageViewCardLeft);         
+	                        	imageViewCardLeft.setFitHeight(38);
+	                        	imageViewCardLeft.fitWidthProperty().bind(columnCards.widthProperty().divide(4));
+	                        	hboxCards.getChildren().add(imageViewCardLeft);
 	                        	
-	                        	//TODO card right
-	                        	
+	                        	Image imageCardRight = getImageForCard(currentPlayer.getCardLeft());                        	
+	                        	ImageView imageViewCardRight = new ImageView(imageCardRight);
+	                        	imageViewCardRight.setFitHeight(38);
+	                        	imageViewCardRight.fitWidthProperty().bind(columnCards.widthProperty().divide(4));
+	                        	hboxCards.getChildren().add(imageViewCardRight);
+	             
 	                        	Button buttonClear = new Button("Clear");
 	                        	buttonClear.setOnAction((e)->{
-//	                        		try
-//									{
-//										socket.write(new ClearSendCommand(currentPlayer.getReaderId()));
-	                        			currentPlayer.setName("Eimer");
-	                        			
-//									}
-//									catch(SocketException e1)
-//									{
-//										//ERRORHANDLING
-//										Logger.error(e1);
-//									}
+	                        		try
+									{
+										socket.write(new ClearSendCommand(currentPlayer.getReaderId()));
+									}
+									catch(SocketException e1)
+									{
+										//ERRORHANDLING
+										Logger.error(e1);
+									}
 	                        		
 	                        		tableView.refresh();                        		
 	                        	});

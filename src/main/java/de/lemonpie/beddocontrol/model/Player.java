@@ -16,9 +16,9 @@ public class Player {
     private String name;
     private String twitchName;
 
-    private Card card1;
-    private Card card2;
-
+	private Card cardLeft;
+	private Card cardRight;
+	
     private int chips;
     private PlayerState playerState;
 
@@ -64,22 +64,22 @@ public class Player {
         fireListener(listener -> listener.twitchNameDidChange(this, twitchName));
     }
 
-    public Card getCard1() {
-        return card1;
+    public Card getCardLeft() {
+        return cardLeft;
     }
 
-    public void setCard1(Card card1) {
-        this.card1 = card1;
-        fireListener(listener -> listener.cardDidChangeAtIndex(this, 0, card1));
+    public void setCardLeft(Card cardLeft) {
+        this.cardLeft = cardLeft;
+        fireListener(listener -> listener.cardDidChangeAtIndex(this, 0, cardLeft));
     }
 
-    public Card getCard2() {
-        return card2;
+    public Card getCardRight() {
+        return cardRight;
     }
 
-    public void setCard2(Card card2) {
-        this.card2 = card2;
-        fireListener(listener -> listener.cardDidChangeAtIndex(this, 1, card2));
+    public void setCardRight(Card cardRight) {
+        this.cardRight = cardRight;
+        fireListener(listener -> listener.cardDidChangeAtIndex(this, 1, cardRight));
     }
 
     public int getChips() {
@@ -117,9 +117,9 @@ public class Player {
 
     public void setCard(int index, Card card) {
         if (index == 0) {
-            setCard1(card);
+            setCardLeft(card);
         } else if (index == 1) {
-            setCard2(card);
+            setCardRight(card);
         } else {
             throw new IllegalArgumentException("Index is " + index + " should be 0 or 1");
         }
@@ -128,6 +128,6 @@ public class Player {
 	@Override
 	public String toString()
 	{
-		return "Player [listeners=" + listeners + ", id=" + id + ", name=" + name + ", twitchName=" + twitchName + ", card1=" + card1 + ", card2=" + card2 + ", chips=" + chips + ", playerState=" + playerState + "]";
-	}
+		return "Player [listeners=" + listeners + ", id=" + id + ", readerId=" + readerId + ", name=" + name + ", twitchName=" + twitchName + ", cardLeft=" + cardLeft + ", cardRight=" + cardRight + ", chips=" + chips + ", playerState=" + playerState + "]";
+	}	
 }
