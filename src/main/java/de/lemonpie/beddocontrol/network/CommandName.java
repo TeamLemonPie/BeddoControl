@@ -8,6 +8,7 @@ public enum CommandName {
 
     PLAYER_NAME("name"),
     PLAYER_TWITCH("twitchName"),
+    PLAYER_HIDE("hide"),
     PLAYER_CHIP("chip"),
     PLAYER_OP("player-op");
 
