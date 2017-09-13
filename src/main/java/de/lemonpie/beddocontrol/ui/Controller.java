@@ -1,5 +1,6 @@
 package de.lemonpie.beddocontrol.ui;
 
+import java.io.IOException;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +21,20 @@ import de.lemonpie.beddocontrol.network.command.read.PlayerOpReadCommand;
 import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -36,11 +45,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import logger.Logger;
 import tools.AlertGenerator;
+import tools.Worker;
 
 public class Controller implements DataAccessable, BoardListener, PlayerListener
 {
@@ -50,6 +61,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	@FXML private Label labelPause;
 	@FXML private Button buttonPause;
 	@FXML private Button buttonPauseReset;
+	@FXML private Label labelStatus;
 
 	private Stage stage;
 	private Image icon;
@@ -59,6 +71,12 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	private ControlSocket socket;
 	private Timeline timeline;
 	private int remainingSeconds;
+	private Stage modalStage;
+	public static StringProperty modalText;
+	
+	// TODO externalize in config file
+	private final String HOST = "localhost";
+	private final int PORT = 9998;
 
 	public void init(Stage stage, Image icon, ResourceBundle bundle)
 	{
@@ -67,30 +85,11 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		this.bundle = bundle;
 		board = new Board();
 		players = new ArrayList<>();
-		// TODO externalize in config file
-		socket = new ControlSocket("localhost", 9998, new ControlSocketDelegate()
-		{
-			@Override
-			public void onConnectionEstablished()
-			{
-				// TODO Auto-generated method stub
-				Logger.debug("Connection established.");
-			}
-
-			@Override
-			public void onConnectionClosed()
-			{
-				// TODO Auto-generated method stub
-				Logger.debug("Connection closed.");
-			}
-
-			@Override
-			public void init(ControlSocket socket)
-			{
-				socket.addCommand(new CardReadCommand(Controller.this));
-				socket.addCommand(new PlayerOpReadCommand(Controller.this));
-			}
-		});
+		
+		modalText = new SimpleStringProperty();
+		
+		labelStatus.setText("Connecting...");
+		labelStatus.setStyle("-fx-text-fill: orange");	
 
 		textFieldPause.setTextFormatter(new TextFormatter<>(c -> {
 			if(c.getControlNewText().isEmpty())
@@ -107,7 +106,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 				return null;
 			}
 		}));
-
+		
 		// DEBUG
 		Player p = new Player(0);
 		p.setChips(1573);
@@ -117,18 +116,85 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		p.setPlayerState(PlayerState.OUT_OF_GAME);
 		p.addListener(this);
 		players.add(p);
+		
+		initTableView();
+		
+		Platform.runLater(()->{
+			initConnection();
+			connect();
+		});
+	}
+	
+	private void connect()
+	{
+		modalStage = showModal("Trying to connect to " + HOST + ":" + PORT, "Connect to server...", stage, icon);
+		
+		Worker.runLater(()->{
+			if(socket.connect())
+			{
+				Platform.runLater(()->{
+					if(modalStage != null)
+						modalStage.close();
+					refreshTableView();
+				});
+			}
+			else
+			{
+				Logger.debug("Couldn't connect.");
+				Platform.runLater(()->{
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Error");
+					alert.setHeaderText("");
+					alert.setContentText("Connection could not be established.");
+					Stage dialogStage = (Stage)alert.getDialogPane().getScene().getWindow();
+					dialogStage.getIcons().add(icon);
+					dialogStage.initOwner(stage);
+					
+					ButtonType buttonTypeOne = new ButtonType("Retry");				
+					alert.getButtonTypes().setAll(buttonTypeOne);
+					Optional<ButtonType> result = alert.showAndWait();
+					if (result.get() == buttonTypeOne)
+					{
+					    connect();
+					}
+				});
+			}
+		});
+		
+	}
+	
+	private void initConnection()
+	{		
+		socket = new ControlSocket(HOST, PORT, new ControlSocketDelegate()
+		{
+			@Override
+			public void onConnectionEstablished()
+			{
+				Logger.debug("Connection established.");
+				Platform.runLater(()->{
+					labelStatus.setText("Connected");
+					labelStatus.setStyle("-fx-text-fill: #48DB5E");
+				});
+			}
 
-		if(socket.connect())
-		{
-			initTableView();
-			refreshTableView();
-		}
-		else
-		{
-			// ERRORHANDLING
-			Logger.debug("Couldn't connect.");
-			System.exit(1);
-		}
+			@Override
+			public void onConnectionClosed()
+			{
+				Logger.debug("Connection closed.");
+				Platform.runLater(()->{
+					labelStatus.setText("Disconnected");
+					labelStatus.setStyle("-fx-text-fill: #CC0000");
+					connect();
+				});
+			}
+
+			@Override
+			public void init(ControlSocket socket)
+			{
+				socket.addCommand(new CardReadCommand(Controller.this));
+				socket.addCommand(new PlayerOpReadCommand(Controller.this));
+			}
+		});
 	}
 
 	private Image getImageForCard(Card card)
@@ -140,7 +206,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 
 	private void initTableView()
 	{
-		Label labelPlaceholder = new Label("Keine Daten verfügbar");
+		Label labelPlaceholder = new Label("No data available");
 		labelPlaceholder.setStyle("-fx-font-size: 16");
 		tableView.setPlaceholder(labelPlaceholder);
 
@@ -235,7 +301,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 			}
 		});
 		columnCards.setStyle("-fx-alignment: CENTER;");
-		columnCards.setText("Karten");
+		columnCards.setText("Cards");
 		tableView.getColumns().add(columnCards);
 
 		TableColumn<Player, Integer> columnChips = new TableColumn<>();
@@ -308,7 +374,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 							hboxButtons.setAlignment(Pos.CENTER);
 							hboxButtons.setSpacing(10);
 
-							Button buttonActivate = new Button("Aktivieren");
+							Button buttonActivate = new Button("Activate");
 							buttonActivate.setOnAction((e) -> {
 								((Player)getTableRow().getItem()).setPlayerState(PlayerState.ACTIVE);
 								tableView.refresh();
@@ -341,7 +407,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 			}
 		});
 		columnButtons.setStyle("-fx-alignment: CENTER;");
-		columnButtons.setText("Aktionen");
+		columnButtons.setText("Actions");
 		tableView.getColumns().add(columnButtons);
 	}
 
@@ -366,7 +432,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		String pauseTime = textFieldPause.getText().trim();
 		if(pauseTime == null || pauseTime.equals(""))
 		{
-			AlertGenerator.showAlert(AlertType.WARNING, "Warnung", "", "Das Feld für die Pausenzeit darf nicht leer sein.", icon, stage, null, false);
+			AlertGenerator.showAlert(AlertType.WARNING, "Warning", "", "Please enter a pause time", icon, stage, null, false);
 			return;
 		}
 
@@ -467,5 +533,31 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	{
 		// TODO Auto-generated method stub
 
+	}
+	
+	public Stage showModal(String title, String message, Stage owner, Image icon)
+	{
+		try
+		{
+			FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/de/lemonpie/beddocontrol/ui/Modal.fxml"));
+			Parent root = (Parent)fxmlLoader.load();
+			Stage newStage = new Stage();
+			newStage.initOwner(owner);
+			newStage.initModality(Modality.APPLICATION_MODAL);
+			newStage.setTitle(title);
+			newStage.setScene(new Scene(root));
+			newStage.getIcons().add(icon);
+			newStage.setResizable(false);
+			ModalController newController = fxmlLoader.getController();
+			newController.init(newStage, modalText);
+			newStage.show();
+
+			return newStage;
+		}
+		catch(IOException e)
+		{
+			Logger.error(e);
+			return null;
+		}
 	}
 }
