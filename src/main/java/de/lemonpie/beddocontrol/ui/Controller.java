@@ -44,10 +44,10 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javafx.util.Duration;
 import logger.Logger;
 import tools.AlertGenerator;
@@ -222,7 +222,43 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		// TODO column reader ID
 
 		TableColumn<Player, String> columnName = new TableColumn<>();
-		columnName.setCellValueFactory(new PropertyValueFactory<Player, String>("name"));
+		columnName.setCellValueFactory(new PropertyValueFactory<Player, String>("name"));		
+		columnName.setCellFactory(param -> {
+			TableCell<Player, String> cell = new TableCell<Player, String>()
+			{
+				@Override
+				public void updateItem(String item, boolean empty)
+				{
+					if(!empty && item != null)
+					{
+						TextField textFieldName = new TextField();						
+						
+						Object currentItem =  getTableRow().getItem();
+						if(currentItem != null)
+						{
+							Player currentPlayer = (Player)currentItem;
+						
+							textFieldName.setOnKeyPressed(ke -> {
+							    if(ke.getCode().equals(KeyCode.ENTER))
+							    {
+							        currentPlayer.setName(textFieldName.getText().trim());
+							    }
+							});
+							setGraphic(textFieldName);
+						}
+						else
+						{
+							setGraphic(null);
+						}
+					}
+					else
+					{
+						setGraphic(null);
+					}
+				}
+			};
+			return cell;
+		});
 		columnName.setStyle("-fx-alignment: CENTER;");
 		columnName.setText("Name");
 		tableView.getColumns().add(columnName);
@@ -235,70 +271,65 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 
 		TableColumn<Player, Integer> columnCards = new TableColumn<>();
 		columnCards.setCellValueFactory(new PropertyValueFactory<Player, Integer>("id"));
-		columnCards.setCellFactory(new Callback<TableColumn<Player, Integer>, TableCell<Player, Integer>>()
-		{
-			@Override
-			public TableCell<Player, Integer> call(TableColumn<Player, Integer> param)
+		columnCards.setCellFactory(param -> {
+			TableCell<Player, Integer> cell = new TableCell<Player, Integer>()
 			{
-				TableCell<Player, Integer> cell = new TableCell<Player, Integer>()
+				@Override
+				public void updateItem(Integer item, boolean empty)
 				{
-					@Override
-					public void updateItem(Integer item, boolean empty)
+					if(!empty && item != null)
 					{
-						if(!empty && item != null)
+						Optional<Player> playerOptional = getPlayer(item);
+						if(playerOptional.isPresent())
 						{
-							Optional<Player> playerOptional = getPlayer(item);
-							if(playerOptional.isPresent())
-							{
-								Player currentPlayer = playerOptional.get();
+							Player currentPlayer = playerOptional.get();
 
-								HBox hboxCards = new HBox();
-								hboxCards.setAlignment(Pos.CENTER);
-								hboxCards.setSpacing(10);
+							HBox hboxCards = new HBox();
+							hboxCards.setAlignment(Pos.CENTER);
+							hboxCards.setSpacing(10);
 
-								Image imageCardLeft = getImageForCard(currentPlayer.getCardLeft());
-								ImageView imageViewCardLeft = new ImageView(imageCardLeft);
-								imageViewCardLeft.setFitHeight(38);
-								imageViewCardLeft.fitWidthProperty().bind(columnCards.widthProperty().divide(4));
-								hboxCards.getChildren().add(imageViewCardLeft);
+							Image imageCardLeft = getImageForCard(currentPlayer.getCardLeft());
+							ImageView imageViewCardLeft = new ImageView(imageCardLeft);
+							imageViewCardLeft.setFitHeight(38);
+							imageViewCardLeft.fitWidthProperty().bind(columnCards.widthProperty().divide(4));
+							hboxCards.getChildren().add(imageViewCardLeft);
 
-								Image imageCardRight = getImageForCard(currentPlayer.getCardLeft());
-								ImageView imageViewCardRight = new ImageView(imageCardRight);
-								imageViewCardRight.setFitHeight(38);
-								imageViewCardRight.fitWidthProperty().bind(columnCards.widthProperty().divide(4));
-								hboxCards.getChildren().add(imageViewCardRight);
+							Image imageCardRight = getImageForCard(currentPlayer.getCardLeft());
+							ImageView imageViewCardRight = new ImageView(imageCardRight);
+							imageViewCardRight.setFitHeight(38);
+							imageViewCardRight.fitWidthProperty().bind(columnCards.widthProperty().divide(4));
+							hboxCards.getChildren().add(imageViewCardRight);
 
-								Button buttonClear = new Button("Clear");
-								buttonClear.setOnAction((e) -> {
-									try
-									{
-										socket.write(new ClearSendCommand(currentPlayer.getReaderId()));
-									}
-									catch(SocketException e1)
-									{
-										Logger.error(e1);
-										AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), icon, stage, null, false);
-									}
+							Button buttonClear = new Button("Clear");
+							buttonClear.setOnAction((e) -> {
+								try
+								{
+									socket.write(new ClearSendCommand(currentPlayer.getReaderId()));
+								}
+								catch(SocketException e1)
+								{
+									Logger.error(e1);
+									AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), icon, stage, null, false);
+								}
 
-									tableView.refresh();
-								});
-								hboxCards.getChildren().add(buttonClear);
+								tableView.refresh();
+							});
+							hboxCards.getChildren().add(buttonClear);
 
-								setGraphic(hboxCards);
-							}
-							else
-							{
-								setGraphic(null);
-							}
+							setGraphic(hboxCards);
 						}
 						else
 						{
 							setGraphic(null);
 						}
 					}
-				};
-				return cell;
-			}
+					else
+					{
+						setGraphic(null);
+					}
+				}
+			};
+			return cell;
 		});
 		columnCards.setStyle("-fx-alignment: CENTER;");
 		columnCards.setText("Cards");
@@ -314,43 +345,38 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 
 		TableColumn<Player, PlayerState> columnStatus = new TableColumn<>();
 		columnStatus.setCellValueFactory(new PropertyValueFactory<Player, PlayerState>("playerState"));
-		columnStatus.setCellFactory(new Callback<TableColumn<Player, PlayerState>, TableCell<Player, PlayerState>>()
-		{
-			@Override
-			public TableCell<Player, PlayerState> call(TableColumn<Player, PlayerState> param)
+		columnStatus.setCellFactory(param -> {
+			TableCell<Player, PlayerState> cell = new TableCell<Player, PlayerState>()
 			{
-				TableCell<Player, PlayerState> cell = new TableCell<Player, PlayerState>()
+				@Override
+				public void updateItem(PlayerState item, boolean empty)
 				{
-					@Override
-					public void updateItem(PlayerState item, boolean empty)
+					if(!empty)
 					{
-						if(!empty)
+						switch(item)
 						{
-							switch(item)
-							{
-								case ACTIVE:
-									this.setStyle("-fx-background-color: #48DB5E; -fx-text-fill: black; -fx-font-weight: bold; -fx-alignment: center");
-									break;
-								case OUT_OF_ROUND:
-									this.setStyle("-fx-background-color: orange; -fx-text-fill: black; -fx-font-weight: bold; -fx-alignment: center");
-									break;
-								case OUT_OF_GAME:
-									this.setStyle("-fx-background-color: #CC0000; -fx-text-fill: white; -fx-font-weight: bold; -fx-alignment: center");
-									break;
-								default:
-									break;
-							}
+							case ACTIVE:
+								this.setStyle("-fx-background-color: #48DB5E; -fx-text-fill: black; -fx-font-weight: bold; -fx-alignment: center");
+								break;
+							case OUT_OF_ROUND:
+								this.setStyle("-fx-background-color: orange; -fx-text-fill: black; -fx-font-weight: bold; -fx-alignment: center");
+								break;
+							case OUT_OF_GAME:
+								this.setStyle("-fx-background-color: #CC0000; -fx-text-fill: white; -fx-font-weight: bold; -fx-alignment: center");
+								break;
+							default:
+								break;
+						}
 
-							setText(item.getName());
-						}
-						else
-						{
-							setText(null);
-						}
+						setText(item.getName());
 					}
-				};
-				return cell;
-			}
+					else
+					{
+						setText(null);
+					}
+				}
+			};
+			return cell;
 		});
 		columnStatus.setStyle("-fx-alignment: CENTER;");
 		columnStatus.setText("Status");
@@ -358,53 +384,48 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 
 		TableColumn<Player, PlayerState> columnButtons = new TableColumn<>();
 		columnButtons.setCellValueFactory(new PropertyValueFactory<Player, PlayerState>("playerState"));
-		columnButtons.setCellFactory(new Callback<TableColumn<Player, PlayerState>, TableCell<Player, PlayerState>>()
-		{
-			@Override
-			public TableCell<Player, PlayerState> call(TableColumn<Player, PlayerState> param)
+		columnButtons.setCellFactory(param -> {
+			TableCell<Player, PlayerState> cell = new TableCell<Player, PlayerState>()
 			{
-				TableCell<Player, PlayerState> cell = new TableCell<Player, PlayerState>()
+				@Override
+				public void updateItem(PlayerState item, boolean empty)
 				{
-					@Override
-					public void updateItem(PlayerState item, boolean empty)
+					if(!empty)
 					{
-						if(!empty)
-						{
-							HBox hboxButtons = new HBox();
-							hboxButtons.setAlignment(Pos.CENTER);
-							hboxButtons.setSpacing(10);
+						HBox hboxButtons = new HBox();
+						hboxButtons.setAlignment(Pos.CENTER);
+						hboxButtons.setSpacing(10);
 
-							Button buttonActivate = new Button("Activate");
-							buttonActivate.setOnAction((e) -> {
-								((Player)getTableRow().getItem()).setPlayerState(PlayerState.ACTIVE);
-								tableView.refresh();
-							});
-							hboxButtons.getChildren().add(buttonActivate);
+						Button buttonActivate = new Button("Activate");
+						buttonActivate.setOnAction((e) -> {
+							((Player)getTableRow().getItem()).setPlayerState(PlayerState.ACTIVE);
+							tableView.refresh();
+						});
+						hboxButtons.getChildren().add(buttonActivate);
 
-							Button buttonOutOfRound = new Button("Fold");
-							buttonOutOfRound.setOnAction((e) -> {
-								((Player)getTableRow().getItem()).setPlayerState(PlayerState.OUT_OF_ROUND);
-								tableView.refresh();
-							});
-							hboxButtons.getChildren().add(buttonOutOfRound);
+						Button buttonOutOfRound = new Button("Fold");
+						buttonOutOfRound.setOnAction((e) -> {
+							((Player)getTableRow().getItem()).setPlayerState(PlayerState.OUT_OF_ROUND);
+							tableView.refresh();
+						});
+						hboxButtons.getChildren().add(buttonOutOfRound);
 
-							Button buttonOutOfGame = new Button("Deactivate");
-							buttonOutOfGame.setOnAction((e) -> {
-								((Player)getTableRow().getItem()).setPlayerState(PlayerState.OUT_OF_GAME);
-								tableView.refresh();
-							});
-							hboxButtons.getChildren().add(buttonOutOfGame);
+						Button buttonOutOfGame = new Button("Deactivate");
+						buttonOutOfGame.setOnAction((e) -> {
+							((Player)getTableRow().getItem()).setPlayerState(PlayerState.OUT_OF_GAME);
+							tableView.refresh();
+						});
+						hboxButtons.getChildren().add(buttonOutOfGame);
 
-							setGraphic(hboxButtons);
-						}
-						else
-						{
-							setGraphic(null);
-						}
+						setGraphic(hboxButtons);
 					}
-				};
-				return cell;
-			}
+					else
+					{
+						setGraphic(null);
+					}
+				}
+			};
+			return cell;
 		});
 		columnButtons.setStyle("-fx-alignment: CENTER;");
 		columnButtons.setText("Actions");
