@@ -276,8 +276,8 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 									}
 									catch(SocketException e1)
 									{
-										// ERRORHANDLING
 										Logger.error(e1);
+										AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), icon, stage, null, false);
 									}
 
 									tableView.refresh();
@@ -422,7 +422,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	@FXML
 	public void newPlayer()
 	{
-		//TODO
+		//TODO add player
 		tableView.refresh();
 	}
 
