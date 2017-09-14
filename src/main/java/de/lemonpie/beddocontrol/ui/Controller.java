@@ -8,7 +8,11 @@ import java.util.ResourceBundle;
 
 import de.lemonpie.beddocontrol.listener.BoardListener;
 import de.lemonpie.beddocontrol.listener.PlayerListListener;
-import de.lemonpie.beddocontrol.model.*;
+import de.lemonpie.beddocontrol.model.Board;
+import de.lemonpie.beddocontrol.model.DataAccessable;
+import de.lemonpie.beddocontrol.model.Player;
+import de.lemonpie.beddocontrol.model.PlayerList;
+import de.lemonpie.beddocontrol.model.PlayerState;
 import de.lemonpie.beddocontrol.model.card.Card;
 import de.lemonpie.beddocontrol.model.listener.PlayerListener;
 import de.lemonpie.beddocontrol.network.ControlSocket;
@@ -16,6 +20,7 @@ import de.lemonpie.beddocontrol.network.ControlSocketDelegate;
 import de.lemonpie.beddocontrol.network.command.read.CardReadCommand;
 import de.lemonpie.beddocontrol.network.command.read.PlayerOpReadCommand;
 import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.PlayerOpSendCommand;
 import de.lemonpie.beddocontrol.network.listener.PlayerListenerImpl;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -107,17 +112,12 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 			}
 		}));
 		
-		// DEBUG
-		Player p = new Player(0);
-		p.setChips(1573);
-		p.setTwitchName("Papaplatte");
-		p.setName("Kevin");
-		p.setCardLeft(Card.fromString("Pi-7"));
-		p.setPlayerState(PlayerState.OUT_OF_GAME);
-		p.addListener(this);
-		players.add(p);
-		
 		initTableView();
+		
+		stage.setOnCloseRequest((event)->{
+			Worker.shutdown();
+			System.exit(0);
+		});
 		
 		Platform.runLater(()->{
 			initConnection();
@@ -160,7 +160,6 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 				});
 			}
 		});
-		
 	}
 	
 	private void initConnection()
@@ -200,6 +199,10 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	private Image getImageForCard(Card card)
 	{
 		String base = "/de/lemonpie/beddocontrol/resources/cards/";
+		if(card == null)
+		{
+			return new Image(base + "back.png");
+		}
 
 		return new Image(base + card.getSymbol() + "-" + card.getValue() + ".png");
 	}
@@ -231,12 +234,13 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 				{
 					if(!empty && item != null)
 					{
-						TextField textFieldName = new TextField();						
+						TextField textFieldName = new TextField();					
 						
 						Object currentItem =  getTableRow().getItem();
 						if(currentItem != null)
 						{
 							Player currentPlayer = (Player)currentItem;
+							textFieldName.setText(currentPlayer.getName());
 						
 							textFieldName.setOnKeyPressed(ke -> {
 							    if(ke.getCode().equals(KeyCode.ENTER))
@@ -443,8 +447,15 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	@FXML
 	public void newPlayer()
 	{
-		//TODO add player
-		tableView.refresh();
+		try
+		{
+			socket.write(new PlayerOpSendCommand());
+		}
+		catch(SocketException e1)
+		{
+			Logger.error(e1);
+			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), icon, stage, null, false);
+		}
 	}
 
 	@FXML
@@ -501,21 +512,22 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		return players.getPlayers();
 	}
 
-	/*
-	Method from DataAccessable and PlayerListListener
-	Add Player to List & add Listener to Player
-	 */
 	@Override
 	public void addPlayer(Player player)
-	{
+	{		
 		players.add(player);
-		player.addListener(new PlayerListenerImpl(socket));
-
-		// TODO Handle new player in ui here
+		
+		refreshTableView();
+	}
+	
+	@Override
+	public void addPlayerToList(Player player)
+	{
+		player.addListener(new PlayerListenerImpl(socket));				
 	}
 
 	@Override
-	public void removePlayer(Player player) {
+	public void removePlayerFromList(Player player) {
 		players.remove(player);
 	}
 

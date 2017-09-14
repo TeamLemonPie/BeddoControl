@@ -16,7 +16,7 @@ public class PlayerList implements Iterable<Player> {
     }
 
     public Player add(Player player) {
-        fireListener(l -> l.addPlayer(player));
+        fireListener(l -> l.addPlayerToList(player));
         return data.add(player) ? player : null;
     }
 
@@ -26,7 +26,7 @@ public class PlayerList implements Iterable<Player> {
 
     public boolean remove(Object o) {
         if (o instanceof Player) {
-            fireListener(l -> l.removePlayer((Player) o));
+            fireListener(l -> l.removePlayerFromList((Player) o));
         }
         return data.remove(o);
     }
