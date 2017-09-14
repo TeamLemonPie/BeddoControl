@@ -31,6 +31,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -199,7 +200,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	private Image getImageForCard(Card card)
 	{
 		String base = "/de/lemonpie/beddocontrol/resources/cards/";
-		if(card == null)
+		if(card == null || card == Card.EMPTY)
 		{
 			return new Image(base + "back.png");
 		}
@@ -234,26 +235,31 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 				{
 					if(!empty && item != null)
 					{
-						TextField textFieldName = new TextField();					
+						TextField textFieldName = new TextField();
+						textFieldName.textProperty().addListener((a, b, c)->{
+							textFieldName.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
+						});
 						
 						Object currentItem =  getTableRow().getItem();
-						if(currentItem != null)
-						{
-							Player currentPlayer = (Player)currentItem;
-							textFieldName.setText(currentPlayer.getName());
 						
-							textFieldName.setOnKeyPressed(ke -> {
-							    if(ke.getCode().equals(KeyCode.ENTER))
-							    {
-							        currentPlayer.setName(textFieldName.getText().trim());
-							    }
-							});
-							setGraphic(textFieldName);
-						}
-						else
+						if(currentItem == null)
 						{
 							setGraphic(null);
-						}
+							return;
+						}						
+						
+						Player currentPlayer = (Player)currentItem;
+						textFieldName.setText(currentPlayer.getName());
+						textFieldName.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
+					
+						textFieldName.setOnKeyPressed(ke -> {
+						    if(ke.getCode().equals(KeyCode.ENTER))
+						    {
+						    	textFieldName.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
+						        currentPlayer.setName(textFieldName.getText().trim());
+						    }
+						});
+						setGraphic(textFieldName);						
 					}
 					else
 					{
@@ -269,6 +275,48 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 
 		TableColumn<Player, String> columnTwitchName = new TableColumn<>();
 		columnTwitchName.setCellValueFactory(new PropertyValueFactory<Player, String>("twitchName"));
+		columnTwitchName.setCellFactory(param -> {
+			TableCell<Player, String> cell = new TableCell<Player, String>()
+			{
+				@Override
+				public void updateItem(String item, boolean empty)
+				{
+					if(!empty && item != null)
+					{
+						TextField textFieldTwitchName = new TextField();
+						textFieldTwitchName.textProperty().addListener((a, b, c)->{
+							textFieldTwitchName.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
+						});
+						
+						Object currentItem =  getTableRow().getItem();
+						
+						if(currentItem == null)
+						{
+							setGraphic(null);
+							return;
+						}						
+						
+						Player currentPlayer = (Player)currentItem;
+						textFieldTwitchName.setText(currentPlayer.getTwitchName());
+						textFieldTwitchName.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
+					
+						textFieldTwitchName.setOnKeyPressed(ke -> {
+						    if(ke.getCode().equals(KeyCode.ENTER))
+						    {
+						    	textFieldTwitchName.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
+						        currentPlayer.setTwitchName(textFieldTwitchName.getText().trim());
+						    }
+						});
+						setGraphic(textFieldTwitchName);						
+					}
+					else
+					{
+						setGraphic(null);
+					}
+				}
+			};
+			return cell;
+		});
 		columnTwitchName.setStyle("-fx-alignment: CENTER;");
 		columnTwitchName.setText("Twitch Name");
 		tableView.getColumns().add(columnTwitchName);
@@ -341,11 +389,72 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 
 		TableColumn<Player, Integer> columnChips = new TableColumn<>();
 		columnChips.setCellValueFactory(new PropertyValueFactory<Player, Integer>("chips"));
+		columnChips.setCellFactory(param -> {
+			TableCell<Player, Integer> cell = new TableCell<Player, Integer>()
+			{
+				@Override
+				public void updateItem(Integer item, boolean empty)
+				{
+					if(!empty && item != null)
+					{					
+						TextField textFieldChips = new TextField();
+						textFieldChips.textProperty().addListener((a, b, c)->{
+							textFieldChips.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
+						});
+						textFieldChips.setTextFormatter(new TextFormatter<>(c -> {
+							if(c.getControlNewText().isEmpty())
+							{
+								return c;
+							}
+							if(c.getControlNewText().matches("[0-9]*"))
+							{
+								return c;
+							}
+							else
+							{
+								return null;
+							}
+						}));		
+						
+						Object currentItem =  getTableRow().getItem();
+						
+						if(currentItem == null)
+						{
+							setGraphic(null);
+							return;
+						}						
+						
+						Player currentPlayer = (Player)currentItem;
+						textFieldChips.setText(String.valueOf(currentPlayer.getChips()));
+						textFieldChips.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
+					
+						textFieldChips.setOnKeyPressed(ke -> {
+						    if(ke.getCode().equals(KeyCode.ENTER))
+						    {
+						    	textFieldChips.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
+						        currentPlayer.setChips(Integer.parseInt(textFieldChips.getText().trim()));
+						    }
+						});
+						setGraphic(textFieldChips);						
+					}
+					else
+					{
+						setGraphic(null);
+					}
+				}
+			};
+			return cell;
+		});
 		columnChips.setStyle("-fx-alignment: CENTER;");
 		columnChips.setText("Chips");
 		tableView.getColumns().add(columnChips);
 
-		// TODO column win probability
+		//TODO 
+//		TableColumn<Player, Integer> columnWinProbability = new TableColumn<>();
+//		columnWinProbability.setCellValueFactory(new PropertyValueFactory<Player, Integer>(""));
+//		columnWinProbability.setStyle("-fx-alignment: CENTER;");
+//		columnWinProbability.setText("Win %");
+//		tableView.getColumns().add(columnWinProbability);
 
 		TableColumn<Player, PlayerState> columnStatus = new TableColumn<>();
 		columnStatus.setCellValueFactory(new PropertyValueFactory<Player, PlayerState>("playerState"));
@@ -357,26 +466,29 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 				{
 					if(!empty)
 					{
+						Label labelStatus = new Label(item.getName());
+						labelStatus.setPadding(new Insets(5, 10, 5, 10));						
+						
 						switch(item)
 						{
 							case ACTIVE:
-								this.setStyle("-fx-background-color: #48DB5E; -fx-text-fill: black; -fx-font-weight: bold; -fx-alignment: center");
+								labelStatus.setStyle("-fx-background-color: #48DB5E; -fx-text-fill: black; -fx-font-weight: bold; -fx-alignment: center;");
 								break;
 							case OUT_OF_ROUND:
-								this.setStyle("-fx-background-color: orange; -fx-text-fill: black; -fx-font-weight: bold; -fx-alignment: center");
+								labelStatus.setStyle("-fx-background-color: orange; -fx-text-fill: black; -fx-font-weight: bold; -fx-alignment: center");
 								break;
 							case OUT_OF_GAME:
-								this.setStyle("-fx-background-color: #CC0000; -fx-text-fill: white; -fx-font-weight: bold; -fx-alignment: center");
+								labelStatus.setStyle("-fx-background-color: #CC0000; -fx-text-fill: white; -fx-font-weight: bold; -fx-alignment: center");
 								break;
 							default:
 								break;
 						}
-
-						setText(item.getName());
+						
+						setGraphic(labelStatus);
 					}
 					else
 					{
-						setText(null);
+						setGraphic(null);
 					}
 				}
 			};
