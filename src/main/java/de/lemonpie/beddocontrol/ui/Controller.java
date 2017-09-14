@@ -2,16 +2,13 @@ package de.lemonpie.beddocontrol.ui;
 
 import java.io.IOException;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 import de.lemonpie.beddocontrol.listener.BoardListener;
-import de.lemonpie.beddocontrol.model.Board;
-import de.lemonpie.beddocontrol.model.DataAccessable;
-import de.lemonpie.beddocontrol.model.Player;
-import de.lemonpie.beddocontrol.model.PlayerState;
+import de.lemonpie.beddocontrol.listener.PlayerListListener;
+import de.lemonpie.beddocontrol.model.*;
 import de.lemonpie.beddocontrol.model.card.Card;
 import de.lemonpie.beddocontrol.model.listener.PlayerListener;
 import de.lemonpie.beddocontrol.network.ControlSocket;
@@ -19,6 +16,7 @@ import de.lemonpie.beddocontrol.network.ControlSocketDelegate;
 import de.lemonpie.beddocontrol.network.command.read.CardReadCommand;
 import de.lemonpie.beddocontrol.network.command.read.PlayerOpReadCommand;
 import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
+import de.lemonpie.beddocontrol.network.listener.PlayerListenerImpl;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -53,7 +51,7 @@ import logger.Logger;
 import tools.AlertGenerator;
 import tools.Worker;
 
-public class Controller implements DataAccessable, BoardListener, PlayerListener
+public class Controller implements DataAccessable, BoardListener, PlayerListener, PlayerListListener
 {
 	@FXML private TableView<Player> tableView;
 	@FXML private Button buttonAdd;
@@ -67,7 +65,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	private Image icon;
 	private ResourceBundle bundle;
 	private Board board;
-	private ArrayList<Player> players;
+	private PlayerList players;
 	private ControlSocket socket;
 	private Timeline timeline;
 	private int remainingSeconds;
@@ -84,7 +82,9 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		this.icon = icon;
 		this.bundle = bundle;
 		board = new Board();
-		players = new ArrayList<>();
+
+		players = new PlayerList();
+		players.addListener(this);
 		
 		modalText = new SimpleStringProperty();
 		
@@ -436,7 +436,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	{
 		tableView.getItems().clear();
 
-		ObservableList<Player> objectsForTable = FXCollections.observableArrayList(players);
+		ObservableList<Player> objectsForTable = FXCollections.observableArrayList(players.getPlayers());
 		tableView.setItems(objectsForTable);
 	}
 
@@ -498,19 +498,31 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	@Override
 	public List<Player> getPlayers()
 	{
-		return players;
+		return players.getPlayers();
 	}
 
+	/*
+	Method from DataAccessable and PlayerListListener
+	Add Player to List & add Listener to Player
+	 */
 	@Override
 	public void addPlayer(Player player)
 	{
 		players.add(player);
+		player.addListener(new PlayerListenerImpl(socket));
+
+		// TODO Handle new player in ui here
+	}
+
+	@Override
+	public void removePlayer(Player player) {
+		players.remove(player);
 	}
 
 	@Override
 	public Optional<Player> getPlayer(int id)
 	{
-		return players.stream().filter(r -> r.getId() == id).findFirst();
+		return players.getPlayers(id);
 	}
 
 	@Override

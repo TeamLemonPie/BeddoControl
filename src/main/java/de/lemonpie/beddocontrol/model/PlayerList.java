@@ -15,13 +15,12 @@ public class PlayerList implements Iterable<Player> {
         this.listeners = new LinkedList<>();
     }
 
-    public Player add() {
-        Player player = new Player(playerIndex++);
+    public Player add(Player player) {
         fireListener(l -> l.addPlayer(player));
-        return data.add(player) == true ? player : null;
+        return data.add(player) ? player : null;
     }
 
-    public Optional<Player> getPlayer(int id) {
+    public Optional<Player> getPlayers(int id) {
         return data.stream().filter(r -> r.getId() == id).findFirst();
     }
 
@@ -30,6 +29,10 @@ public class PlayerList implements Iterable<Player> {
             fireListener(l -> l.removePlayer((Player) o));
         }
         return data.remove(o);
+    }
+
+    public List<Player> getPlayers() {
+        return data;
     }
 
     public void addListener(PlayerListListener playerListener) {
