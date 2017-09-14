@@ -67,6 +67,19 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	@FXML private Button buttonPauseReset;
 	@FXML private Label labelStatus;
 
+	@FXML private ImageView imageViewBoard1;
+	@FXML private ImageView imageViewBoard2;
+	@FXML private ImageView imageViewBoard3;
+	@FXML private ImageView imageViewBoard4;
+	@FXML private ImageView imageViewBoard5;
+	@FXML private TextField textFieldBoard1;
+	@FXML private TextField textFieldBoard2;
+	@FXML private TextField textFieldBoard3;
+	@FXML private TextField textFieldBoard4;
+	@FXML private TextField textFieldBoard5;
+
+	@FXML private Button buttonClearBoard;
+
 	private Stage stage;
 	private Image icon;
 	private ResourceBundle bundle;
@@ -77,7 +90,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	private int remainingSeconds;
 	private Stage modalStage;
 	public static StringProperty modalText;
-	
+
 	// TODO externalize in config file
 	private final String HOST = "localhost";
 	private final int PORT = 9998;
@@ -91,11 +104,11 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 
 		players = new PlayerList();
 		players.addListener(this);
-		
+
 		modalText = new SimpleStringProperty();
-		
+
 		labelStatus.setText("Connecting...");
-		labelStatus.setStyle("-fx-text-fill: orange");	
+		labelStatus.setStyle("-fx-text-fill: orange");
 
 		textFieldPause.setTextFormatter(new TextFormatter<>(c -> {
 			if(c.getControlNewText().isEmpty())
@@ -112,28 +125,29 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 				return null;
 			}
 		}));
-		
+
 		initTableView();
-		
-		stage.setOnCloseRequest((event)->{
+		initBoard();
+
+		stage.setOnCloseRequest((event) -> {
 			Worker.shutdown();
 			System.exit(0);
 		});
-		
-		Platform.runLater(()->{
+
+		Platform.runLater(() -> {
 			initConnection();
 			connect();
 		});
 	}
-	
+
 	private void connect()
 	{
 		modalStage = showModal("Trying to connect to " + HOST + ":" + PORT, "Connect to server...", stage, icon);
-		
-		Worker.runLater(()->{
+
+		Worker.runLater(() -> {
 			if(socket.connect())
 			{
-				Platform.runLater(()->{
+				Platform.runLater(() -> {
 					if(modalStage != null)
 						modalStage.close();
 					refreshTableView();
@@ -142,7 +156,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 			else
 			{
 				Logger.debug("Couldn't connect.");
-				Platform.runLater(()->{
+				Platform.runLater(() -> {
 					Alert alert = new Alert(AlertType.ERROR);
 					alert.setTitle("Error");
 					alert.setHeaderText("");
@@ -150,28 +164,28 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 					Stage dialogStage = (Stage)alert.getDialogPane().getScene().getWindow();
 					dialogStage.getIcons().add(icon);
 					dialogStage.initOwner(stage);
-					
-					ButtonType buttonTypeOne = new ButtonType("Retry");				
+
+					ButtonType buttonTypeOne = new ButtonType("Retry");
 					alert.getButtonTypes().setAll(buttonTypeOne);
 					Optional<ButtonType> result = alert.showAndWait();
-					if (result.get() == buttonTypeOne)
+					if(result.get() == buttonTypeOne)
 					{
-					    connect();
+						connect();
 					}
 				});
 			}
 		});
 	}
-	
+
 	private void initConnection()
-	{		
+	{
 		socket = new ControlSocket(HOST, PORT, new ControlSocketDelegate()
 		{
 			@Override
 			public void onConnectionEstablished()
 			{
 				Logger.debug("Connection established.");
-				Platform.runLater(()->{
+				Platform.runLater(() -> {
 					labelStatus.setText("Connected");
 					labelStatus.setStyle("-fx-text-fill: #48DB5E");
 				});
@@ -181,7 +195,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 			public void onConnectionClosed()
 			{
 				Logger.debug("Connection closed.");
-				Platform.runLater(()->{
+				Platform.runLater(() -> {
 					labelStatus.setText("Disconnected");
 					labelStatus.setStyle("-fx-text-fill: #CC0000");
 					connect();
@@ -226,7 +240,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		// TODO column reader ID
 
 		TableColumn<Player, String> columnName = new TableColumn<>();
-		columnName.setCellValueFactory(new PropertyValueFactory<Player, String>("name"));		
+		columnName.setCellValueFactory(new PropertyValueFactory<Player, String>("name"));
 		columnName.setCellFactory(param -> {
 			TableCell<Player, String> cell = new TableCell<Player, String>()
 			{
@@ -236,30 +250,30 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 					if(!empty && item != null)
 					{
 						TextField textFieldName = new TextField();
-						textFieldName.textProperty().addListener((a, b, c)->{
+						textFieldName.textProperty().addListener((a, b, c) -> {
 							textFieldName.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
 						});
-						
-						Object currentItem =  getTableRow().getItem();
-						
+
+						Object currentItem = getTableRow().getItem();
+
 						if(currentItem == null)
 						{
 							setGraphic(null);
 							return;
-						}						
-						
+						}
+
 						Player currentPlayer = (Player)currentItem;
 						textFieldName.setText(currentPlayer.getName());
 						textFieldName.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
-					
+
 						textFieldName.setOnKeyPressed(ke -> {
-						    if(ke.getCode().equals(KeyCode.ENTER))
-						    {
-						    	textFieldName.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
-						        currentPlayer.setName(textFieldName.getText().trim());
-						    }
+							if(ke.getCode().equals(KeyCode.ENTER))
+							{
+								textFieldName.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
+								currentPlayer.setName(textFieldName.getText().trim());
+							}
 						});
-						setGraphic(textFieldName);						
+						setGraphic(textFieldName);
 					}
 					else
 					{
@@ -284,30 +298,30 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 					if(!empty && item != null)
 					{
 						TextField textFieldTwitchName = new TextField();
-						textFieldTwitchName.textProperty().addListener((a, b, c)->{
+						textFieldTwitchName.textProperty().addListener((a, b, c) -> {
 							textFieldTwitchName.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
 						});
-						
-						Object currentItem =  getTableRow().getItem();
-						
+
+						Object currentItem = getTableRow().getItem();
+
 						if(currentItem == null)
 						{
 							setGraphic(null);
 							return;
-						}						
-						
+						}
+
 						Player currentPlayer = (Player)currentItem;
 						textFieldTwitchName.setText(currentPlayer.getTwitchName());
 						textFieldTwitchName.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
-					
+
 						textFieldTwitchName.setOnKeyPressed(ke -> {
-						    if(ke.getCode().equals(KeyCode.ENTER))
-						    {
-						    	textFieldTwitchName.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
-						        currentPlayer.setTwitchName(textFieldTwitchName.getText().trim());
-						    }
+							if(ke.getCode().equals(KeyCode.ENTER))
+							{
+								textFieldTwitchName.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
+								currentPlayer.setTwitchName(textFieldTwitchName.getText().trim());
+							}
 						});
-						setGraphic(textFieldTwitchName);						
+						setGraphic(textFieldTwitchName);
 					}
 					else
 					{
@@ -396,9 +410,9 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 				public void updateItem(Integer item, boolean empty)
 				{
 					if(!empty && item != null)
-					{					
+					{
 						TextField textFieldChips = new TextField();
-						textFieldChips.textProperty().addListener((a, b, c)->{
+						textFieldChips.textProperty().addListener((a, b, c) -> {
 							textFieldChips.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
 						});
 						textFieldChips.setTextFormatter(new TextFormatter<>(c -> {
@@ -414,28 +428,28 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 							{
 								return null;
 							}
-						}));		
-						
-						Object currentItem =  getTableRow().getItem();
-						
+						}));
+
+						Object currentItem = getTableRow().getItem();
+
 						if(currentItem == null)
 						{
 							setGraphic(null);
 							return;
-						}						
-						
+						}
+
 						Player currentPlayer = (Player)currentItem;
 						textFieldChips.setText(String.valueOf(currentPlayer.getChips()));
 						textFieldChips.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
-					
+
 						textFieldChips.setOnKeyPressed(ke -> {
-						    if(ke.getCode().equals(KeyCode.ENTER))
-						    {
-						    	textFieldChips.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
-						        currentPlayer.setChips(Integer.parseInt(textFieldChips.getText().trim()));
-						    }
+							if(ke.getCode().equals(KeyCode.ENTER))
+							{
+								textFieldChips.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
+								currentPlayer.setChips(Integer.parseInt(textFieldChips.getText().trim()));
+							}
 						});
-						setGraphic(textFieldChips);						
+						setGraphic(textFieldChips);
 					}
 					else
 					{
@@ -449,12 +463,12 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		columnChips.setText("Chips");
 		tableView.getColumns().add(columnChips);
 
-		//TODO 
-//		TableColumn<Player, Integer> columnWinProbability = new TableColumn<>();
-//		columnWinProbability.setCellValueFactory(new PropertyValueFactory<Player, Integer>(""));
-//		columnWinProbability.setStyle("-fx-alignment: CENTER;");
-//		columnWinProbability.setText("Win %");
-//		tableView.getColumns().add(columnWinProbability);
+		// TODO
+		// TableColumn<Player, Integer> columnWinProbability = new TableColumn<>();
+		// columnWinProbability.setCellValueFactory(new PropertyValueFactory<Player, Integer>(""));
+		// columnWinProbability.setStyle("-fx-alignment: CENTER;");
+		// columnWinProbability.setText("Win %");
+		// tableView.getColumns().add(columnWinProbability);
 
 		TableColumn<Player, PlayerState> columnStatus = new TableColumn<>();
 		columnStatus.setCellValueFactory(new PropertyValueFactory<Player, PlayerState>("playerState"));
@@ -467,8 +481,8 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 					if(!empty)
 					{
 						Label labelStatus = new Label(item.getName());
-						labelStatus.setPadding(new Insets(5, 10, 5, 10));						
-						
+						labelStatus.setPadding(new Insets(5, 10, 5, 10));
+
 						switch(item)
 						{
 							case ACTIVE:
@@ -483,7 +497,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 							default:
 								break;
 						}
-						
+
 						setGraphic(labelStatus);
 					}
 					else
@@ -555,6 +569,48 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		ObservableList<Player> objectsForTable = FXCollections.observableArrayList(players.getPlayers());
 		tableView.setItems(objectsForTable);
 	}
+	
+	private void initBoard()
+	{		
+		initTextFieldBoard(textFieldBoard1, 0);
+		initTextFieldBoard(textFieldBoard2, 1);
+		initTextFieldBoard(textFieldBoard3, 2);
+		initTextFieldBoard(textFieldBoard4, 3);
+		initTextFieldBoard(textFieldBoard5, 4);		
+	}
+	
+	private void initTextFieldBoard(TextField textField, int position)
+	{
+		textField.textProperty().addListener((a, b, c) -> {
+			textField.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
+		});
+		
+		//TODO prefill with data from server
+		textField.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
+		
+		textField.setTextFormatter(new TextFormatter<>(c -> {
+			if(c.getControlNewText().isEmpty())
+			{
+				return c;
+			}
+			if(c.getControlNewText().matches("[0-9]*"))
+			{
+				return c;
+			}
+			else
+			{
+				return null;
+			}
+		}));
+
+		textField.setOnKeyPressed(ke -> {
+			if(ke.getCode().equals(KeyCode.ENTER))
+			{
+				textField.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
+				//TODO send to server				
+			}
+		});
+	}
 
 	@FXML
 	public void newPlayer()
@@ -582,30 +638,37 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 
 		// TODO send to server
 
-		resetPause();		
+		resetPause();
 		remainingSeconds = Integer.parseInt(pauseTime) * 60;
 		labelPause.setText(getMinuteStringFromSeconds(remainingSeconds));
-		
+
 		timeline = new Timeline();
 		timeline.setCycleCount(Timeline.INDEFINITE);
-		timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), (event)->{			
-			remainingSeconds--;			
+		timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), (event) -> {
+			remainingSeconds--;
 			labelPause.setText(getMinuteStringFromSeconds(remainingSeconds));
 			if(remainingSeconds <= 0)
 			{
 				timeline.stop();
 			}
 		}));
-			
+
 		timeline.playFromStart();
 	}
 	
+	@FXML
+	public void clearBoard()
+	{
+		//TODO is not send to server
+		board.clearCards();
+	}
+
 	private String getMinuteStringFromSeconds(int seconds)
 	{
 		int minutes = seconds / 60;
 		int secondsRest = seconds % 60;
-		
-		return String.format("%02d", minutes) + ":"  + String.format("%02d", secondsRest);
+
+		return String.format("%02d", minutes) + ":" + String.format("%02d", secondsRest);
 	}
 
 	@FXML
@@ -626,20 +689,21 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 
 	@Override
 	public void addPlayer(Player player)
-	{		
-		players.add(player);
-		
-		refreshTableView();
-	}
-	
-	@Override
-	public void addPlayerToList(Player player)
 	{
-		player.addListener(new PlayerListenerImpl(socket));				
+		players.add(player);
+
+		refreshTableView();
 	}
 
 	@Override
-	public void removePlayerFromList(Player player) {
+	public void addPlayerToList(Player player)
+	{
+		player.addListener(new PlayerListenerImpl(socket));
+	}
+
+	@Override
+	public void removePlayerFromList(Player player)
+	{
 		players.remove(player);
 	}
 
@@ -683,15 +747,36 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	{
 		tableView.refresh();
 	}
-
-	// Board
+	
 	@Override
 	public void cardDidChangeAtIndex(int index, Card card)
 	{
-		// TODO Auto-generated method stub
-
+		if(index == 0)
+		{
+			imageViewBoard1.setImage(getImageForCard(card));
+		}
+		
+		if(index == 1)
+		{
+			imageViewBoard2.setImage(getImageForCard(card));
+		}
+		
+		if(index == 2)
+		{
+			imageViewBoard3.setImage(getImageForCard(card));
+		}
+		
+		if(index == 3)
+		{
+			imageViewBoard4.setImage(getImageForCard(card));
+		}
+		
+		if(index == 4)
+		{
+			imageViewBoard5.setImage(getImageForCard(card));
+		}
 	}
-	
+
 	public Stage showModal(String title, String message, Stage owner, Image icon)
 	{
 		try
