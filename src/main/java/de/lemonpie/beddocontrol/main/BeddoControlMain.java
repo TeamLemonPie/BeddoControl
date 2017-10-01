@@ -1,9 +1,5 @@
 package de.lemonpie.beddocontrol.main;
 
-import java.io.File;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import de.lemonpie.beddocontrol.ui.Controller;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -15,9 +11,13 @@ import logger.FileOutputMode;
 import logger.Logger;
 import tools.PathUtils;
 
+import java.io.File;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 public class BeddoControlMain extends Application
 {
-	private static final ResourceBundle bundle = ResourceBundle.getBundle("de/lemonpie/beddocontrol/resources/", Locale.GERMANY);	
+	private static final ResourceBundle bundle = ResourceBundle.getBundle("de/lemonpie/beddocontrol/", Locale.GERMANY);
 
 	public static void main(String[] args)
 	{
@@ -34,7 +34,7 @@ public class BeddoControlMain extends Application
 
 			Scene scene = new Scene(root, 800, 600);
 
-			Image icon = new Image("/de/lemonpie/beddocontrol/resources/icon.png");
+			Image icon = new Image("/de/lemonpie/beddocontrol/icon.png");
 			((Controller)loader.getController()).init(primaryStage, icon, bundle);
 			
 			primaryStage.getIcons().add(icon);

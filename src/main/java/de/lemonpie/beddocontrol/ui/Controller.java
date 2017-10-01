@@ -203,7 +203,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 
 	private Image getImageForCard(Card card)
 	{
-		String base = "/de/lemonpie/beddocontrol/resources/cards/";
+		String base = "/de/lemonpie/beddocontrol/cards/";
 		if(card == null || card == Card.EMPTY)
 		{
 			return new Image(base + "back.png");
