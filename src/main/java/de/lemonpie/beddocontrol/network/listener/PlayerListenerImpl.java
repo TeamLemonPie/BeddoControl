@@ -1,10 +1,12 @@
 package de.lemonpie.beddocontrol.network.listener;
 
 import de.lemonpie.beddocontrol.model.Player;
+import de.lemonpie.beddocontrol.model.PlayerState;
 import de.lemonpie.beddocontrol.model.card.Card;
 import de.lemonpie.beddocontrol.model.listener.PlayerListener;
 import de.lemonpie.beddocontrol.network.ControlSocket;
 import de.lemonpie.beddocontrol.network.command.send.PlayerNameSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.PlayerStateSendCommand;
 
 import java.net.SocketException;
 
@@ -25,6 +27,16 @@ public class PlayerListenerImpl implements PlayerListener {
             e.printStackTrace();
         }
     }
+
+	@Override
+	public void stateDidChange(Player player, PlayerState state) {
+		PlayerStateSendCommand cmd = new PlayerStateSendCommand(player.getId(), state);
+		try {
+			socket.write(cmd);
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
+	}
 
     @Override
     public void twitchNameDidChange(Player player, String twitchName) {
