@@ -26,7 +26,7 @@ public class Player {
         listeners = new LinkedList<>();
 
         this.id = id;
-        this.readerId = -1;
+        this.readerId = -2;
         this.name = "[Player]";
         this.twitchName = "[TwitchName]";
         this.playerState = PlayerState.ACTIVE;
@@ -44,6 +44,7 @@ public class Player {
 	public void setReaderId(int readerId)
 	{
 		this.readerId = readerId;
+        fireListener(listener -> listener.readerIdDidChange(this, readerId));
 	}
 
 	public String getName() {
@@ -99,6 +100,7 @@ public class Player {
 	public void setPlayerState(PlayerState playerState)
 	{
 		this.playerState = playerState;
+		fireListener(listener -> listener.stateDidChange(this, playerState));
 	}
 
 	public void addListener(PlayerListener playerListener) {

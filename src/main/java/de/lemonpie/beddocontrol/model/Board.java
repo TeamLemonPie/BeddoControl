@@ -13,27 +13,33 @@ public class Board {
 
 	private List<BoardListener> listeners;
 	private Card[] cards;
+	private int[] readerIds;
 
 	public Board() {
 		listeners = new LinkedList<>();
 		cards = new Card[5];
+		readerIds = new int[5];
 
 		Arrays.fill(cards, Card.EMPTY);
+		Arrays.fill(readerIds, -2);
 	}
 
 	public Card getCard(int index) throws IndexOutOfBoundsException {
-		if (index < 0 || index >= cards.length) {
-			throw new IndexOutOfBoundsException("Index: " + index + " size: " + cards.length);
-		}
 		return cards[index];
 	}
 
 	public void setCard(int index, Card card) throws IndexOutOfBoundsException {
-		if (index < 0 || index >= cards.length) {
-			throw new IndexOutOfBoundsException("Index: " + index + " size: " + cards.length);
-		}
 		cards[index] = card;
 		fireListener(listener -> listener.cardDidChangeAtIndex(index, card));
+	}
+	
+	public int getReaderId(int index) throws IndexOutOfBoundsException {		
+		return readerIds[index];
+	}
+	
+	public void setReaderId(int index, int readerId) throws IndexOutOfBoundsException {
+		readerIds[index] = readerId;
+		fireListener(listener -> listener.boardReaderIdDidChange(index, readerId));
 	}
 
 	public void addListener(BoardListener boardListener) {

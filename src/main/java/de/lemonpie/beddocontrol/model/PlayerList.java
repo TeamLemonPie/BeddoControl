@@ -32,10 +32,11 @@ public class PlayerList implements Iterable<Player> {
     }
 
     public boolean remove(Object o) {
+    	boolean success = data.remove(o);
         if (o instanceof Player) {
             fireListener(l -> l.removePlayerFromList((Player) o));
         }
-        return data.remove(o);
+        return success;
     }
 
     public List<Player> getPlayers() {

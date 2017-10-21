@@ -20,4 +20,6 @@ public interface PlayerListener {
     void cardDidChangeAtIndex(Player player, int index, Card card);
 
     void chipsDidChange(Player player, int chips);
+    
+    void readerIdDidChange(Player player, int readerId);
 }

@@ -11,7 +11,9 @@ import de.lemonpie.beddocontrol.network.command.read.CardReadCommand;
 import de.lemonpie.beddocontrol.network.command.read.DataReadCommand;
 import de.lemonpie.beddocontrol.network.command.read.PlayerOpReadCommand;
 import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.DataSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.PlayerOpSendCommand;
+import de.lemonpie.beddocontrol.network.listener.BoardListenerImpl;
 import de.lemonpie.beddocontrol.network.listener.PlayerListenerImpl;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -90,6 +92,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		this.icon = icon;
 		this.bundle = bundle;
 		board = new Board();
+		board.addListener(this);
 
 		players = new PlayerList();
 		players.addListener(this);
@@ -126,6 +129,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		Platform.runLater(() -> {
 			initConnection();
 			connect();
+			board.addListener(new BoardListenerImpl(socket));
 		});
 	}
 
@@ -136,11 +140,20 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		Worker.runLater(() -> {
 			if(socket.connect())
 			{
-				Platform.runLater(() -> {
-					if(modalStage != null)
-						modalStage.close();
-					refreshTableView();
-				});
+				try
+				{
+					socket.write(new DataSendCommand());
+					Platform.runLater(() -> {
+						if(modalStage != null)
+							modalStage.close();
+						refreshTableView();
+					});
+				}
+				catch(SocketException e)
+				{
+					// ERRORHANDLING
+					e.printStackTrace();
+				}
 			}
 			else
 			{
@@ -227,7 +240,67 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		columnID.setText("Nr.");
 		tableView.getColumns().add(columnID);
 
-		// TODO column reader ID
+		TableColumn<Player, Integer> columnReader = new TableColumn<>();
+		columnReader.setCellValueFactory(new PropertyValueFactory<Player, Integer>("readerId"));
+		columnReader.setCellFactory(param -> {
+			TableCell<Player, Integer> cell = new TableCell<Player, Integer>()
+			{
+				@Override
+				public void updateItem(Integer item, boolean empty)
+				{
+					if(!empty && item != null)
+					{
+						TextField textFieldReader = new TextField();
+						textFieldReader.textProperty().addListener((a, b, c) -> {
+							textFieldReader.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
+						});
+						textFieldReader.setTextFormatter(new TextFormatter<>(c -> {
+							if(c.getControlNewText().isEmpty())
+							{
+								return c;
+							}
+							if(c.getControlNewText().matches("[0-9]*"))
+							{
+								return c;
+							}
+							else
+							{
+								return null;
+							}
+						}));
+
+						Object currentItem = getTableRow().getItem();
+
+						if(currentItem == null)
+						{
+							setGraphic(null);
+							return;
+						}
+
+						Player currentPlayer = (Player)currentItem;
+						textFieldReader.setText(String.valueOf(currentPlayer.getReaderId()));
+						textFieldReader.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
+
+						textFieldReader.setOnKeyPressed(ke -> {
+							if(ke.getCode().equals(KeyCode.ENTER))
+							{
+								textFieldReader.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
+								currentPlayer.setReaderId(Integer.parseInt(textFieldReader.getText().trim()));
+							}
+						});
+						setGraphic(textFieldReader);
+					}
+					else
+					{
+						setGraphic(null);
+					}
+				}
+			};
+			return cell;
+		});
+		columnReader.setStyle("-fx-alignment: CENTER;");
+		columnReader.setText("Reader ID");
+		tableView.getColumns().add(columnReader);
 
 		TableColumn<Player, String> columnName = new TableColumn<>();
 		columnName.setCellValueFactory(new PropertyValueFactory<Player, String>("name"));
@@ -350,7 +423,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 							imageViewCardLeft.fitWidthProperty().bind(columnCards.widthProperty().divide(4));
 							hboxCards.getChildren().add(imageViewCardLeft);
 
-							Image imageCardRight = getImageForCard(currentPlayer.getCardLeft());
+							Image imageCardRight = getImageForCard(currentPlayer.getCardRight());
 							ImageView imageViewCardRight = new ImageView(imageCardRight);
 							imageViewCardRight.setFitHeight(38);
 							imageViewCardRight.fitWidthProperty().bind(columnCards.widthProperty().divide(4));
@@ -367,8 +440,6 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 									Logger.error(e1);
 									AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), icon, stage, null, false);
 								}
-
-								tableView.refresh();
 							});
 							hboxCards.getChildren().add(buttonClear);
 
@@ -537,6 +608,22 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 						});
 						hboxButtons.getChildren().add(buttonOutOfGame);
 
+						Button buttonDelete = new Button("Delete");
+						buttonDelete.setOnAction((e) -> {
+							Player player = ((Player)getTableRow().getItem());
+							Alert alert = new Alert(AlertType.CONFIRMATION);
+							alert.setTitle("Spieler " + player.getId() + " löschen");
+							alert.setHeaderText("");
+							alert.setContentText("Do you really want to delete player " + player.getId() + "?");
+
+							Optional<ButtonType> result = alert.showAndWait();
+							if(result.get() == ButtonType.OK)
+							{
+								players.remove(player);
+							}
+						});
+						hboxButtons.getChildren().add(buttonDelete);
+
 						setGraphic(hboxButtons);
 					}
 					else
@@ -559,25 +646,25 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		ObservableList<Player> objectsForTable = FXCollections.observableArrayList(players.getPlayers());
 		tableView.setItems(objectsForTable);
 	}
-	
+
 	private void initBoard()
-	{		
+	{
 		initTextFieldBoard(textFieldBoard1, 0);
 		initTextFieldBoard(textFieldBoard2, 1);
 		initTextFieldBoard(textFieldBoard3, 2);
 		initTextFieldBoard(textFieldBoard4, 3);
-		initTextFieldBoard(textFieldBoard5, 4);		
+		initTextFieldBoard(textFieldBoard5, 4);
 	}
-	
+
 	private void initTextFieldBoard(TextField textField, int position)
 	{
 		textField.textProperty().addListener((a, b, c) -> {
 			textField.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
 		});
-		
-		//TODO prefill with data from server
+
+		// TODO prefill with data from server
 		textField.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
-		
+
 		textField.setTextFormatter(new TextFormatter<>(c -> {
 			if(c.getControlNewText().isEmpty())
 			{
@@ -597,7 +684,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 			if(ke.getCode().equals(KeyCode.ENTER))
 			{
 				textField.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
-				//TODO send to server				
+				board.setReaderId(position, Integer.parseInt(textField.getText()));
 			}
 		});
 	}
@@ -645,12 +732,23 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 
 		timeline.playFromStart();
 	}
-	
+
 	@FXML
 	public void clearBoard()
 	{
-		//TODO is not send to server
 		board.clearCards();
+		for(int i = 0; i < 5; i++)
+		{
+			try
+			{
+				socket.write(new ClearSendCommand(board.getReaderId(i)));
+			}
+			catch(SocketException | IndexOutOfBoundsException e)
+			{
+				Logger.error(e);
+				AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
+			}
+		}
 	}
 
 	private String getMinuteStringFromSeconds(int seconds)
@@ -687,14 +785,24 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 
 	// PlayerList Listener
 	@Override
-	public void addPlayerToList(Player player) {
+	public void addPlayerToList(Player player)
+	{
 		player.addListener(new PlayerListenerImpl(socket));
 	}
 
 	@Override
 	public void removePlayerFromList(Player player)
 	{
-		players.remove(player);
+		try
+		{
+			socket.write(new PlayerOpSendCommand(player.getId()));
+			refreshTableView();
+		}
+		catch(SocketException e1)
+		{
+			Logger.error(e1);
+			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), icon, stage, null, false);
+		}
 	}
 
 	@Override
@@ -737,35 +845,76 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	{
 		tableView.refresh();
 	}
-	
+
+	@Override
+	public void stateDidChange(Player player, PlayerState state)
+	{
+		tableView.refresh();
+	}
+
+	@Override
+	public void readerIdDidChange(Player player, int readerId)
+	{
+		tableView.refresh();
+	}
+
 	@Override
 	public void cardDidChangeAtIndex(int index, Card card)
 	{
-		if(index == 0)
+		switch(index)
 		{
-			imageViewBoard1.setImage(getImageForCard(card));
-		}
-		
-		if(index == 1)
-		{
-			imageViewBoard2.setImage(getImageForCard(card));
-		}
-		
-		if(index == 2)
-		{
-			imageViewBoard3.setImage(getImageForCard(card));
-		}
-		
-		if(index == 3)
-		{
-			imageViewBoard4.setImage(getImageForCard(card));
-		}
-		
-		if(index == 4)
-		{
-			imageViewBoard5.setImage(getImageForCard(card));
+			case 0:
+				imageViewBoard1.setImage(getImageForCard(card));
+				break;
+			case 1:
+				imageViewBoard2.setImage(getImageForCard(card));
+				break;
+			case 2:
+				imageViewBoard3.setImage(getImageForCard(card));
+				break;
+			case 3:
+				imageViewBoard4.setImage(getImageForCard(card));
+				break;
+			case 4:
+				imageViewBoard5.setImage(getImageForCard(card));
+				break;
+			default:
+				break;
 		}
 	}
+
+	@Override
+	public void boardReaderIdDidChange(int index, int readerId)
+	{
+		String style = readerId == -2 ? "-fx-border-color: #CC0000; -fx-border-width: 2" : "-fx-border-color: #48DB5E; -fx-border-width: 2";
+		switch(index)
+		{
+			case 0:
+				textFieldBoard1.setText(String.valueOf(readerId));
+				textFieldBoard1.setStyle(style);
+				break;
+			case 1:
+				textFieldBoard2.setText(String.valueOf(readerId));
+				textFieldBoard2.setStyle(style);
+				break;
+			case 2:
+				textFieldBoard3.setText(String.valueOf(readerId));
+				textFieldBoard3.setStyle(style);
+				break;
+			case 3:
+				textFieldBoard4.setText(String.valueOf(readerId));
+				textFieldBoard4.setStyle(style);
+				break;
+			case 4:
+				textFieldBoard5.setText(String.valueOf(readerId));
+				textFieldBoard5.setStyle(style);
+				break;
+			default:
+				break;
+		}
+	}
+
+	// TODO board allow card set
 
 	public Stage showModal(String title, String message, Stage owner, Image icon)
 	{

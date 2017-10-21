@@ -5,8 +5,11 @@ import de.lemonpie.beddocontrol.model.PlayerState;
 import de.lemonpie.beddocontrol.model.card.Card;
 import de.lemonpie.beddocontrol.model.listener.PlayerListener;
 import de.lemonpie.beddocontrol.network.ControlSocket;
+import de.lemonpie.beddocontrol.network.command.send.PlayerChipsSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.PlayerNameSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.PlayerStateSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.ReaderSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.ReaderSendCommand.ReaderType;
 
 import java.net.SocketException;
 
@@ -54,6 +57,22 @@ public class PlayerListenerImpl implements PlayerListener {
 
     @Override
     public void chipsDidChange(Player player, int chips) {
-
+    	PlayerChipsSendCommand cmd = new PlayerChipsSendCommand(player.getId(), chips);
+        try {
+            socket.write(cmd);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
     }
+
+	@Override
+	public void readerIdDidChange(Player player, int readerId)
+	{
+		ReaderSendCommand cmd = new ReaderSendCommand(ReaderType.PLAYER, readerId, player.getId());
+        try {
+            socket.write(cmd);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+	}
 }
