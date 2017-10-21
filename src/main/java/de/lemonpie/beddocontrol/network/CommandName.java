@@ -13,7 +13,9 @@ public enum CommandName {
     PLAYER_CHIP("chip"),
     PLAYER_OP("player-op"),
 
-    DATA("data");
+	DATA("data"),
+
+	COUNTDOWN("countdown");
 
     private String name;
 

@@ -11,6 +11,7 @@ import de.lemonpie.beddocontrol.network.command.read.CardReadCommand;
 import de.lemonpie.beddocontrol.network.command.read.DataReadCommand;
 import de.lemonpie.beddocontrol.network.command.read.PlayerOpReadCommand;
 import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.CountdownSetSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.DataSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.PlayerOpSendCommand;
 import de.lemonpie.beddocontrol.network.listener.BoardListenerImpl;
@@ -714,9 +715,15 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		}
 
 		// TODO send to server
+		final int minutes = Integer.parseInt(pauseTime);
+		try {
+			socket.write(new CountdownSetSendCommand(minutes));
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
 
 		resetPause();
-		remainingSeconds = Integer.parseInt(pauseTime) * 60;
+		remainingSeconds = minutes * 60;
 		labelPause.setText(getMinuteStringFromSeconds(remainingSeconds));
 
 		timeline = new Timeline();
@@ -762,6 +769,11 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	@FXML
 	void resetPause()
 	{
+		try {
+			socket.write(new CountdownSetSendCommand(0));
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
 		if(timeline != null)
 		{
 			timeline.stop();
