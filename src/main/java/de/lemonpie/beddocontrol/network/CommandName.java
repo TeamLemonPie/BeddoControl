@@ -4,7 +4,8 @@ public enum CommandName {
 
     CLEAR("clear"),
     CARD("card"),
-    READER("reader"), // CONFIG
+	BOARD_CARD("board_card"),
+	READER("reader"), // CONFIG
 
     PLAYER_NAME("name"),
     PLAYER_TWITCH("twitchName"),
