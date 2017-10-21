@@ -1,5 +1,10 @@
 package de.lemonpie.beddocontrol.network;
 
+import com.google.gson.Gson;
+import de.lemonpie.beddocontrol.ui.Controller;
+import javafx.application.Platform;
+import logger.Logger;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,12 +14,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.google.gson.Gson;
-
-import de.lemonpie.beddocontrol.ui.Controller;
-import javafx.application.Platform;
-import logger.Logger;
 
 public class ControlSocket implements Runnable
 {
@@ -146,6 +145,10 @@ public class ControlSocket implements Runnable
 
 	public void write(String data) throws SocketException
 	{
+		if (isNewValueComingFromServer()) {
+			return;
+		}
+
 		if(!socket.isClosed())
 		{
 			outputStream.println(data); // AutoFlush is enable
@@ -161,6 +164,23 @@ public class ControlSocket implements Runnable
 				throw new SocketException("Socket closed");
 			}
 		}
+	}
+
+	public static boolean isNewValueComingFromServer() {
+		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		for (StackTraceElement element : stackTrace) {
+			try {
+				if (element.getClassName().startsWith("de.")) {
+					Class<?> clazz = Class.forName(element.getClassName());
+					if (Command.class.isAssignableFrom(clazz)) {
+						return true;
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
 	}
 
 	@Override
