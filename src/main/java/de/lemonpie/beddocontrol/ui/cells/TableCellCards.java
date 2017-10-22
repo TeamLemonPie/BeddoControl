@@ -7,6 +7,7 @@ import de.lemonpie.beddocontrol.model.Player;
 import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
 import de.lemonpie.beddocontrol.ui.Controller;
 import fontAwesome.FontIconType;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
@@ -43,17 +44,17 @@ public class TableCellCards extends TableCell<Player, Integer>
 
 				HBox hboxCards = new HBox();
 				hboxCards.setAlignment(Pos.CENTER);
-				hboxCards.setSpacing(10);
+				hboxCards.setSpacing(15);
 
 				Image imageCardLeft = controller.getImageForCard(currentPlayer.getCardLeft());
 				ImageView imageViewCardLeft = new ImageView(imageCardLeft);
-				imageViewCardLeft.setFitHeight(38);
+				imageViewCardLeft.setFitHeight(50);
 				imageViewCardLeft.fitWidthProperty().bind(columnCards.widthProperty().divide(4));
 				hboxCards.getChildren().add(imageViewCardLeft);
 
 				Image imageCardRight = controller.getImageForCard(currentPlayer.getCardRight());
 				ImageView imageViewCardRight = new ImageView(imageCardRight);
-				imageViewCardRight.setFitHeight(38);
+				imageViewCardRight.setFitHeight(50);
 				imageViewCardRight.fitWidthProperty().bind(columnCards.widthProperty().divide(4));
 				hboxCards.getChildren().add(imageViewCardRight);
 
@@ -73,6 +74,7 @@ public class TableCellCards extends TableCell<Player, Integer>
 					}
 				});
 				hboxCards.getChildren().add(buttonClear);
+				HBox.setMargin(buttonClear, new Insets(0, 0, 0, 10));
 
 				setGraphic(hboxCards);
 			}

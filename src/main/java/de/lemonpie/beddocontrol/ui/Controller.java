@@ -33,6 +33,7 @@ import de.lemonpie.beddocontrol.ui.cells.TableCellName;
 import de.lemonpie.beddocontrol.ui.cells.TableCellReaderID;
 import de.lemonpie.beddocontrol.ui.cells.TableCellStatus;
 import de.lemonpie.beddocontrol.ui.cells.TableCellTwitchName;
+import de.lemonpie.beddocontrol.ui.cells.TableCellWinProbability;
 import fontAwesome.FontIcon;
 import fontAwesome.FontIconType;
 import javafx.animation.KeyFrame;
@@ -291,7 +292,8 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		columnID.setCellValueFactory(new PropertyValueFactory<Player, Integer>("id"));
 		columnID.setStyle("-fx-alignment: CENTER;");
 		columnID.setText("Nr.");
-		tableView.getColumns().add(columnID);
+		columnID.prefWidthProperty().bind(tableView.widthProperty().multiply(0.05));
+		tableView.getColumns().add(columnID);		
 
 		TableColumn<Player, Integer> columnReader = new TableColumn<>();
 		columnReader.setCellValueFactory(new PropertyValueFactory<Player, Integer>("readerId"));
@@ -300,6 +302,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		});
 		columnReader.setStyle("-fx-alignment: CENTER;");
 		columnReader.setText("Reader ID");
+		columnReader.prefWidthProperty().bind(tableView.widthProperty().multiply(0.05));
 		tableView.getColumns().add(columnReader);
 
 		TableColumn<Player, String> columnName = new TableColumn<>();
@@ -309,6 +312,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		});
 		columnName.setStyle("-fx-alignment: CENTER;");
 		columnName.setText("Name");
+		columnName.prefWidthProperty().bind(tableView.widthProperty().multiply(0.15));
 		tableView.getColumns().add(columnName);
 
 		TableColumn<Player, String> columnTwitchName = new TableColumn<>();
@@ -319,6 +323,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		columnTwitchName.setStyle("-fx-alignment: CENTER;");
 		columnTwitchName.setText("Twitch Name");
 		tableView.getColumns().add(columnTwitchName);
+		columnTwitchName.prefWidthProperty().bind(tableView.widthProperty().multiply(0.15));
 
 		TableColumn<Player, Integer> columnCards = new TableColumn<>();
 		columnCards.setCellValueFactory(new PropertyValueFactory<Player, Integer>("id"));
@@ -327,6 +332,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		});
 		columnCards.setStyle("-fx-alignment: CENTER;");
 		columnCards.setText("Cards");
+		columnCards.prefWidthProperty().bind(tableView.widthProperty().multiply(0.20));
 		tableView.getColumns().add(columnCards);
 
 		TableColumn<Player, Integer> columnChips = new TableColumn<>();
@@ -336,14 +342,18 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		});
 		columnChips.setStyle("-fx-alignment: CENTER;");
 		columnChips.setText("Chips");
+		columnChips.prefWidthProperty().bind(tableView.widthProperty().multiply(0.10));
 		tableView.getColumns().add(columnChips);
-
-		// TODO
-		// TableColumn<Player, Integer> columnWinProbability = new TableColumn<>();
-		// columnWinProbability.setCellValueFactory(new PropertyValueFactory<Player, Integer>(""));
-		// columnWinProbability.setStyle("-fx-alignment: CENTER;");
-		// columnWinProbability.setText("Win %");
-		// tableView.getColumns().add(columnWinProbability);
+		
+		TableColumn<Player, Integer> columnWinProbability = new TableColumn<>();
+		columnWinProbability.setCellValueFactory(new PropertyValueFactory<Player, Integer>("id"));
+		columnWinProbability.setCellFactory(param -> {
+			return new TableCellWinProbability();
+		});
+		columnWinProbability.setStyle("-fx-alignment: CENTER;");
+		columnWinProbability.setText("Win %");
+		columnWinProbability.prefWidthProperty().bind(tableView.widthProperty().multiply(0.05));
+		tableView.getColumns().add(columnWinProbability);	
 
 		TableColumn<Player, PlayerState> columnStatus = new TableColumn<>();
 		columnStatus.setCellValueFactory(new PropertyValueFactory<Player, PlayerState>("playerState"));
@@ -352,6 +362,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		});
 		columnStatus.setStyle("-fx-alignment: CENTER;");
 		columnStatus.setText("Status");
+		columnStatus.prefWidthProperty().bind(tableView.widthProperty().multiply(0.10));
 		tableView.getColumns().add(columnStatus);
 
 		TableColumn<Player, PlayerState> columnButtons = new TableColumn<>();
@@ -361,6 +372,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		});
 		columnButtons.setStyle("-fx-alignment: CENTER;");
 		columnButtons.setText("Actions");
+		columnButtons.prefWidthProperty().bind(tableView.widthProperty().multiply(0.15));
 		tableView.getColumns().add(columnButtons);
 	}
 
