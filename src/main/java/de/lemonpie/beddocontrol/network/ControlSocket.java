@@ -191,10 +191,11 @@ public class ControlSocket implements Runnable
 			String line;
 			while((line = inputStream.readLine()) != null)
 			{
+				System.out.println(line);
 				ControlCommandData commandData = gson.fromJson(line, ControlCommandData.class);
 
 				commands.forEach((name, command) -> {
-					if(name.getName().equals(commandData.getCommand()))
+					if (name.getName().equalsIgnoreCase(commandData.getCommand()))
 					{
 						command.execute(commandData);
 					}
