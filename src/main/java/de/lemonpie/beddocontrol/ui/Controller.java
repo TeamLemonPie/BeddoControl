@@ -1,18 +1,8 @@
 package de.lemonpie.beddocontrol.ui;
 
-import java.io.IOException;
-import java.net.SocketException;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
 import de.lemonpie.beddocontrol.listener.BoardListener;
 import de.lemonpie.beddocontrol.listener.PlayerListListener;
-import de.lemonpie.beddocontrol.model.Board;
-import de.lemonpie.beddocontrol.model.DataAccessable;
-import de.lemonpie.beddocontrol.model.Player;
-import de.lemonpie.beddocontrol.model.PlayerList;
-import de.lemonpie.beddocontrol.model.PlayerState;
+import de.lemonpie.beddocontrol.model.*;
 import de.lemonpie.beddocontrol.model.card.Card;
 import de.lemonpie.beddocontrol.model.listener.PlayerListener;
 import de.lemonpie.beddocontrol.network.ControlSocket;
@@ -26,14 +16,7 @@ import de.lemonpie.beddocontrol.network.command.send.DataSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.PlayerOpSendCommand;
 import de.lemonpie.beddocontrol.network.listener.BoardListenerImpl;
 import de.lemonpie.beddocontrol.network.listener.PlayerListenerImpl;
-import de.lemonpie.beddocontrol.ui.cells.TableCellActions;
-import de.lemonpie.beddocontrol.ui.cells.TableCellCards;
-import de.lemonpie.beddocontrol.ui.cells.TableCellChips;
-import de.lemonpie.beddocontrol.ui.cells.TableCellName;
-import de.lemonpie.beddocontrol.ui.cells.TableCellReaderID;
-import de.lemonpie.beddocontrol.ui.cells.TableCellStatus;
-import de.lemonpie.beddocontrol.ui.cells.TableCellTwitchName;
-import de.lemonpie.beddocontrol.ui.cells.TableCellWinProbability;
+import de.lemonpie.beddocontrol.ui.cells.*;
 import fontAwesome.FontIcon;
 import fontAwesome.FontIconType;
 import javafx.animation.KeyFrame;
@@ -47,15 +30,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -67,6 +43,12 @@ import javafx.util.Duration;
 import logger.Logger;
 import tools.AlertGenerator;
 import tools.Worker;
+
+import java.io.IOException;
+import java.net.SocketException;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class Controller implements DataAccessable, BoardListener, PlayerListener, PlayerListListener
 {
@@ -542,6 +524,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	public void addPlayerToList(Player player)
 	{
 		player.addListener(new PlayerListenerImpl(socket));
+		player.addListener(this);
 	}
 
 	@Override
