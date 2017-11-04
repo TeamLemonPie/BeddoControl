@@ -77,6 +77,6 @@ public class PlayerListenerImpl implements PlayerListener {
 	}
 
 	@Override
-	public void winProbabilityDidChange(Player player, double value) {
+	public void winProbabilityDidChange(Player player, int value) {
 	}
 }

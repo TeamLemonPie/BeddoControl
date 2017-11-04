@@ -4,10 +4,10 @@ import de.lemonpie.beddocontrol.model.Player;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 
-public class TableCellWinProbability extends TableCell<Player, Double>
+public class TableCellWinProbability extends TableCell<Player, Integer>
 {
 	@Override
-	public void updateItem(Double item, boolean empty)
+	public void updateItem(Integer item, boolean empty)
 	{
 		if(!empty)
 		{

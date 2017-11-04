@@ -22,7 +22,7 @@ public class Player {
     private int chips;
     private PlayerState playerState;
 
-	private double winprobability;
+	private int winprobability;
 
     public Player(int id) {
         listeners = new LinkedList<>();
@@ -105,11 +105,11 @@ public class Player {
 		fireListener(listener -> listener.stateDidChange(this, playerState));
 	}
 
-	public double getWinprobability() {
+	public int getWinprobability() {
 		return winprobability;
 	}
 
-	public void setWinprobability(double winprobability) {
+	public void setWinprobability(int winprobability) {
 		this.winprobability = winprobability;
 		fireListener(listener -> listener.winProbabilityDidChange(this, winprobability));
 	}

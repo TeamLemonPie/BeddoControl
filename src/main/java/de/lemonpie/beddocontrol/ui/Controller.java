@@ -361,9 +361,9 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		columnChips.setText("Chips");
 		columnChips.prefWidthProperty().bind(tableView.widthProperty().multiply(0.10));
 		tableView.getColumns().add(columnChips);
-		
-		TableColumn<Player, Double> columnWinProbability = new TableColumn<>();
-		columnWinProbability.setCellValueFactory(new PropertyValueFactory<Player, Double>("winprobability"));
+
+		TableColumn<Player, Integer> columnWinProbability = new TableColumn<>();
+		columnWinProbability.setCellValueFactory(new PropertyValueFactory<Player, Integer>("winprobability"));
 		columnWinProbability.setCellFactory(param -> {
 			return new TableCellWinProbability();
 		});
@@ -678,7 +678,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	}
 
 	@Override
-	public void winProbabilityDidChange(Player player, double value) {
+	public void winProbabilityDidChange(Player player, int value) {
 		tableView.refresh();
 	}
 

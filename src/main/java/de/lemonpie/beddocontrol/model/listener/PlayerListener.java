@@ -23,5 +23,5 @@ public interface PlayerListener {
     
     void readerIdDidChange(Player player, int readerId);
 
-	void winProbabilityDidChange(Player player, double value);
+	void winProbabilityDidChange(Player player, int value);
 }

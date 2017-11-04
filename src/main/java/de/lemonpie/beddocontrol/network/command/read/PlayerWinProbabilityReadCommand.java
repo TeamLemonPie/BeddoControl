@@ -21,7 +21,7 @@ public class PlayerWinProbabilityReadCommand implements Command {
 	@Override
 	public void execute(ControlCommandData data) {
 		dataAccessable.getPlayer(data.getKey()).ifPresent(player -> {
-			player.setWinprobability(data.getValue().getAsDouble());
+			player.setWinprobability(data.getValue().getAsInt());
 		});
 	}
 }
