@@ -439,7 +439,9 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 			AlertGenerator.showAlert(AlertType.WARNING, "Warning", "", "Please enter a pause time", icon, stage, null, false);
 			return;
 		}
-		
+
+		resetPause();
+
 		final int minutes = Integer.parseInt(pauseTime);
 		try
 		{
@@ -451,7 +453,6 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
 		}
 
-		resetPause();
 		remainingSeconds = minutes * 60;
 		labelPause.setText(getMinuteStringFromSeconds(remainingSeconds));
 
