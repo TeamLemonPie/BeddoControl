@@ -46,7 +46,7 @@ public class DataReadCommand implements Command
 			if(players != null)
 			{
 				// Clear old data
-				dataAccessable.getPlayers().clear(); // TODO Should use some listener for ui
+				dataAccessable.getPlayers().clear();
 				
 				HashMap<Integer, Integer> readerIdAssignments = new HashMap<>();
 				

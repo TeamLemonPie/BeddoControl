@@ -1,10 +1,17 @@
 package de.lemonpie.beddocontrol.ui;
 
-import de.lemonpie.beddocontrol.listener.BoardListener;
-import de.lemonpie.beddocontrol.listener.PlayerListListener;
-import de.lemonpie.beddocontrol.model.*;
+import java.io.IOException;
+import java.net.SocketException;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
+
+import de.lemonpie.beddocontrol.model.Board;
+import de.lemonpie.beddocontrol.model.DataAccessable;
+import de.lemonpie.beddocontrol.model.Player;
+import de.lemonpie.beddocontrol.model.PlayerList;
+import de.lemonpie.beddocontrol.model.PlayerState;
 import de.lemonpie.beddocontrol.model.card.Card;
-import de.lemonpie.beddocontrol.model.listener.PlayerListener;
 import de.lemonpie.beddocontrol.network.ControlSocket;
 import de.lemonpie.beddocontrol.network.ControlSocketDelegate;
 import de.lemonpie.beddocontrol.network.command.read.CardReadCommand;
@@ -19,8 +26,14 @@ import de.lemonpie.beddocontrol.network.command.send.CountdownSetSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.DataSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.player.PlayerOpSendCommand;
 import de.lemonpie.beddocontrol.network.listener.BoardListenerImpl;
-import de.lemonpie.beddocontrol.network.listener.PlayerListenerImpl;
-import de.lemonpie.beddocontrol.ui.cells.*;
+import de.lemonpie.beddocontrol.ui.cells.TableCellActions;
+import de.lemonpie.beddocontrol.ui.cells.TableCellCards;
+import de.lemonpie.beddocontrol.ui.cells.TableCellChips;
+import de.lemonpie.beddocontrol.ui.cells.TableCellName;
+import de.lemonpie.beddocontrol.ui.cells.TableCellReaderID;
+import de.lemonpie.beddocontrol.ui.cells.TableCellStatus;
+import de.lemonpie.beddocontrol.ui.cells.TableCellTwitchName;
+import de.lemonpie.beddocontrol.ui.cells.TableCellWinProbability;
 import fontAwesome.FontIcon;
 import fontAwesome.FontIconType;
 import javafx.animation.KeyFrame;
@@ -34,8 +47,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -51,16 +71,10 @@ import logger.Logger;
 import tools.AlertGenerator;
 import tools.Worker;
 
-import java.io.IOException;
-import java.net.SocketException;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
-public class Controller implements DataAccessable, BoardListener, PlayerListener, PlayerListListener
+public class Controller implements DataAccessable
 {
 	@FXML private AnchorPane mainPane;
-	@FXML private TableView<Player> tableView;
+	@FXML TableView<Player> tableView;
 	@FXML private Button buttonAdd;
 	@FXML private TextField textFieldPause;
 	@FXML private Label labelPause;
@@ -70,34 +84,36 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	@FXML private Button buttonMasterLock;
 	@FXML private VBox vboxAll;
 
-	@FXML private ImageView imageViewBoard1;
-	@FXML private ImageView imageViewBoard2;
-	@FXML private ImageView imageViewBoard3;
-	@FXML private ImageView imageViewBoard4;
-	@FXML private ImageView imageViewBoard5;
-	@FXML private TextField textFieldBoard1;
-	@FXML private TextField textFieldBoard2;
-	@FXML private TextField textFieldBoard3;
-	@FXML private TextField textFieldBoard4;
-	@FXML private TextField textFieldBoard5;
+	@FXML ImageView imageViewBoard1;
+	@FXML ImageView imageViewBoard2;
+	@FXML ImageView imageViewBoard3;
+	@FXML ImageView imageViewBoard4;
+	@FXML ImageView imageViewBoard5;
+	@FXML TextField textFieldBoard1;
+	@FXML TextField textFieldBoard2;
+	@FXML TextField textFieldBoard3;
+	@FXML TextField textFieldBoard4;
+	@FXML TextField textFieldBoard5;
 	@FXML private HBox hboxBoard;
 
 	@FXML private Button buttonClearBoard;
 	@FXML private Button buttonNewRound;
 	@FXML private Button buttonLockBoard;
 
-	private Stage stage;
-	private Image icon;
-	private ResourceBundle bundle;
-	private Board board;
-	private PlayerList players;
-	private ControlSocket socket;
-	private Timeline timeline;
-	private int remainingSeconds;
-	private Stage modalStage;
+	Stage stage;
+	Image icon;
+	ResourceBundle bundle;
+	Board board;
+	PlayerList players;
+	ControlSocket socket;
+	Timeline timeline;
+	int remainingSeconds;
+	Stage modalStage;
 	public static StringProperty modalText;
-	private boolean isBoardLocked = false;
-	private boolean isAllLocked = false;
+	boolean isBoardLocked = false;
+	boolean isAllLocked = false;
+	
+	private ControllerListenerImpl listenerImpl;
 
 	// TODO externalize in config file
 	private final String HOST = "localhost";
@@ -108,11 +124,13 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		this.stage = stage;
 		this.icon = icon;
 		this.bundle = bundle;
+		this.listenerImpl = new ControllerListenerImpl(this);
+		
 		board = new Board();
-		board.addListener(this);
+		board.addListener(listenerImpl);
 
 		players = new PlayerList();
-		players.addListener(this);
+		players.addListener(listenerImpl);
 
 		modalText = new SimpleStringProperty();
 
@@ -407,7 +425,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		tableView.getColumns().add(columnButtons);
 	}
 
-	private void refreshTableView()
+	public void refreshTableView()
 	{
 		tableView.getItems().clear();
 
@@ -663,29 +681,6 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		refreshTableView();
 	}
 
-	// PlayerList Listener
-	@Override
-	public void addPlayerToList(Player player)
-	{
-		player.addListener(new PlayerListenerImpl(socket));
-		player.addListener(this);
-	}
-
-	@Override
-	public void removePlayerFromList(Player player)
-	{
-		try
-		{
-			socket.write(new PlayerOpSendCommand(player.getId()));
-			refreshTableView();
-		}
-		catch(SocketException e1)
-		{
-			Logger.error(e1);
-			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), icon, stage, null, false);
-		}
-	}
-
 	@Override
 	public Optional<Player> getPlayer(int id)
 	{
@@ -703,103 +698,6 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		AlertGenerator.showAboutAlert(bundle.getString("app.name"), bundle.getString("version.name"), bundle.getString("version.code"), bundle.getString("version.date"), bundle.getString("author"), icon, stage, null, false);
 	}
 
-	// TODO Extract into extra class
-	@Override
-	public void nameDidChange(Player player, String name) {
-		tableView.refresh();
-	}
-
-	@Override
-	public void twitchNameDidChange(Player player, String twitchName)
-	{
-		tableView.refresh();
-	}
-
-	@Override
-	public void cardDidChangeAtIndex(Player player, int index, Card card)
-	{
-		tableView.refresh();
-	}
-
-	@Override
-	public void chipsDidChange(Player player, int chips)
-	{
-		tableView.refresh();
-	}
-
-	@Override
-	public void stateDidChange(Player player, PlayerState state)
-	{
-		tableView.refresh();
-	}
-
-	@Override
-	public void readerIdDidChange(Player player, int readerId)
-	{
-		tableView.refresh();
-	}
-
-	@Override
-	public void cardDidChangeAtIndex(int index, Card card)
-	{
-		switch(index)
-		{
-			case 0:
-				imageViewBoard1.setImage(getImageForCard(card));
-				break;
-			case 1:
-				imageViewBoard2.setImage(getImageForCard(card));
-				break;
-			case 2:
-				imageViewBoard3.setImage(getImageForCard(card));
-				break;
-			case 3:
-				imageViewBoard4.setImage(getImageForCard(card));
-				break;
-			case 4:
-				imageViewBoard5.setImage(getImageForCard(card));
-				break;
-			default:
-				break;
-		}
-	}
-
-	@Override
-	public void winProbabilityDidChange(Player player, int value) {
-		tableView.refresh();
-	}
-
-	@Override
-	public void boardReaderIdDidChange(int index, int readerId)
-	{
-		String style = readerId == -2 ? "-fx-border-color: #CC0000; -fx-border-width: 2" : "-fx-border-color: #48DB5E; -fx-border-width: 2";
-		switch(index)
-		{
-			case 0:
-				textFieldBoard1.setText(String.valueOf(readerId));
-				textFieldBoard1.setStyle(style);
-				break;
-			case 1:
-				textFieldBoard2.setText(String.valueOf(readerId));
-				textFieldBoard2.setStyle(style);
-				break;
-			case 2:
-				textFieldBoard3.setText(String.valueOf(readerId));
-				textFieldBoard3.setStyle(style);
-				break;
-			case 3:
-				textFieldBoard4.setText(String.valueOf(readerId));
-				textFieldBoard4.setStyle(style);
-				break;
-			case 4:
-				textFieldBoard5.setText(String.valueOf(readerId));
-				textFieldBoard5.setStyle(style);
-				break;
-			default:
-				break;
-		}
-	}
-	
 	private void showBoardCardGUI(int index)
 	{
 		try
