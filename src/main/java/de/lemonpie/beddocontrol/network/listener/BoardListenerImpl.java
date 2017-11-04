@@ -19,7 +19,6 @@ public class BoardListenerImpl implements BoardListener {
 	@Override
 	public void cardDidChangeAtIndex(int index, Card card)
 	{
-		// TODO Auto-generated method stub
 		
 	}
 

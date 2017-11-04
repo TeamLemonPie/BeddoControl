@@ -41,6 +41,16 @@ public class Card implements Comparable<Object> {
 		return true;
 	}
 
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((symbol == null) ? 0 : symbol.hashCode());
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		return result;
+	}
+
 	public String getName()
 	{
 		if(this == EMPTY)

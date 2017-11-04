@@ -1,7 +1,10 @@
 package de.lemonpie.beddocontrol.ui;
 
+import java.util.HashSet;
 import java.util.ResourceBundle;
+import java.util.Set;
 
+import de.lemonpie.beddocontrol.model.Player;
 import de.lemonpie.beddocontrol.model.card.Card;
 import de.lemonpie.beddocontrol.model.card.CardSymbol;
 import de.lemonpie.beddocontrol.model.card.CardValue;
@@ -39,6 +42,33 @@ public class BoardCardController
 		prefill();
 	}
 	
+	private Set<Card> getAlreadyUsedCards()
+	{
+		Set<Card> cards = new HashSet<Card>();
+		for(Player currentPlayer : controller.getPlayerList())
+		{
+			if(currentPlayer.getCardLeft() != Card.EMPTY)
+			{
+				cards.add(currentPlayer.getCardLeft());
+			}
+			
+			if(currentPlayer.getCardRight() != Card.EMPTY)
+			{
+				cards.add(currentPlayer.getCardRight());
+			}
+		}
+		
+		for(Card currentCard : controller.getBoard().getCards())
+		{
+			if(currentCard != Card.EMPTY)
+			{
+				cards.add(currentCard);
+			}
+		}
+		
+		return cards;
+	}
+	
 	private void prefill()
 	{
 		hboxHeart.getChildren().clear();
@@ -46,29 +76,39 @@ public class BoardCardController
 		hboxSpades.getChildren().clear();
 		hboxCross.getChildren().clear();
 		
+		Set<Card> alreadyUsedCards = getAlreadyUsedCards();
+		
 		for(CardValue currentValue : CardValue.values())
 		{
 			if(currentValue != CardValue.BACK)
-			{
-				addImageViewForCard(new Card(CardSymbol.HEART, currentValue), hboxHeart);
-				addImageViewForCard(new Card(CardSymbol.DIAMONDS, currentValue), hboxDiamonds);
-				addImageViewForCard(new Card(CardSymbol.SPADES, currentValue), hboxSpades);
-				addImageViewForCard(new Card(CardSymbol.CROSS, currentValue), hboxCross);
+			{				
+				addImageViewForCard(alreadyUsedCards, new Card(CardSymbol.HEART, currentValue), hboxHeart);
+				addImageViewForCard(alreadyUsedCards, new Card(CardSymbol.DIAMONDS, currentValue), hboxDiamonds);
+				addImageViewForCard(alreadyUsedCards, new Card(CardSymbol.SPADES, currentValue), hboxSpades);
+				addImageViewForCard(alreadyUsedCards, new Card(CardSymbol.CROSS, currentValue), hboxCross);
 			}
 		}
 	}
 	
-	private void addImageViewForCard(Card card, HBox parent)
-	{
+	private void addImageViewForCard(Set<Card> alreadyUsedCards, Card card, HBox parent)
+	{		
 		Image image = controller.getImageForCard(card);
 		ImageView imageView = new ImageView(image);
 		imageView.setFitHeight(50);
 		imageView.setFitWidth(40);
-		imageView.setOnMouseClicked((e)->
+		
+		if(alreadyUsedCards.contains(card))
 		{
-			controller.overridBoardCard(boardCardIndex, card);
-			stage.close();
-		});
+			imageView.setOpacity(0.5);
+		}
+		else
+		{
+			imageView.setOnMouseClicked((e)->
+			{
+				controller.overrideBoardCard(boardCardIndex, card);
+				stage.close();
+			});
+		}
 		parent.getChildren().add(imageView);
 	}
 }

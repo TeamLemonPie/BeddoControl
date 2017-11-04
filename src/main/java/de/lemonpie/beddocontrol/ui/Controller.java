@@ -828,7 +828,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		}
 	}
 
-	public void overridBoardCard(int index, Card card)
+	public void overrideBoardCard(int index, Card card)
 	{
 		try
 		{
