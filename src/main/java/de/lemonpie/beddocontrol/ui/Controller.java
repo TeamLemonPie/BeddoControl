@@ -110,19 +110,19 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		labelStatus.setText("Connecting...");
 		labelStatus.setStyle("-fx-text-fill: orange");
 		
-		buttonLockBoard.setGraphic(Helpers.getFontIcon(FontIconType.LOCK, 16, Color.BLACK));
+		buttonLockBoard.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
 		buttonLockBoard.setOnAction((e)->{
 			if(isBoardLocked)
 			{
 				hboxBoard.setDisable(false);
-				buttonLockBoard.setGraphic(Helpers.getFontIcon(FontIconType.LOCK, 16, Color.BLACK));
+				buttonLockBoard.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
 				buttonLockBoard.setText("Lock");
 				//TODO send to server
 			}
 			else
 			{
 				hboxBoard.setDisable(true);
-				buttonLockBoard.setGraphic(Helpers.getFontIcon(FontIconType.UNLOCK, 16, Color.BLACK));
+				buttonLockBoard.setGraphic(new FontIcon(FontIconType.UNLOCK, 16, Color.BLACK));
 				buttonLockBoard.setText("Unlock");
 				//TODO send to server
 			}
