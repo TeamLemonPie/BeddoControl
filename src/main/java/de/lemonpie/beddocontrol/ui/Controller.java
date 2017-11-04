@@ -13,6 +13,7 @@ import de.lemonpie.beddocontrol.network.command.read.PlayerOpReadCommand;
 import de.lemonpie.beddocontrol.network.command.read.PlayerWinProbabilityReadCommand;
 import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand.Option;
+import de.lemonpie.beddocontrol.network.command.send.BoardCardSetSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.CountdownSetSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.DataSendCommand;
@@ -152,6 +153,12 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 				return null;
 			}
 		}));
+		
+		imageViewBoard1.setOnMouseClicked((e)->{showBoardCardGUI(0);});
+		imageViewBoard2.setOnMouseClicked((e)->{showBoardCardGUI(1);});
+		imageViewBoard3.setOnMouseClicked((e)->{showBoardCardGUI(2);});
+		imageViewBoard4.setOnMouseClicked((e)->{showBoardCardGUI(3);});
+		imageViewBoard5.setOnMouseClicked((e)->{showBoardCardGUI(4);});
 
 		initTableView();
 		initBoard();
@@ -653,7 +660,6 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	public void addPlayer(Player player)
 	{
 		players.add(player);
-
 		refreshTableView();
 	}
 
@@ -793,8 +799,47 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 				break;
 		}
 	}
+	
+	private void showBoardCardGUI(int index)
+	{
+		try
+		{
+			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("de/lemonpie/beddocontrol/ui/BoardCardGUI.fxml"));;
 
-	// TODO board allow card set
+			Parent root = (Parent)loader.load();
+			Stage newStage = new Stage();
+			Scene scene = new Scene(root, 650, 270);
+			newStage.setScene(scene);
+			newStage.setTitle("Override Board Card");
+			newStage.initOwner(stage);
+
+			newStage.getIcons().add(icon);
+			BoardCardController newController = loader.getController();
+			newController.init(newStage, icon, bundle, this, index);
+
+			newStage.initModality(Modality.APPLICATION_MODAL);
+			newStage.setResizable(true);
+			newStage.show();
+		}
+		catch(IOException e1)
+		{
+			Logger.error(e1);
+			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), icon, stage, null, false);
+		}
+	}
+
+	public void overridBoardCard(int index, Card card)
+	{
+		try
+		{
+			socket.write(new BoardCardSetSendCommand(index, card));
+		}
+		catch(SocketException e)
+		{
+			Logger.error(e);
+			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
+		}
+	}
 
 	public Stage showModal(String title, String message, Stage owner, Image icon)
 	{

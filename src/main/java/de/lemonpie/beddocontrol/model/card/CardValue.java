@@ -2,7 +2,7 @@ package de.lemonpie.beddocontrol.model.card;
 
 public enum CardValue{
 
-	BACK("B", 0),
+	BACK("b", 0),
 	TWO("2", 2),
 	THREE("3", 3),
 	FOUR("4", 4),
