@@ -39,7 +39,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -56,6 +58,7 @@ import java.util.ResourceBundle;
 
 public class Controller implements DataAccessable, BoardListener, PlayerListener, PlayerListListener
 {
+	@FXML private AnchorPane mainPane;
 	@FXML private TableView<Player> tableView;
 	@FXML private Button buttonAdd;
 	@FXML private TextField textFieldPause;
@@ -63,6 +66,8 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	@FXML private Button buttonPause;
 	@FXML private Button buttonPauseReset;
 	@FXML private Label labelStatus;
+	@FXML private Button buttonMasterLock;
+	@FXML private VBox vboxAll;
 
 	@FXML private ImageView imageViewBoard1;
 	@FXML private ImageView imageViewBoard2;
@@ -91,6 +96,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	private Stage modalStage;
 	public static StringProperty modalText;
 	private boolean isBoardLocked = false;
+	private boolean isAllLocked = false;
 
 	// TODO externalize in config file
 	private final String HOST = "localhost";
@@ -115,6 +121,20 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		buttonLockBoard.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
 		buttonLockBoard.setOnAction((e)->{
 			lockBoard(!isBoardLocked);
+		});
+		
+		buttonMasterLock.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
+		buttonMasterLock.setFocusTraversable(false);
+		buttonMasterLock.setOnAction((e)->{
+			lockAll(!isAllLocked);
+		});
+		
+		mainPane.setOnKeyPressed((e)->
+		{
+			if(e.getCode() == KeyCode.F1)
+			{
+				newRound();
+			}
 		});
 
 		textFieldPause.setTextFormatter(new TextFormatter<>(c -> {
@@ -530,6 +550,19 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	
 	@FXML public void newRound()
 	{
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("New Round");
+		alert.setHeaderText("");
+		alert.initOwner(stage);
+		alert.initModality(Modality.APPLICATION_MODAL);
+		alert.setContentText("Do you really want to start a new round?");
+
+		Optional<ButtonType> result = alert.showAndWait();
+		if(result.get() != ButtonType.OK)
+		{
+			return;
+		}
+		
 		for(Player currentPlayer : players)
 		{
 			if(currentPlayer.getPlayerState().equals(PlayerState.OUT_OF_ROUND))
@@ -548,6 +581,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 			}
 		}
 		
+		clearBoard();
 		lockBoard(true);
 	}
 	
@@ -571,6 +605,36 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 			}
 			
 			isBoardLocked = lock;
+		}
+		catch(SocketException e)
+		{
+			Logger.error(e);
+			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
+		}
+	}
+	
+	private void lockAll(boolean lock)
+	{
+		try
+		{
+			if(lock)
+			{
+				vboxAll.setDisable(true);
+				buttonMasterLock.setGraphic(new FontIcon(FontIconType.UNLOCK, 16, Color.WHITE));
+				buttonMasterLock.setStyle("-fx-background-color: #CC0000; -fx-text-fill: white");
+				buttonMasterLock.setText("Unlock");
+				socket.write(new BlockSendCommand(Option.ALL));
+			}
+			else
+			{
+				vboxAll.setDisable(false);
+				buttonMasterLock.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
+				buttonMasterLock.setStyle("");
+				buttonMasterLock.setText("Lock");					
+				socket.write(new BlockSendCommand(Option.NONE));				
+			}
+			
+			isAllLocked = lock;
 		}
 		catch(SocketException e)
 		{

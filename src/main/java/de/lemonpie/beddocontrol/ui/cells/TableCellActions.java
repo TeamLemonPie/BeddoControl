@@ -72,7 +72,7 @@ public class TableCellActions extends TableCell<Player, PlayerState>
 			buttonDelete.setOnAction((e) -> {
 				Player player = ((Player)getTableRow().getItem());
 				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setTitle("Spieler " + player.getId() + " löschen");
+				alert.setTitle("Delete player " + player.getId());
 				alert.setHeaderText("");
 				alert.initOwner(controller.getStage());
 				alert.initModality(Modality.APPLICATION_MODAL);
