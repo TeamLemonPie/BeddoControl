@@ -243,13 +243,22 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 
 	public Image getImageForCard(Card card)
 	{
-		String base = "/de/lemonpie/beddocontrol/cards/";
-		if(card == null || card == Card.EMPTY)
+		Image image = null;
+		try
 		{
-			return new Image(base + "back.png");
+			String base = "/de/lemonpie/beddocontrol/cards/";
+			if(card == null || card == Card.EMPTY)
+			{
+				return new Image(base + "back.png");
+			}
+			
+			image = new Image(base + card.getSymbol() + "-" + card.getValue() + ".png");
 		}
-
-		return new Image(base + card.getSymbol() + "-" + card.getValue() + ".png");
+		catch(Exception e)
+		{
+			Logger.error(e);
+		}
+		return image;
 	}
 
 	public FontIcon getFontIcon(FontIconType type, int size, Color color)
