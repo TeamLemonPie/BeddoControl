@@ -4,15 +4,14 @@ import de.lemonpie.beddocontrol.model.Player;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 
-public class TableCellWinProbability extends TableCell<Player, Integer>
+public class TableCellWinProbability extends TableCell<Player, Double>
 {
 	@Override
-	public void updateItem(Integer item, boolean empty)
+	public void updateItem(Double item, boolean empty)
 	{
 		if(!empty)
 		{
-			//TODO
-			Label labelStatus = new Label("72%");
+			Label labelStatus = new Label(item.toString() + "%");
 			setGraphic(labelStatus);
 		}
 		else

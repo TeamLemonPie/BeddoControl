@@ -264,7 +264,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 				socket.addCommand(new DataReadCommand(Controller.this));
 				socket.addCommand(new PlayerWinProbabilityReadCommand(Controller.this));
 			}
-		});
+		}); 
 	}
 
 	public Image getImageForCard(Card card)
@@ -362,8 +362,8 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		columnChips.prefWidthProperty().bind(tableView.widthProperty().multiply(0.10));
 		tableView.getColumns().add(columnChips);
 		
-		TableColumn<Player, Integer> columnWinProbability = new TableColumn<>();
-		columnWinProbability.setCellValueFactory(new PropertyValueFactory<Player, Integer>("id"));
+		TableColumn<Player, Double> columnWinProbability = new TableColumn<>();
+		columnWinProbability.setCellValueFactory(new PropertyValueFactory<Player, Double>("winprobability"));
 		columnWinProbability.setCellFactory(param -> {
 			return new TableCellWinProbability();
 		});
