@@ -11,6 +11,8 @@ import de.lemonpie.beddocontrol.network.command.read.CardReadCommand;
 import de.lemonpie.beddocontrol.network.command.read.DataReadCommand;
 import de.lemonpie.beddocontrol.network.command.read.PlayerOpReadCommand;
 import de.lemonpie.beddocontrol.network.command.read.PlayerWinProbabilityReadCommand;
+import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand.Option;
 import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.CountdownSetSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.DataSendCommand;
@@ -112,21 +114,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		
 		buttonLockBoard.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
 		buttonLockBoard.setOnAction((e)->{
-			if(isBoardLocked)
-			{
-				hboxBoard.setDisable(false);
-				buttonLockBoard.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
-				buttonLockBoard.setText("Lock");
-				//TODO send to server
-			}
-			else
-			{
-				hboxBoard.setDisable(true);
-				buttonLockBoard.setGraphic(new FontIcon(FontIconType.UNLOCK, 16, Color.BLACK));
-				buttonLockBoard.setText("Unlock");
-				//TODO send to server
-			}
-			isBoardLocked = !isBoardLocked;
+			lockBoard(!isBoardLocked);
 		});
 
 		textFieldPause.setTextFormatter(new TextFormatter<>(c -> {
@@ -203,8 +191,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 				}
 				catch(SocketException e)
 				{
-					// ERRORHANDLING
-					e.printStackTrace();
+					Logger.error(e);					
 				}
 			}
 			else
@@ -559,6 +546,36 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 				Logger.error(e1);
 				AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), icon, stage, null, false);
 			}
+		}
+		
+		lockBoard(true);
+	}
+	
+	private void lockBoard(boolean lock)
+	{
+		try
+		{
+			if(lock)
+			{
+				hboxBoard.setDisable(true);
+				buttonLockBoard.setGraphic(new FontIcon(FontIconType.UNLOCK, 16, Color.BLACK));
+				buttonLockBoard.setText("Unlock");
+				socket.write(new BlockSendCommand(Option.BOARD));
+			}
+			else
+			{
+				hboxBoard.setDisable(false);
+				buttonLockBoard.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
+				buttonLockBoard.setText("Lock");					
+				socket.write(new BlockSendCommand(Option.NONE));				
+			}
+			
+			isBoardLocked = lock;
+		}
+		catch(SocketException e)
+		{
+			Logger.error(e);
+			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
 		}
 	}
 	
