@@ -41,7 +41,6 @@ public class ControlSocket implements Runnable
 	private ControlSocketDelegate delegate;
 
 	private Thread readerThread;
-
 	public ControlSocket(String host, int port, ControlSocketDelegate delegate)
 	{
 		this.host = host;

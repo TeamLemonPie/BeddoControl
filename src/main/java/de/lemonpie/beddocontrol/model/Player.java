@@ -1,11 +1,11 @@
 package de.lemonpie.beddocontrol.model;
 
+import de.lemonpie.beddocontrol.model.card.Card;
+import de.lemonpie.beddocontrol.model.listener.PlayerListener;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
-
-import de.lemonpie.beddocontrol.model.card.Card;
-import de.lemonpie.beddocontrol.model.listener.PlayerListener;
 
 public class Player {
 
@@ -21,6 +21,8 @@ public class Player {
 	
     private int chips;
     private PlayerState playerState;
+
+	private double winprobability;
 
     public Player(int id) {
         listeners = new LinkedList<>();
@@ -101,6 +103,15 @@ public class Player {
 	{
 		this.playerState = playerState;
 		fireListener(listener -> listener.stateDidChange(this, playerState));
+	}
+
+	public double getWinprobability() {
+		return winprobability;
+	}
+
+	public void setWinprobability(double winprobability) {
+		this.winprobability = winprobability;
+		fireListener(listener -> listener.winProbabilityDidChange(this, winprobability));
 	}
 
 	public void addListener(PlayerListener playerListener) {

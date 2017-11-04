@@ -75,4 +75,8 @@ public class PlayerListenerImpl implements PlayerListener {
             e.printStackTrace();
         }
 	}
+
+	@Override
+	public void winProbabilityDidChange(Player player, double value) {
+	}
 }

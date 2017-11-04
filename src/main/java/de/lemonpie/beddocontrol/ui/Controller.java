@@ -10,6 +10,7 @@ import de.lemonpie.beddocontrol.network.ControlSocketDelegate;
 import de.lemonpie.beddocontrol.network.command.read.CardReadCommand;
 import de.lemonpie.beddocontrol.network.command.read.DataReadCommand;
 import de.lemonpie.beddocontrol.network.command.read.PlayerOpReadCommand;
+import de.lemonpie.beddocontrol.network.command.read.PlayerWinProbabilityReadCommand;
 import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.CountdownSetSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.DataSendCommand;
@@ -261,6 +262,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 				socket.addCommand(new CardReadCommand(Controller.this));
 				socket.addCommand(new PlayerOpReadCommand(Controller.this));
 				socket.addCommand(new DataReadCommand(Controller.this));
+				socket.addCommand(new PlayerWinProbabilityReadCommand(Controller.this));
 			}
 		});
 	}
@@ -614,9 +616,9 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		AlertGenerator.showAboutAlert(bundle.getString("app.name"), bundle.getString("version.name"), bundle.getString("version.code"), bundle.getString("version.date"), bundle.getString("author"), icon, stage, null, false);
 	}
 
+	// TODO Extract into extra class
 	@Override
-	public void nameDidChange(Player player, String name)
-	{
+	public void nameDidChange(Player player, String name) {
 		tableView.refresh();
 	}
 
@@ -673,6 +675,11 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 			default:
 				break;
 		}
+	}
+
+	@Override
+	public void winProbabilityDidChange(Player player, double value) {
+		tableView.refresh();
 	}
 
 	@Override

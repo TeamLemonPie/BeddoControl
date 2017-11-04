@@ -22,4 +22,6 @@ public interface PlayerListener {
     void chipsDidChange(Player player, int chips);
     
     void readerIdDidChange(Player player, int readerId);
+
+	void winProbabilityDidChange(Player player, double value);
 }
