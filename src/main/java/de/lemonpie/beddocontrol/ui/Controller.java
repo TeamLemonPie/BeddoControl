@@ -14,7 +14,7 @@ import de.lemonpie.beddocontrol.network.command.read.PlayerWinProbabilityReadCom
 import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.CountdownSetSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.DataSendCommand;
-import de.lemonpie.beddocontrol.network.command.send.PlayerOpSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.player.PlayerOpSendCommand;
 import de.lemonpie.beddocontrol.network.listener.BoardListenerImpl;
 import de.lemonpie.beddocontrol.network.listener.PlayerListenerImpl;
 import de.lemonpie.beddocontrol.ui.cells.*;

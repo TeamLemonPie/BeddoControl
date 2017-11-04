@@ -5,11 +5,11 @@ import de.lemonpie.beddocontrol.model.PlayerState;
 import de.lemonpie.beddocontrol.model.card.Card;
 import de.lemonpie.beddocontrol.model.listener.PlayerListener;
 import de.lemonpie.beddocontrol.network.ControlSocket;
-import de.lemonpie.beddocontrol.network.command.send.PlayerChipsSendCommand;
-import de.lemonpie.beddocontrol.network.command.send.PlayerNameSendCommand;
-import de.lemonpie.beddocontrol.network.command.send.PlayerStateSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.ReaderSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.ReaderSendCommand.ReaderType;
+import de.lemonpie.beddocontrol.network.command.send.player.PlayerChipsSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.player.PlayerNameSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.player.PlayerStateSendCommand;
 
 import java.net.SocketException;
 

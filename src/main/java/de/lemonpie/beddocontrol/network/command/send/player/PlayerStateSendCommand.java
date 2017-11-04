@@ -1,4 +1,4 @@
-package de.lemonpie.beddocontrol.network.command.send;
+package de.lemonpie.beddocontrol.network.command.send.player;
 
 import com.google.gson.JsonPrimitive;
 import de.lemonpie.beddocontrol.model.PlayerState;

@@ -1,7 +1,6 @@
-package de.lemonpie.beddocontrol.network.command.send;
+package de.lemonpie.beddocontrol.network.command.send.player;
 
 import com.google.gson.JsonPrimitive;
-
 import de.lemonpie.beddocontrol.network.CommandName;
 import de.lemonpie.beddocontrol.network.ControlCommandData;
 import de.lemonpie.beddocontrol.network.Scope;

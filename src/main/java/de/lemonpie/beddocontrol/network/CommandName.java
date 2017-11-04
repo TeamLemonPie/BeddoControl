@@ -16,6 +16,8 @@ public enum CommandName {
 
 	DATA("data"),
 
+	BLOCK("block"),
+
 	COUNTDOWN("countdown");
 
     private String name;
