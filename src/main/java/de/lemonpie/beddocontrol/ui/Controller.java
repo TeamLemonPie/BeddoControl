@@ -36,6 +36,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -70,9 +71,11 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	@FXML private TextField textFieldBoard3;
 	@FXML private TextField textFieldBoard4;
 	@FXML private TextField textFieldBoard5;
+	@FXML private HBox hboxBoard;
 
 	@FXML private Button buttonClearBoard;
 	@FXML private Button buttonNewRound;
+	@FXML private Button buttonLockBoard;
 
 	private Stage stage;
 	private Image icon;
@@ -84,6 +87,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	private int remainingSeconds;
 	private Stage modalStage;
 	public static StringProperty modalText;
+	private boolean isBoardLocked = false;
 
 	// TODO externalize in config file
 	private final String HOST = "localhost";
@@ -104,6 +108,25 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 
 		labelStatus.setText("Connecting...");
 		labelStatus.setStyle("-fx-text-fill: orange");
+		
+		buttonLockBoard.setGraphic(Helpers.getFontIcon(FontIconType.LOCK, 16, Color.BLACK));
+		buttonLockBoard.setOnAction((e)->{
+			if(isBoardLocked)
+			{
+				hboxBoard.setDisable(false);
+				buttonLockBoard.setGraphic(Helpers.getFontIcon(FontIconType.LOCK, 16, Color.BLACK));
+				buttonLockBoard.setText("Lock");
+				//TODO send to server
+			}
+			else
+			{
+				hboxBoard.setDisable(true);
+				buttonLockBoard.setGraphic(Helpers.getFontIcon(FontIconType.UNLOCK, 16, Color.BLACK));
+				buttonLockBoard.setText("Unlock");
+				//TODO send to server
+			}
+			isBoardLocked = !isBoardLocked;
+		});
 
 		textFieldPause.setTextFormatter(new TextFormatter<>(c -> {
 			if(c.getControlNewText().isEmpty())
@@ -535,8 +558,8 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 				AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), icon, stage, null, false);
 			}
 		}
-	}	
-
+	}
+	
 	@Override
 	public List<Player> getPlayers()
 	{
