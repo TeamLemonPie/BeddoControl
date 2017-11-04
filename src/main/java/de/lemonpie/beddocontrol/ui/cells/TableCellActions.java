@@ -15,6 +15,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 
 public class TableCellActions extends TableCell<Player, PlayerState>
 {	
@@ -73,6 +74,8 @@ public class TableCellActions extends TableCell<Player, PlayerState>
 				Alert alert = new Alert(AlertType.CONFIRMATION);
 				alert.setTitle("Spieler " + player.getId() + " löschen");
 				alert.setHeaderText("");
+				alert.initOwner(controller.getStage());
+				alert.initModality(Modality.APPLICATION_MODAL);
 				alert.setContentText("Do you really want to delete player " + player.getId() + "?");
 
 				Optional<ButtonType> result = alert.showAndWait();

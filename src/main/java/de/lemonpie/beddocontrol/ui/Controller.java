@@ -72,6 +72,7 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 	@FXML private TextField textFieldBoard5;
 
 	@FXML private Button buttonClearBoard;
+	@FXML private Button buttonNewRound;
 
 	private Stage stage;
 	private Image icon;
@@ -514,6 +515,27 @@ public class Controller implements DataAccessable, BoardListener, PlayerListener
 		}
 		labelPause.setText("--:--");
 	}
+	
+	@FXML public void newRound()
+	{
+		for(Player currentPlayer : players)
+		{
+			if(currentPlayer.getPlayerState().equals(PlayerState.OUT_OF_ROUND))
+			{
+				currentPlayer.setPlayerState(PlayerState.ACTIVE);				
+			}
+			
+			try
+			{
+				socket.write(new ClearSendCommand(currentPlayer.getReaderId()));
+			}
+			catch(SocketException e1)
+			{
+				Logger.error(e1);
+				AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), icon, stage, null, false);
+			}
+		}
+	}	
 
 	@Override
 	public List<Player> getPlayers()
