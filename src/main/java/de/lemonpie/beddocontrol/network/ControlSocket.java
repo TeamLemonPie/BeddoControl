@@ -190,7 +190,7 @@ public class ControlSocket implements Runnable
 			String line;
 			while((line = inputStream.readLine()) != null)
 			{
-				System.out.println(line);
+				Logger.info("Read from Admin Socket: " + line);
 				ControlCommandData commandData = gson.fromJson(line, ControlCommandData.class);
 
 				commands.forEach((name, command) -> {

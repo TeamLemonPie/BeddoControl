@@ -1,16 +1,6 @@
 package de.lemonpie.beddocontrol.ui;
 
-import java.io.IOException;
-import java.net.SocketException;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
-import de.lemonpie.beddocontrol.model.Board;
-import de.lemonpie.beddocontrol.model.DataAccessable;
-import de.lemonpie.beddocontrol.model.Player;
-import de.lemonpie.beddocontrol.model.PlayerList;
-import de.lemonpie.beddocontrol.model.PlayerState;
+import de.lemonpie.beddocontrol.model.*;
 import de.lemonpie.beddocontrol.model.card.Card;
 import de.lemonpie.beddocontrol.network.ControlSocket;
 import de.lemonpie.beddocontrol.network.ControlSocketDelegate;
@@ -18,22 +8,11 @@ import de.lemonpie.beddocontrol.network.command.read.CardReadCommand;
 import de.lemonpie.beddocontrol.network.command.read.DataReadCommand;
 import de.lemonpie.beddocontrol.network.command.read.PlayerOpReadCommand;
 import de.lemonpie.beddocontrol.network.command.read.PlayerWinProbabilityReadCommand;
-import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.*;
 import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand.Option;
-import de.lemonpie.beddocontrol.network.command.send.BoardCardSetSendCommand;
-import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
-import de.lemonpie.beddocontrol.network.command.send.CountdownSetSendCommand;
-import de.lemonpie.beddocontrol.network.command.send.DataSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.player.PlayerOpSendCommand;
 import de.lemonpie.beddocontrol.network.listener.BoardListenerImpl;
-import de.lemonpie.beddocontrol.ui.cells.TableCellActions;
-import de.lemonpie.beddocontrol.ui.cells.TableCellCards;
-import de.lemonpie.beddocontrol.ui.cells.TableCellChips;
-import de.lemonpie.beddocontrol.ui.cells.TableCellName;
-import de.lemonpie.beddocontrol.ui.cells.TableCellReaderID;
-import de.lemonpie.beddocontrol.ui.cells.TableCellStatus;
-import de.lemonpie.beddocontrol.ui.cells.TableCellTwitchName;
-import de.lemonpie.beddocontrol.ui.cells.TableCellWinProbability;
+import de.lemonpie.beddocontrol.ui.cells.*;
 import fontAwesome.FontIcon;
 import fontAwesome.FontIconType;
 import javafx.animation.KeyFrame;
@@ -47,15 +26,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -70,6 +42,12 @@ import javafx.util.Duration;
 import logger.Logger;
 import tools.AlertGenerator;
 import tools.Worker;
+
+import java.io.IOException;
+import java.net.SocketException;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class Controller implements DataAccessable
 {
@@ -429,7 +407,7 @@ public class Controller implements DataAccessable
 	{
 		tableView.getItems().clear();
 
-		ObservableList<Player> objectsForTable = FXCollections.observableArrayList(players.getPlayers());
+		ObservableList<Player> objectsForTable = FXCollections.observableArrayList(players.getPlayer());
 		tableView.setItems(objectsForTable);
 	}
 
@@ -609,8 +587,8 @@ public class Controller implements DataAccessable
 		clearBoard();
 		lockBoard(true);
 	}
-	
-	private void lockBoard(boolean lock)
+
+	public void lockBoard(boolean lock)
 	{
 		try
 		{
@@ -637,8 +615,12 @@ public class Controller implements DataAccessable
 			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
 		}
 	}
-	
-	private void lockAll(boolean lock)
+
+	public boolean isBoardLocked() {
+		return isBoardLocked;
+	}
+
+	public void lockAll(boolean lock)
 	{
 		try
 		{
@@ -667,11 +649,15 @@ public class Controller implements DataAccessable
 			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
 		}
 	}
-	
+
+	public boolean isAllLocked() {
+		return isAllLocked;
+	}
+
 	@Override
 	public List<Player> getPlayers()
 	{
-		return players.getPlayers();
+		return players.getPlayer();
 	}
 
 	@Override
@@ -684,7 +670,7 @@ public class Controller implements DataAccessable
 	@Override
 	public Optional<Player> getPlayer(int id)
 	{
-		return players.getPlayers(id);
+		return players.getPlayer(id);
 	}
 
 	@Override

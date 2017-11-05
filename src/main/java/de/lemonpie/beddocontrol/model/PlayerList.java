@@ -20,16 +20,16 @@ public class PlayerList implements Iterable<Player> {
         return data.add(player) ? player : null;
     }
 
-    public Optional<Player> getPlayers(int id) {
-        return data.stream().filter(r -> r.getId() == id).findFirst();
+	public Optional<Player> getPlayer(int id) {
+		return data.stream().filter(r -> r.getId() == id).findFirst();
     }
 
     public void clear() {
-        for (Player player : getPlayers()) {
-            fireListener(l -> l.removePlayerFromList(player));
+		for (Player player : getPlayer()) {
+			fireListener(l -> l.removePlayerFromList(player));
         }
-        getPlayers().clear();
-    }
+		getPlayer().clear();
+	}
 
     public boolean remove(Object o) {
     	boolean success = data.remove(o);
@@ -39,8 +39,8 @@ public class PlayerList implements Iterable<Player> {
         return success;
     }
 
-    public List<Player> getPlayers() {
-        return data;
+	public List<Player> getPlayer() {
+		return data;
     }
 
     public void addListener(PlayerListListener playerListener) {
