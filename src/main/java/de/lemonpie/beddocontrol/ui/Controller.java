@@ -96,10 +96,6 @@ public class Controller implements DataAccessable
 	
 	private ControllerListenerImpl listenerImpl;
 
-	// TODO externalize in config file
-	private final String HOST = "localhost";
-	private final int PORT = 9998;
-
 	public boolean init(Stage stage, Image icon, ResourceBundle bundle)
 	{
 		this.stage = stage;
@@ -228,7 +224,7 @@ public class Controller implements DataAccessable
 
 	private void connect()
 	{
-		modalStage = showModal("Trying to connect to " + HOST + ":" + PORT, "Connect to server...", stage, icon);
+		modalStage = showModal("Trying to connect to " + settings.getHostName() + ":" + settings.getPort(), "Connect to server...", stage, icon);
 
 		Worker.runLater(() -> {
 			if(socket.connect())
