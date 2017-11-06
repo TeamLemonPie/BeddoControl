@@ -41,6 +41,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import logger.Logger;
 import tools.AlertGenerator;
+import tools.ObjectJSONHandler;
 import tools.Worker;
 
 import java.io.IOException;
@@ -59,6 +60,7 @@ public class Controller implements DataAccessable
 	@FXML private Button buttonPause;
 	@FXML private Button buttonPauseReset;
 	@FXML private Label labelStatus;
+	@FXML private Label labelServer;
 	@FXML private Button buttonMasterLock;
 	@FXML private VBox vboxAll;
 
@@ -90,6 +92,7 @@ public class Controller implements DataAccessable
 	public static StringProperty modalText;
 	boolean isBoardLocked = false;
 	boolean isAllLocked = false;
+	Settings settings;
 	
 	private ControllerListenerImpl listenerImpl;
 
@@ -97,11 +100,11 @@ public class Controller implements DataAccessable
 	private final String HOST = "localhost";
 	private final int PORT = 9998;
 
-	public void init(Stage stage, Image icon, ResourceBundle bundle)
+	public boolean init(Stage stage, Image icon, ResourceBundle bundle)
 	{
 		this.stage = stage;
 		this.icon = icon;
-		this.bundle = bundle;
+		this.bundle = bundle;	
 		this.listenerImpl = new ControllerListenerImpl(this);
 		
 		board = new Board();
@@ -114,6 +117,31 @@ public class Controller implements DataAccessable
 
 		labelStatus.setText("Connecting...");
 		labelStatus.setStyle("-fx-text-fill: orange");
+		
+		Object possibleSettings = ObjectJSONHandler.loadObjectFromJSON(bundle.getString("folder"), "settings", new Settings());
+		if(possibleSettings == null) 
+		{
+			Logger.error("Missing or invalid settings.json - Created default JSON");
+			try
+			{
+				Settings s = new Settings();
+				s.setHostName("localhost");
+				s.setPort(9998);
+				ObjectJSONHandler.saveObjectToJSON(bundle.getString("folder"), "settings", s);
+			}
+			catch(IOException e1)
+			{
+				Logger.error(e1);
+			}
+			
+			Platform.runLater(()->{
+				AlertGenerator.showAlert(AlertType.ERROR, "Error", "", "Missing or invalid settings.json.\nA default settings.json has been created.", icon, stage, null, false);
+				System.exit(0);
+			});
+			return false;
+		}		
+		settings = (Settings)possibleSettings;
+		labelServer.setText(settings.getHostName() + ":" + settings.getPort());
 		
 		buttonLockBoard.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
 		buttonLockBoard.setOnAction((e)->{
@@ -162,13 +190,15 @@ public class Controller implements DataAccessable
 		stage.setOnCloseRequest((event) -> {
 			Worker.shutdown();
 			System.exit(0);
-		});
+		});		
 
 		Platform.runLater(() -> {
 			initConnection();
 			connect();
 			board.addListener(new BoardListenerImpl(socket));
 		});
+		
+		return true;
 	}
 
 	public ControlSocket getSocket()
@@ -243,7 +273,7 @@ public class Controller implements DataAccessable
 
 	private void initConnection()
 	{
-		socket = new ControlSocket(HOST, PORT, new ControlSocketDelegate()
+		socket = new ControlSocket(settings.getHostName(), settings.getPort(), new ControlSocketDelegate()
 		{
 			@Override
 			public void onConnectionEstablished()
@@ -319,7 +349,7 @@ public class Controller implements DataAccessable
 		columnID.setCellValueFactory(new PropertyValueFactory<Player, Integer>("id"));
 		columnID.setStyle("-fx-alignment: CENTER;");
 		columnID.setText("Nr.");
-		columnID.prefWidthProperty().bind(tableView.widthProperty().multiply(0.05));
+		columnID.prefWidthProperty().bind(tableView.widthProperty().multiply(0.03).subtract(2));
 		tableView.getColumns().add(columnID);		
 
 		TableColumn<Player, Integer> columnReader = new TableColumn<>();
@@ -329,7 +359,7 @@ public class Controller implements DataAccessable
 		});
 		columnReader.setStyle("-fx-alignment: CENTER;");
 		columnReader.setText("Reader ID");
-		columnReader.prefWidthProperty().bind(tableView.widthProperty().multiply(0.05));
+		columnReader.prefWidthProperty().bind(tableView.widthProperty().multiply(0.05).subtract(2));
 		tableView.getColumns().add(columnReader);
 
 		TableColumn<Player, String> columnName = new TableColumn<>();
@@ -339,7 +369,7 @@ public class Controller implements DataAccessable
 		});
 		columnName.setStyle("-fx-alignment: CENTER;");
 		columnName.setText("Name");
-		columnName.prefWidthProperty().bind(tableView.widthProperty().multiply(0.15));
+		columnName.prefWidthProperty().bind(tableView.widthProperty().multiply(0.15).subtract(2));
 		tableView.getColumns().add(columnName);
 
 		TableColumn<Player, String> columnTwitchName = new TableColumn<>();
@@ -350,7 +380,7 @@ public class Controller implements DataAccessable
 		columnTwitchName.setStyle("-fx-alignment: CENTER;");
 		columnTwitchName.setText("Twitch Name");
 		tableView.getColumns().add(columnTwitchName);
-		columnTwitchName.prefWidthProperty().bind(tableView.widthProperty().multiply(0.15));
+		columnTwitchName.prefWidthProperty().bind(tableView.widthProperty().multiply(0.15).subtract(2));
 
 		TableColumn<Player, Integer> columnCards = new TableColumn<>();
 		columnCards.setCellValueFactory(new PropertyValueFactory<Player, Integer>("id"));
@@ -359,7 +389,7 @@ public class Controller implements DataAccessable
 		});
 		columnCards.setStyle("-fx-alignment: CENTER;");
 		columnCards.setText("Cards");
-		columnCards.prefWidthProperty().bind(tableView.widthProperty().multiply(0.20));
+		columnCards.prefWidthProperty().bind(tableView.widthProperty().multiply(0.20).subtract(2));
 		tableView.getColumns().add(columnCards);
 
 		TableColumn<Player, Integer> columnChips = new TableColumn<>();
@@ -369,7 +399,7 @@ public class Controller implements DataAccessable
 		});
 		columnChips.setStyle("-fx-alignment: CENTER;");
 		columnChips.setText("Chips");
-		columnChips.prefWidthProperty().bind(tableView.widthProperty().multiply(0.10));
+		columnChips.prefWidthProperty().bind(tableView.widthProperty().multiply(0.09).subtract(2));
 		tableView.getColumns().add(columnChips);
 
 		TableColumn<Player, Integer> columnWinProbability = new TableColumn<>();
@@ -379,7 +409,7 @@ public class Controller implements DataAccessable
 		});
 		columnWinProbability.setStyle("-fx-alignment: CENTER;");
 		columnWinProbability.setText("Win %");
-		columnWinProbability.prefWidthProperty().bind(tableView.widthProperty().multiply(0.05));
+		columnWinProbability.prefWidthProperty().bind(tableView.widthProperty().multiply(0.05).subtract(2));
 		tableView.getColumns().add(columnWinProbability);	
 
 		TableColumn<Player, PlayerState> columnStatus = new TableColumn<>();
@@ -389,7 +419,7 @@ public class Controller implements DataAccessable
 		});
 		columnStatus.setStyle("-fx-alignment: CENTER;");
 		columnStatus.setText("Status");
-		columnStatus.prefWidthProperty().bind(tableView.widthProperty().multiply(0.10));
+		columnStatus.prefWidthProperty().bind(tableView.widthProperty().multiply(0.10).subtract(2));
 		tableView.getColumns().add(columnStatus);
 
 		TableColumn<Player, PlayerState> columnButtons = new TableColumn<>();
@@ -399,7 +429,7 @@ public class Controller implements DataAccessable
 		});
 		columnButtons.setStyle("-fx-alignment: CENTER;");
 		columnButtons.setText("Actions");
-		columnButtons.prefWidthProperty().bind(tableView.widthProperty().multiply(0.15));
+		columnButtons.prefWidthProperty().bind(tableView.widthProperty().multiply(0.18).subtract(2));
 		tableView.getColumns().add(columnButtons);
 	}
 

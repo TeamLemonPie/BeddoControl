@@ -45,14 +45,22 @@ public class BeddoControlMain extends Application
 			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("de/lemonpie/beddocontrol/ui/GUI.fxml"));
 			Parent root = loader.load();
 
-			Scene scene = new Scene(root, 800, 600);
+			Scene scene = new Scene(root, 900, 800);
 
 			Image icon = new Image("/de/lemonpie/beddocontrol/icon.png");
 			Controller controller = loader.getController();
-			controller.init(primaryStage, icon, bundle);
-
-			Midi.getInstance().lookupMidiDevice("PD 12");
-			Midi.getInstance().setListener(new PD12Handler(controller, midiActionList));
+			if(controller.init(primaryStage, icon, bundle))
+			{
+				try
+				{
+					Midi.getInstance().lookupMidiDevice("PD 12");
+					Midi.getInstance().setListener(new PD12Handler(controller, midiActionList));
+				}
+				catch(Exception e)
+				{
+					Logger.error(e);
+				}
+			}
 			
 			primaryStage.getIcons().add(icon);
 			primaryStage.setTitle(bundle.getString("app.name") + " - " + bundle.getString("version.name")+ " (" + bundle.getString("version.code") + ")");
