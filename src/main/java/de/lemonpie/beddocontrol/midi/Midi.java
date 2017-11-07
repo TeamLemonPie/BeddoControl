@@ -41,7 +41,7 @@ public class Midi implements AutoCloseable {
 		return outputDevice;
 	}
 
-	public void lookupMidiDevice(String name) throws IllegalArgumentException, MidiUnavailableException, NullPointerException {
+	public void lookupMidiDevice(String name) throws MidiUnavailableException {
 		boolean first = true;
 
 		MidiDevice.Info input = null;
@@ -57,7 +57,7 @@ public class Midi implements AutoCloseable {
 			}
 		}
 		if (input == null || output == null) {
-			throw new NullPointerException();
+			throw new MidiUnavailableException();
 		}
 		setMidiDevice(input, output);
 	}

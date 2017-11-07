@@ -1,5 +1,10 @@
 package de.lemonpie.beddocontrol.ui;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import de.lemonpie.beddocontrol.midi.Midi;
+import de.lemonpie.beddocontrol.midi.MidiAction;
+import de.lemonpie.beddocontrol.midi.PD12Handler;
 import de.lemonpie.beddocontrol.model.*;
 import de.lemonpie.beddocontrol.model.card.Card;
 import de.lemonpie.beddocontrol.network.ControlSocket;
@@ -42,10 +47,19 @@ import javafx.util.Duration;
 import logger.Logger;
 import tools.AlertGenerator;
 import tools.ObjectJSONHandler;
+import tools.PathUtils;
 import tools.Worker;
 
+import javax.sound.midi.MidiUnavailableException;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.net.SocketException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -93,16 +107,17 @@ public class Controller implements DataAccessable
 	boolean isBoardLocked = false;
 	boolean isAllLocked = false;
 	Settings settings;
-	
+	List<MidiAction> midiActionList = new ArrayList<>();
+
 	private ControllerListenerImpl listenerImpl;
 
-	public boolean init(Stage stage, Image icon, ResourceBundle bundle)
+	public void init(Stage stage, Image icon, ResourceBundle bundle)
 	{
 		this.stage = stage;
 		this.icon = icon;
-		this.bundle = bundle;	
+		this.bundle = bundle;
 		this.listenerImpl = new ControllerListenerImpl(this);
-		
+
 		board = new Board();
 		board.addListener(listenerImpl);
 
@@ -113,9 +128,9 @@ public class Controller implements DataAccessable
 
 		labelStatus.setText("Connecting...");
 		labelStatus.setStyle("-fx-text-fill: orange");
-		
+
 		Object possibleSettings = ObjectJSONHandler.loadObjectFromJSON(bundle.getString("folder"), "settings", new Settings());
-		if(possibleSettings == null) 
+		if (possibleSettings == null)
 		{
 			Logger.error("Missing or invalid settings.json - Created default JSON");
 			try
@@ -129,27 +144,52 @@ public class Controller implements DataAccessable
 			{
 				Logger.error(e1);
 			}
-			
+
 			Platform.runLater(()->{
 				AlertGenerator.showAlert(AlertType.ERROR, "Error", "", "Missing or invalid settings.json.\nA default settings.json has been created.", icon, stage, null, false);
 				System.exit(0);
 			});
-			return false;
-		}		
+		}
+
+		try {
+			Path midiSettingsPath = Paths.get(PathUtils.getOSindependentPath() + bundle.getString("folder") + "midi.json");
+
+			if (Files.notExists(midiSettingsPath)) {
+				if (Files.notExists(midiSettingsPath.getParent())) {
+					Files.createDirectories(midiSettingsPath.getParent());
+				}
+
+				InputStream iStr = getClass().getClassLoader().getResourceAsStream("de/lemonpie/beddocontrol/midi.json");
+				Files.copy(iStr, midiSettingsPath);
+			}
+
+			BufferedReader inputStream = Files.newBufferedReader(midiSettingsPath);
+			Type type = new TypeToken<List<MidiAction>>() {
+			}.getType();
+			midiActionList = new Gson().fromJson(inputStream, type);
+			Midi.getInstance().lookupMidiDevice("PD 12");
+			Midi.getInstance().setListener(new PD12Handler(this, midiActionList));
+		} catch (MidiUnavailableException | IOException e) {
+			Logger.error(e);
+			Platform.runLater(() -> {
+				AlertGenerator.showAlert(AlertType.ERROR, "Error", "", "Midi unavailable (Make midi great again)", icon, stage, null, false);
+			});
+		}
+
 		settings = (Settings)possibleSettings;
 		labelServer.setText(settings.getHostName() + ":" + settings.getPort());
-		
+
 		buttonLockBoard.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
 		buttonLockBoard.setOnAction((e)->{
 			lockBoard(!isBoardLocked);
 		});
-		
+
 		buttonMasterLock.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
 		buttonMasterLock.setFocusTraversable(false);
 		buttonMasterLock.setOnAction((e)->{
 			lockAll(!isAllLocked);
 		});
-		
+
 		mainPane.setOnKeyPressed((e)->
 		{
 			if(e.getCode() == KeyCode.F1)
@@ -173,7 +213,7 @@ public class Controller implements DataAccessable
 				return null;
 			}
 		}));
-		
+
 		imageViewBoard1.setOnMouseClicked((e)->{showBoardCardGUI(0);});
 		imageViewBoard2.setOnMouseClicked((e)->{showBoardCardGUI(1);});
 		imageViewBoard3.setOnMouseClicked((e)->{showBoardCardGUI(2);});
@@ -186,15 +226,13 @@ public class Controller implements DataAccessable
 		stage.setOnCloseRequest((event) -> {
 			Worker.shutdown();
 			System.exit(0);
-		});		
+		});
 
 		Platform.runLater(() -> {
 			initConnection();
 			connect();
 			board.addListener(new BoardListenerImpl(socket));
 		});
-		
-		return true;
 	}
 
 	public ControlSocket getSocket()
@@ -240,7 +278,7 @@ public class Controller implements DataAccessable
 				}
 				catch(SocketException e)
 				{
-					Logger.error(e);					
+					Logger.error(e);
 				}
 			}
 			else
@@ -300,7 +338,7 @@ public class Controller implements DataAccessable
 				socket.addCommand(new DataReadCommand(Controller.this));
 				socket.addCommand(new PlayerWinProbabilityReadCommand(Controller.this));
 			}
-		}); 
+		});
 	}
 
 	public Image getImageForCard(Card card)
@@ -313,7 +351,7 @@ public class Controller implements DataAccessable
 			{
 				return new Image(base + "back.png");
 			}
-			
+
 			image = new Image(base + card.getSymbol() + "-" + card.getValue() + ".png");
 		}
 		catch(Exception e)
@@ -346,7 +384,7 @@ public class Controller implements DataAccessable
 		columnID.setStyle("-fx-alignment: CENTER;");
 		columnID.setText("Nr.");
 		columnID.prefWidthProperty().bind(tableView.widthProperty().multiply(0.03).subtract(2));
-		tableView.getColumns().add(columnID);		
+		tableView.getColumns().add(columnID);
 
 		TableColumn<Player, Integer> columnReader = new TableColumn<>();
 		columnReader.setCellValueFactory(new PropertyValueFactory<Player, Integer>("readerId"));
@@ -406,7 +444,7 @@ public class Controller implements DataAccessable
 		columnWinProbability.setStyle("-fx-alignment: CENTER;");
 		columnWinProbability.setText("Win %");
 		columnWinProbability.prefWidthProperty().bind(tableView.widthProperty().multiply(0.05).subtract(2));
-		tableView.getColumns().add(columnWinProbability);	
+		tableView.getColumns().add(columnWinProbability);
 
 		TableColumn<Player, PlayerState> columnStatus = new TableColumn<>();
 		columnStatus.setCellValueFactory(new PropertyValueFactory<Player, PlayerState>("playerState"));
@@ -576,7 +614,7 @@ public class Controller implements DataAccessable
 		}
 		labelPause.setText("--:--");
 	}
-	
+
 	@FXML public void newRound()
 	{
 		Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -591,14 +629,14 @@ public class Controller implements DataAccessable
 		{
 			return;
 		}
-		
+
 		for(Player currentPlayer : players)
 		{
 			if(currentPlayer.getPlayerState().equals(PlayerState.OUT_OF_ROUND))
 			{
-				currentPlayer.setPlayerState(PlayerState.ACTIVE);				
+				currentPlayer.setPlayerState(PlayerState.ACTIVE);
 			}
-			
+
 			try
 			{
 				socket.write(new ClearSendCommand(currentPlayer.getReaderId()));
@@ -609,7 +647,7 @@ public class Controller implements DataAccessable
 				AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), icon, stage, null, false);
 			}
 		}
-		
+
 		clearBoard();
 		lockBoard(true);
 	}
@@ -629,10 +667,10 @@ public class Controller implements DataAccessable
 			{
 				hboxBoard.setDisable(false);
 				buttonLockBoard.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
-				buttonLockBoard.setText("Lock");					
-				socket.write(new BlockSendCommand(Option.NONE));				
+				buttonLockBoard.setText("Lock");
+				socket.write(new BlockSendCommand(Option.NONE));
 			}
-			
+
 			isBoardLocked = lock;
 		}
 		catch(SocketException e)
@@ -663,10 +701,10 @@ public class Controller implements DataAccessable
 				vboxAll.setDisable(false);
 				buttonMasterLock.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
 				buttonMasterLock.setStyle("");
-				buttonMasterLock.setText("Lock");					
-				socket.write(new BlockSendCommand(Option.NONE));				
+				buttonMasterLock.setText("Lock");
+				socket.write(new BlockSendCommand(Option.NONE));
 			}
-			
+
 			isAllLocked = lock;
 		}
 		catch(SocketException e)
