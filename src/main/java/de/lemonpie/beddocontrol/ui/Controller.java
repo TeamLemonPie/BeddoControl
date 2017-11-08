@@ -574,18 +574,15 @@ public class Controller implements DataAccessable
 	public void clearBoard()
 	{
 		board.clearCards();
-		for(int i = 0; i < 5; i++)
+		try
 		{
-			try
-			{
-				socket.write(new ClearSendCommand(board.getReaderId(i)));
-			}
-			catch(SocketException | IndexOutOfBoundsException e)
-			{
-				Logger.error(e);
-				AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
-			}
+			socket.write(new ClearSendCommand(-2));
 		}
+		catch(SocketException | IndexOutOfBoundsException e)
+		{
+			Logger.error(e);
+			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
+		}		
 	}
 
 	private String getMinuteStringFromSeconds(int seconds)

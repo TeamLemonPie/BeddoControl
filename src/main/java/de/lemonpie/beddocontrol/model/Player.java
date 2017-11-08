@@ -28,7 +28,7 @@ public class Player {
         listeners = new LinkedList<>();
 
         this.id = id;
-        this.readerId = -2;
+        this.readerId = -3;
         this.name = "[Player]";
         this.twitchName = "[TwitchName]";
         this.playerState = PlayerState.ACTIVE;
