@@ -285,6 +285,9 @@ public class Controller implements DataAccessable
 			{
 				Logger.debug("Couldn't connect.");
 				Platform.runLater(() -> {
+					if(modalStage != null)
+						modalStage.close();
+					
 					Alert alert = new Alert(AlertType.ERROR);
 					alert.setTitle("Error");
 					alert.setHeaderText("");

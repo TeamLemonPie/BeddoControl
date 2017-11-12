@@ -27,7 +27,7 @@ public class BeddoControlMain extends Application
 
 	@Override
 	public void start(Stage primaryStage) throws Exception
-	{
+	{		
 		try
 		{
 			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("de/lemonpie/beddocontrol/ui/GUI.fxml"));
