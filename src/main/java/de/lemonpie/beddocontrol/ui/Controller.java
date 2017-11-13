@@ -1,11 +1,32 @@
 package de.lemonpie.beddocontrol.ui;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.net.SocketException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
+
+import javax.sound.midi.MidiUnavailableException;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 import de.lemonpie.beddocontrol.midi.Midi;
 import de.lemonpie.beddocontrol.midi.MidiAction;
 import de.lemonpie.beddocontrol.midi.PD12Handler;
-import de.lemonpie.beddocontrol.model.*;
+import de.lemonpie.beddocontrol.model.Board;
+import de.lemonpie.beddocontrol.model.DataAccessable;
+import de.lemonpie.beddocontrol.model.Player;
+import de.lemonpie.beddocontrol.model.PlayerList;
+import de.lemonpie.beddocontrol.model.PlayerState;
+import de.lemonpie.beddocontrol.model.Settings;
 import de.lemonpie.beddocontrol.model.card.Card;
 import de.lemonpie.beddocontrol.network.ControlSocket;
 import de.lemonpie.beddocontrol.network.ControlSocketDelegate;
@@ -13,11 +34,24 @@ import de.lemonpie.beddocontrol.network.command.read.CardReadCommand;
 import de.lemonpie.beddocontrol.network.command.read.DataReadCommand;
 import de.lemonpie.beddocontrol.network.command.read.PlayerOpReadCommand;
 import de.lemonpie.beddocontrol.network.command.read.PlayerWinProbabilityReadCommand;
-import de.lemonpie.beddocontrol.network.command.send.*;
+import de.lemonpie.beddocontrol.network.command.send.BigBlindSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand.Option;
+import de.lemonpie.beddocontrol.network.command.send.BoardCardSetSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.CountdownSetSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.DataSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.SmallBlindSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.player.PlayerOpSendCommand;
 import de.lemonpie.beddocontrol.network.listener.BoardListenerImpl;
-import de.lemonpie.beddocontrol.ui.cells.*;
+import de.lemonpie.beddocontrol.ui.cells.TableCellActions;
+import de.lemonpie.beddocontrol.ui.cells.TableCellCards;
+import de.lemonpie.beddocontrol.ui.cells.TableCellChips;
+import de.lemonpie.beddocontrol.ui.cells.TableCellName;
+import de.lemonpie.beddocontrol.ui.cells.TableCellReaderID;
+import de.lemonpie.beddocontrol.ui.cells.TableCellStatus;
+import de.lemonpie.beddocontrol.ui.cells.TableCellTwitchName;
+import de.lemonpie.beddocontrol.ui.cells.TableCellWinProbability;
 import fontAwesome.FontIcon;
 import fontAwesome.FontIconType;
 import javafx.animation.KeyFrame;
@@ -31,8 +65,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -46,23 +86,10 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import logger.Logger;
 import tools.AlertGenerator;
+import tools.NumberTextFormatter;
 import tools.ObjectJSONHandler;
 import tools.PathUtils;
 import tools.Worker;
-
-import javax.sound.midi.MidiUnavailableException;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Type;
-import java.net.SocketException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
 
 public class Controller implements DataAccessable
 {
@@ -77,6 +104,8 @@ public class Controller implements DataAccessable
 	@FXML private Label labelServer;
 	@FXML private Button buttonMasterLock;
 	@FXML private VBox vboxAll;
+	@FXML private TextField textFieldSmallBlind;
+	@FXML private TextField textFieldBigBlind;
 
 	@FXML ImageView imageViewBoard1;
 	@FXML ImageView imageViewBoard2;
@@ -198,21 +227,28 @@ public class Controller implements DataAccessable
 			}
 		});
 
-		textFieldPause.setTextFormatter(new TextFormatter<>(c -> {
-			if(c.getControlNewText().isEmpty())
+		textFieldPause.setTextFormatter(new NumberTextFormatter());
+		textFieldPause.setOnKeyPressed(ke -> {
+			if(ke.getCode().equals(KeyCode.ENTER))
 			{
-				return c;
+				setPause();
 			}
-
-			if(c.getControlNewText().matches("[0-9]*"))
+		});
+		
+		textFieldSmallBlind.setTextFormatter(new NumberTextFormatter());
+		textFieldSmallBlind.setOnKeyPressed(ke -> {
+			if(ke.getCode().equals(KeyCode.ENTER))
 			{
-				return c;
+				setSmallBlind();
 			}
-			else
+		});
+		textFieldBigBlind.setTextFormatter(new NumberTextFormatter());
+		textFieldBigBlind.setOnKeyPressed(ke -> {
+			if(ke.getCode().equals(KeyCode.ENTER))
 			{
-				return null;
+				setBigBlind();
 			}
-		}));
+		});
 
 		imageViewBoard1.setOnMouseClicked((e)->{showBoardCardGUI(0);});
 		imageViewBoard2.setOnMouseClicked((e)->{showBoardCardGUI(1);});
@@ -495,20 +531,7 @@ public class Controller implements DataAccessable
 
 		textField.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
 
-		textField.setTextFormatter(new TextFormatter<>(c -> {
-			if(c.getControlNewText().isEmpty())
-			{
-				return c;
-			}
-			if(c.getControlNewText().matches("[0-9]*"))
-			{
-				return c;
-			}
-			else
-			{
-				return null;
-			}
-		}));
+		textField.setTextFormatter(new NumberTextFormatter());
 
 		textField.setOnKeyPressed(ke -> {
 			if(ke.getCode().equals(KeyCode.ENTER))
@@ -571,6 +594,58 @@ public class Controller implements DataAccessable
 		}));
 
 		timeline.playFromStart();
+	}
+	
+	@FXML
+	public void setSmallBlind()
+	{
+		String smallBlindText = textFieldSmallBlind.getText().trim();
+		if(smallBlindText == null || smallBlindText.equals(""))
+		{
+			AlertGenerator.showAlert(AlertType.WARNING, "Warning", "", "Please enter a small blind value", icon, stage, null, false);
+			textFieldSmallBlind.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
+			return;
+		}	
+
+		final int smallBlind = Integer.parseInt(smallBlindText);
+		try
+		{
+			socket.write(new SmallBlindSendCommand(smallBlind));
+		}
+		catch(SocketException e)
+		{
+			Logger.error(e);
+			textFieldSmallBlind.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
+			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
+		}
+		
+		textFieldSmallBlind.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
+	}
+	
+	@FXML
+	public void setBigBlind()
+	{
+		String bigBlindText = textFieldBigBlind.getText().trim();
+		if(bigBlindText == null || bigBlindText.equals(""))
+		{
+			AlertGenerator.showAlert(AlertType.WARNING, "Warning", "", "Please enter a small blind value", icon, stage, null, false);
+			textFieldSmallBlind.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
+			return;
+		}	
+
+		final int bigBlind = Integer.parseInt(bigBlindText);
+		try
+		{
+			socket.write(new BigBlindSendCommand(bigBlind));
+		}
+		catch(SocketException e)
+		{
+			Logger.error(e);
+			textFieldBigBlind.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
+			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
+		}
+		
+		textFieldBigBlind.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
 	}
 
 	@FXML

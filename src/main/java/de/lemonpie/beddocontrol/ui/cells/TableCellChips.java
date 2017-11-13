@@ -3,8 +3,8 @@ package de.lemonpie.beddocontrol.ui.cells;
 import de.lemonpie.beddocontrol.model.Player;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.input.KeyCode;
+import tools.NumberTextFormatter;
 
 public class TableCellChips extends TableCell<Player, Integer>
 {
@@ -17,20 +17,7 @@ public class TableCellChips extends TableCell<Player, Integer>
 			textFieldChips.textProperty().addListener((a, b, c) -> {
 				textFieldChips.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
 			});
-			textFieldChips.setTextFormatter(new TextFormatter<>(c -> {
-				if(c.getControlNewText().isEmpty())
-				{
-					return c;
-				}
-				if(c.getControlNewText().matches("[0-9]*"))
-				{
-					return c;
-				}
-				else
-				{
-					return null;
-				}
-			}));
+			textFieldChips.setTextFormatter(new NumberTextFormatter());
 
 			Object currentItem = getTableRow().getItem();
 
