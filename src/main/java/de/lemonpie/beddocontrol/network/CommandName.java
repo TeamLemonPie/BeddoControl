@@ -18,7 +18,9 @@ public enum CommandName {
 
 	BLOCK("block"),
 
-	COUNTDOWN("countdown");
+	COUNTDOWN("countdown"),
+	SMALL_BLIND("small-blind"),
+	BIG_BLIND("big-blind");
 
     private String name;
 

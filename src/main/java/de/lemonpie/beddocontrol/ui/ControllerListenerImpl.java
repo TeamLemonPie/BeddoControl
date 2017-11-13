@@ -1,7 +1,5 @@
 package de.lemonpie.beddocontrol.ui;
 
-import java.net.SocketException;
-
 import de.lemonpie.beddocontrol.listener.BoardListener;
 import de.lemonpie.beddocontrol.listener.PlayerListListener;
 import de.lemonpie.beddocontrol.model.Player;
@@ -13,6 +11,8 @@ import de.lemonpie.beddocontrol.network.listener.PlayerListenerImpl;
 import javafx.scene.control.Alert.AlertType;
 import logger.Logger;
 import tools.AlertGenerator;
+
+import java.net.SocketException;
 
 public class ControllerListenerImpl implements BoardListener, PlayerListener, PlayerListListener
 {
@@ -141,5 +141,15 @@ public class ControllerListenerImpl implements BoardListener, PlayerListener, Pl
 			default:
 				break;
 		}
+	}
+
+	@Override
+	public void smallBlindDidChange(int newValue) {
+
+	}
+
+	@Override
+	public void bigBlindDidChange(int newValue) {
+
 	}
 }
