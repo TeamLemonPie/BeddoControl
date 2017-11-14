@@ -1,6 +1,7 @@
 package de.lemonpie.beddocontrol.ui.cells;
 
 import de.lemonpie.beddocontrol.model.Player;
+import de.lemonpie.beddocontrol.ui.Controller;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -8,6 +9,13 @@ import tools.NumberTextFormatter;
 
 public class TableCellReaderID extends TableCell<Player, Integer>
 {
+	private Controller controller;
+	
+	public TableCellReaderID(Controller controller)
+	{
+		this.controller = controller;
+	}
+	
 	@Override
 	public void updateItem(Integer item, boolean empty)
 	{
@@ -34,8 +42,15 @@ public class TableCellReaderID extends TableCell<Player, Integer>
 			textFieldReader.setOnKeyPressed(ke -> {
 				if(ke.getCode().equals(KeyCode.ENTER))
 				{
-					textFieldReader.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
-					currentPlayer.setReaderId(Integer.parseInt(textFieldReader.getText().trim()));
+					if(controller.setReaderIDForPlayer(currentPlayer, Integer.parseInt(textFieldReader.getText().trim())))
+					{
+						textFieldReader.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
+					}
+					else
+					{
+						textFieldReader.clear();
+						textFieldReader.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
+					}
 				}
 			});
 			setGraphic(textFieldReader);

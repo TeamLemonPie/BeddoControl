@@ -398,7 +398,7 @@ public class Controller implements DataAccessable
 		TableColumn<Player, Integer> columnReader = new TableColumn<>();
 		columnReader.setCellValueFactory(new PropertyValueFactory<Player, Integer>("readerId"));
 		columnReader.setCellFactory(param -> {
-			return new TableCellReaderID();
+			return new TableCellReaderID(this);
 		});
 		columnReader.setStyle("-fx-alignment: CENTER;");
 		columnReader.setText("Reader ID");
@@ -506,8 +506,15 @@ public class Controller implements DataAccessable
 		textField.setOnKeyPressed(ke -> {
 			if(ke.getCode().equals(KeyCode.ENTER))
 			{
-				textField.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
-				board.setReaderId(position, Integer.parseInt(textField.getText()));
+				if(setReaderIDForBoard(position, Integer.parseInt(textField.getText().trim())))
+				{
+					textField.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
+				}
+				else
+				{
+					textField.clear();
+					textField.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
+				}
 			}
 		});
 	}
@@ -834,6 +841,51 @@ public class Controller implements DataAccessable
 			Logger.error(e);
 			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
 		}
+	}
+	
+	private boolean checkNewReaderID(int newReaderID)
+	{
+		for(Player currentPlayer : players)
+		{
+			if(currentPlayer.getReaderId() == newReaderID)
+			{
+				AlertGenerator.showAlert(AlertType.ERROR, "Warning", "", "The reader ID \"" + newReaderID + "\" is already in use for player " + currentPlayer.getId(), icon, stage, null, false);
+				return false;
+			}
+		}
+		
+		for(int i = 0; i < 5; i++)
+		{
+			if(board.getReaderId(i) == newReaderID)
+			{
+				AlertGenerator.showAlert(AlertType.ERROR, "Warning", "", "The reader ID \"" + newReaderID + "\" is already in use for board card " + i, icon, stage, null, false);
+				return false;
+			}
+		}
+		
+		return true;
+	}
+		
+	public boolean setReaderIDForPlayer(Player player, int newReaderID)
+	{
+		if(checkNewReaderID(newReaderID))
+		{			
+			player.setReaderId(newReaderID);
+			return true;
+		}
+		
+		return false;		
+	}
+	
+	public boolean setReaderIDForBoard(int boardIndex, int newReaderID)
+	{
+		if(checkNewReaderID(newReaderID))
+		{
+			board.setReaderId(boardIndex, newReaderID);
+			return true;
+		}
+		
+		return false;
 	}
 
 	public Stage showModal(String title, String message, Stage owner, Image icon)
