@@ -1,32 +1,11 @@
 package de.lemonpie.beddocontrol.ui;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Type;
-import java.net.SocketException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
-import javax.sound.midi.MidiUnavailableException;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import de.lemonpie.beddocontrol.midi.Midi;
 import de.lemonpie.beddocontrol.midi.MidiAction;
 import de.lemonpie.beddocontrol.midi.PD12Handler;
-import de.lemonpie.beddocontrol.model.Board;
-import de.lemonpie.beddocontrol.model.DataAccessable;
-import de.lemonpie.beddocontrol.model.Player;
-import de.lemonpie.beddocontrol.model.PlayerList;
-import de.lemonpie.beddocontrol.model.PlayerState;
-import de.lemonpie.beddocontrol.model.Settings;
+import de.lemonpie.beddocontrol.model.*;
 import de.lemonpie.beddocontrol.model.card.Card;
 import de.lemonpie.beddocontrol.network.ControlSocket;
 import de.lemonpie.beddocontrol.network.ControlSocketDelegate;
@@ -34,24 +13,11 @@ import de.lemonpie.beddocontrol.network.command.read.CardReadCommand;
 import de.lemonpie.beddocontrol.network.command.read.DataReadCommand;
 import de.lemonpie.beddocontrol.network.command.read.PlayerOpReadCommand;
 import de.lemonpie.beddocontrol.network.command.read.PlayerWinProbabilityReadCommand;
-import de.lemonpie.beddocontrol.network.command.send.BigBlindSendCommand;
-import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.*;
 import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand.Option;
-import de.lemonpie.beddocontrol.network.command.send.BoardCardSetSendCommand;
-import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
-import de.lemonpie.beddocontrol.network.command.send.CountdownSetSendCommand;
-import de.lemonpie.beddocontrol.network.command.send.DataSendCommand;
-import de.lemonpie.beddocontrol.network.command.send.SmallBlindSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.player.PlayerOpSendCommand;
 import de.lemonpie.beddocontrol.network.listener.BoardListenerImpl;
-import de.lemonpie.beddocontrol.ui.cells.TableCellActions;
-import de.lemonpie.beddocontrol.ui.cells.TableCellCards;
-import de.lemonpie.beddocontrol.ui.cells.TableCellChips;
-import de.lemonpie.beddocontrol.ui.cells.TableCellName;
-import de.lemonpie.beddocontrol.ui.cells.TableCellReaderID;
-import de.lemonpie.beddocontrol.ui.cells.TableCellStatus;
-import de.lemonpie.beddocontrol.ui.cells.TableCellTwitchName;
-import de.lemonpie.beddocontrol.ui.cells.TableCellWinProbability;
+import de.lemonpie.beddocontrol.ui.cells.*;
 import fontAwesome.FontIcon;
 import fontAwesome.FontIconType;
 import javafx.animation.KeyFrame;
@@ -65,14 +31,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -85,11 +45,21 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import logger.Logger;
-import tools.AlertGenerator;
-import tools.NumberTextFormatter;
-import tools.ObjectJSONHandler;
-import tools.PathUtils;
-import tools.Worker;
+import tools.*;
+
+import javax.sound.midi.MidiUnavailableException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.net.SocketException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class Controller implements DataAccessable
 {
@@ -386,7 +356,7 @@ public class Controller implements DataAccessable
 		try
 		{
 			String base = "/de/lemonpie/beddocontrol/cards/";
-			if(card == null || card == Card.EMPTY)
+			if (card == null || card.equals(Card.EMPTY))
 			{
 				return new Image(base + "back.png");
 			}
