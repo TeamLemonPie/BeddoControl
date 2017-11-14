@@ -610,6 +610,7 @@ public class Controller implements DataAccessable
 		final int smallBlind = Integer.parseInt(smallBlindText);
 		try
 		{
+			board.setSmallBlind(smallBlind);
 			socket.write(new SmallBlindSendCommand(smallBlind));
 		}
 		catch(SocketException e)
@@ -636,6 +637,7 @@ public class Controller implements DataAccessable
 		final int bigBlind = Integer.parseInt(bigBlindText);
 		try
 		{
+			board.setBigBlind(bigBlind);
 			socket.write(new BigBlindSendCommand(bigBlind));
 		}
 		catch(SocketException e)

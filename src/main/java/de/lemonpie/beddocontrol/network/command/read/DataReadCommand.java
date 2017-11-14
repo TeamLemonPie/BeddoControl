@@ -6,6 +6,7 @@ import java.util.HashMap;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import com.google.gson.JsonPrimitive;
 import de.lemonpie.beddocontrol.model.Board;
 import de.lemonpie.beddocontrol.model.DataAccessable;
 import de.lemonpie.beddocontrol.model.Player;
@@ -15,65 +16,34 @@ import de.lemonpie.beddocontrol.network.Command;
 import de.lemonpie.beddocontrol.network.CommandName;
 import de.lemonpie.beddocontrol.network.ControlCommandData;
 
-public class DataReadCommand implements Command
-{
+public class DataReadCommand implements Command {
 
 	private DataAccessable dataAccessable;
 
-	public DataReadCommand(DataAccessable dataAccessable)
-	{
+	public DataReadCommand(DataAccessable dataAccessable) {
 		this.dataAccessable = dataAccessable;
 	}
 
 	@Override
-	public CommandName name()
-	{
+	public CommandName name() {
 		return CommandName.DATA;
 	}
 
 	@Override
-	public void execute(ControlCommandData data)
-	{
-		if(data.getValue() instanceof JsonObject)
-		{
-			JsonObject values = (JsonObject)data.getValue();
+	public void execute(ControlCommandData data) {
+		if (data.getValue() instanceof JsonObject) {
+			JsonObject values = (JsonObject) data.getValue();
 			JsonArray players = values.getAsJsonArray("players");
 			JsonArray board = values.getAsJsonArray("board");
-			JsonArray reader = values.getAsJsonArray("reader");
+			JsonArray boardReader = values.getAsJsonArray("board-reader");
 
-			ArrayList<Integer> boardReaderIds = new ArrayList<>();
-			
-			if(players != null)
-			{
+			if (players != null) {
 				// Clear old data
 				dataAccessable.getPlayers().clear();
-				
-				HashMap<Integer, Integer> readerIdAssignments = new HashMap<>();
-				
-				if(reader != null)
-				{
-					reader.forEach(elem -> {
-						if(elem instanceof JsonObject)
-						{
-							JsonObject obj = (JsonObject)elem;
-							int readerId = obj.getAsJsonPrimitive("readerId").getAsInt();
-							if(obj.getAsJsonPrimitive("type").getAsString().equals("player"))
-							{
-								int playerId = obj.getAsJsonPrimitive("playerId").getAsInt();							
-								readerIdAssignments.put(playerId, readerId);								
-							}
-							else
-							{
-								boardReaderIds.add(readerId);
-							}
-						}
-					});
-				}
 
 				players.forEach(elem -> {
-					if(elem instanceof JsonObject)
-					{
-						JsonObject obj = (JsonObject)elem;
+					if (elem instanceof JsonObject) {
+						JsonObject obj = (JsonObject) elem;
 						int id = obj.getAsJsonPrimitive("id").getAsInt();
 						String name = obj.getAsJsonPrimitive("name").getAsString();
 						String twitchName = obj.getAsJsonPrimitive("twitchName").getAsString();
@@ -81,6 +51,7 @@ public class DataReadCommand implements Command
 						int chips = obj.getAsJsonPrimitive("chips").getAsInt();
 						Card cardLeft = Card.fromString(obj.getAsJsonPrimitive("cardLeft").getAsString());
 						Card cardRight = Card.fromString(obj.getAsJsonPrimitive("cardRight").getAsString());
+						int readerId = obj.getAsJsonPrimitive("readerId").getAsInt();
 
 						Player player = new Player(id);
 						player.setName(name);
@@ -89,39 +60,38 @@ public class DataReadCommand implements Command
 						player.setChips(chips);
 						player.setCardLeft(cardLeft);
 						player.setCardRight(cardRight);
-						if(readerIdAssignments.containsKey(id))
-						{
-							player.setReaderId(readerIdAssignments.get(id));
-						}
+						player.setReaderId(readerId);
 
 						dataAccessable.addPlayer(player);
 					}
 				});
 			}
 
-			if(board != null)
-			{
+			if (board != null) {
 				Board b = dataAccessable.getBoard();
 
 				board.forEach(elem -> {
-					if(elem instanceof JsonObject)
-					{
-						JsonObject obj = (JsonObject)elem;
+					if (elem instanceof JsonObject) {
+						JsonObject obj = (JsonObject) elem;
 						int id = obj.getAsJsonPrimitive("id").getAsInt();
 						Card card = Card.fromString(obj.getAsJsonPrimitive("card").getAsString());
 
 						b.setCard(id, card);
-						if(boardReaderIds.size() > id)
-						{
-							b.setReaderId(id, boardReaderIds.get(id));
-						}
-						else
-						{
-							b.setReaderId(id, -2);
-						}
+
 					}
 				});
-			}	
+			}
+
+			int[] i = {0};
+			if (boardReader != null) {
+				boardReader.forEach(reader -> {
+					if (reader instanceof JsonPrimitive) {
+						Board b = dataAccessable.getBoard();
+						b.setReaderId(i[0], reader.getAsInt());
+						i[0] += 1;
+					}
+				});
+			}
 		}
 	}
 }
