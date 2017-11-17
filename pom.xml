@@ -53,8 +53,6 @@
             <groupId>de.deadlocker8</groupId>
             <artifactId>tools</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Tools.jar</systemPath>
         </dependency>
     </dependencies>
 
