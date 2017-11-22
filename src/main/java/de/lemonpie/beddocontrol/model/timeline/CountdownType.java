@@ -1,4 +1,4 @@
-package de.lemonpie.beddocontrol.ui;
+package de.lemonpie.beddocontrol.model.timeline;
 
 public enum CountdownType
 {

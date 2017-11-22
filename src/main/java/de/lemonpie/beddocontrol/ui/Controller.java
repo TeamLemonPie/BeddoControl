@@ -28,6 +28,7 @@ import de.lemonpie.beddocontrol.model.PlayerList;
 import de.lemonpie.beddocontrol.model.PlayerState;
 import de.lemonpie.beddocontrol.model.Settings;
 import de.lemonpie.beddocontrol.model.card.Card;
+import de.lemonpie.beddocontrol.model.timeline.CountdownType;
 import de.lemonpie.beddocontrol.model.timeline.TimelineHandler;
 import de.lemonpie.beddocontrol.model.timeline.TimelineInstance;
 import de.lemonpie.beddocontrol.network.ControlSocket;
