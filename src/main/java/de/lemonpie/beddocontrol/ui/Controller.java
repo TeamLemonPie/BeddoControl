@@ -1,53 +1,5 @@
 package de.lemonpie.beddocontrol.ui;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import de.lemonpie.beddocontrol.midi.Midi;
-import de.lemonpie.beddocontrol.midi.MidiAction;
-import de.lemonpie.beddocontrol.midi.PD12Handler;
-import de.lemonpie.beddocontrol.model.*;
-import de.lemonpie.beddocontrol.model.card.Card;
-import de.lemonpie.beddocontrol.network.ControlSocket;
-import de.lemonpie.beddocontrol.network.ControlSocketDelegate;
-import de.lemonpie.beddocontrol.network.command.read.CardReadCommand;
-import de.lemonpie.beddocontrol.network.command.read.DataReadCommand;
-import de.lemonpie.beddocontrol.network.command.read.PlayerOpReadCommand;
-import de.lemonpie.beddocontrol.network.command.read.PlayerWinProbabilityReadCommand;
-import de.lemonpie.beddocontrol.network.command.send.*;
-import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand.Option;
-import de.lemonpie.beddocontrol.network.command.send.player.PlayerOpSendCommand;
-import de.lemonpie.beddocontrol.network.listener.BoardListenerImpl;
-import de.lemonpie.beddocontrol.ui.cells.*;
-import fontAwesome.FontIcon;
-import fontAwesome.FontIconType;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.util.Duration;
-import logger.Logger;
-import tools.*;
-
-import javax.sound.midi.MidiUnavailableException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,6 +13,86 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javax.sound.midi.MidiUnavailableException;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import de.lemonpie.beddocontrol.midi.Midi;
+import de.lemonpie.beddocontrol.midi.MidiAction;
+import de.lemonpie.beddocontrol.midi.PD12Handler;
+import de.lemonpie.beddocontrol.model.Board;
+import de.lemonpie.beddocontrol.model.DataAccessable;
+import de.lemonpie.beddocontrol.model.Player;
+import de.lemonpie.beddocontrol.model.PlayerList;
+import de.lemonpie.beddocontrol.model.PlayerState;
+import de.lemonpie.beddocontrol.model.Settings;
+import de.lemonpie.beddocontrol.model.card.Card;
+import de.lemonpie.beddocontrol.model.timeline.TimelineHandler;
+import de.lemonpie.beddocontrol.model.timeline.TimelineInstance;
+import de.lemonpie.beddocontrol.network.ControlSocket;
+import de.lemonpie.beddocontrol.network.ControlSocketDelegate;
+import de.lemonpie.beddocontrol.network.command.read.CardReadCommand;
+import de.lemonpie.beddocontrol.network.command.read.DataReadCommand;
+import de.lemonpie.beddocontrol.network.command.read.PlayerOpReadCommand;
+import de.lemonpie.beddocontrol.network.command.read.PlayerWinProbabilityReadCommand;
+import de.lemonpie.beddocontrol.network.command.send.BigBlindSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand.Option;
+import de.lemonpie.beddocontrol.network.command.send.BoardCardSetSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.CountdownSetSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.DataSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.SmallBlindSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.player.PlayerOpSendCommand;
+import de.lemonpie.beddocontrol.network.listener.BoardListenerImpl;
+import de.lemonpie.beddocontrol.ui.cells.TableCellActions;
+import de.lemonpie.beddocontrol.ui.cells.TableCellCards;
+import de.lemonpie.beddocontrol.ui.cells.TableCellChips;
+import de.lemonpie.beddocontrol.ui.cells.TableCellName;
+import de.lemonpie.beddocontrol.ui.cells.TableCellReaderID;
+import de.lemonpie.beddocontrol.ui.cells.TableCellStatus;
+import de.lemonpie.beddocontrol.ui.cells.TableCellTwitchName;
+import de.lemonpie.beddocontrol.ui.cells.TableCellWinProbability;
+import fontAwesome.FontIcon;
+import fontAwesome.FontIconType;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import logger.Logger;
+import tools.AlertGenerator;
+import tools.NumberTextFormatter;
+import tools.ObjectJSONHandler;
+import tools.PathUtils;
+import tools.Worker;
+
 public class Controller implements DataAccessable
 {
 	@FXML private AnchorPane mainPane;
@@ -70,12 +102,20 @@ public class Controller implements DataAccessable
 	@FXML private Label labelPause;
 	@FXML private Button buttonPause;
 	@FXML private Button buttonPauseReset;
+	@FXML private VBox vboxPause;
+	@FXML private TextField textFieldNextPause;
+	@FXML private Label labelNextPause;
+	@FXML private Button buttonNextPause;
+	@FXML private Button buttonNextPauseReset;
+	@FXML private VBox vboxNextPause;
 	@FXML private Label labelStatus;
 	@FXML private Label labelServer;
 	@FXML private Button buttonMasterLock;
 	@FXML private VBox vboxAll;
 	@FXML private TextField textFieldSmallBlind;
 	@FXML private TextField textFieldBigBlind;
+	@FXML private Button buttonSmallBlind;
+	@FXML private Button buttonBigBlind;
 
 	@FXML ImageView imageViewBoard1;
 	@FXML ImageView imageViewBoard2;
@@ -92,6 +132,7 @@ public class Controller implements DataAccessable
 	@FXML private Button buttonClearBoard;
 	@FXML private Button buttonNewRound;
 	@FXML private Button buttonLockBoard;
+	
 
 	Stage stage;
 	Image icon;
@@ -99,14 +140,16 @@ public class Controller implements DataAccessable
 	Board board;
 	PlayerList players;
 	ControlSocket socket;
-	Timeline timeline;
-	int remainingSeconds;
+	TimelineHandler timelineHandler;
 	Stage modalStage;
 	public static StringProperty modalText;
 	boolean isBoardLocked = false;
 	boolean isAllLocked = false;
 	Settings settings;
 	List<MidiAction> midiActionList = new ArrayList<>();
+	
+	private final int COUNTDOWN_WARNING_TIME = 30;
+	private final int COUNTDOWN_PRE_WARNING_TIME = 60;
 
 	private ControllerListenerImpl listenerImpl;
 
@@ -124,6 +167,10 @@ public class Controller implements DataAccessable
 		players.addListener(listenerImpl);
 
 		modalText = new SimpleStringProperty();
+		
+		timelineHandler = new TimelineHandler();
+		timelineHandler.getTimelines().add(new TimelineInstance(new Timeline(), 0));
+		timelineHandler.getTimelines().add(new TimelineInstance(new Timeline(), 0));
 
 		labelStatus.setText("Connecting...");
 		labelStatus.setStyle("-fx-text-fill: orange");
@@ -205,6 +252,14 @@ public class Controller implements DataAccessable
 			}
 		});
 		
+		textFieldNextPause.setTextFormatter(new NumberTextFormatter());
+		textFieldNextPause.setOnKeyPressed(ke -> {
+			if(ke.getCode().equals(KeyCode.ENTER))
+			{
+				setNextPause();
+			}
+		});
+		
 		textFieldSmallBlind.setTextFormatter(new NumberTextFormatter());
 		textFieldSmallBlind.setOnKeyPressed(ke -> {
 			if(ke.getCode().equals(KeyCode.ENTER))
@@ -219,6 +274,13 @@ public class Controller implements DataAccessable
 				setBigBlind();
 			}
 		});
+		
+		buttonPause.setGraphic(new FontIcon(FontIconType.MAIL_FORWARD, 14, Color.BLACK));
+		buttonPauseReset.setGraphic(new FontIcon(FontIconType.TRASH, 14, Color.BLACK));
+		buttonNextPause.setGraphic(new FontIcon(FontIconType.MAIL_FORWARD, 14, Color.BLACK));
+		buttonNextPauseReset.setGraphic(new FontIcon(FontIconType.TRASH, 14, Color.BLACK));
+		buttonSmallBlind.setGraphic(new FontIcon(FontIconType.MAIL_FORWARD, 14, Color.BLACK));
+		buttonBigBlind.setGraphic(new FontIcon(FontIconType.MAIL_FORWARD, 14, Color.BLACK));
 
 		imageViewBoard1.setOnMouseClicked((e)->{showBoardCardGUI(0);});
 		imageViewBoard2.setOnMouseClicked((e)->{showBoardCardGUI(1);});
@@ -532,46 +594,142 @@ public class Controller implements DataAccessable
 			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), icon, stage, null, false);
 		}
 	}
-
-	@FXML
-	public void setPause()
+	
+	private void resetCountdown(CountdownType countdownType)
 	{
-		String pauseTime = textFieldPause.getText().trim();
-		if(pauseTime == null || pauseTime.equals(""))
+		int timelineIndex;
+		Label currentLabel;
+		VBox currentVbox;
+		if(countdownType.equals(CountdownType.PAUSE))
 		{
-			AlertGenerator.showAlert(AlertType.WARNING, "Warning", "", "Please enter a pause time", icon, stage, null, false);
-			return;
+			timelineIndex = 0;
+			currentLabel = labelPause;
+			currentVbox = vboxPause;
 		}
-
-		resetPause();
-
-		final int minutes = Integer.parseInt(pauseTime);
+		else
+		{
+			timelineIndex = 1;
+			currentLabel = labelNextPause;
+			currentVbox = vboxNextPause;
+		}
+		
 		try
 		{
-			socket.write(new CountdownSetSendCommand(minutes));
+			socket.write(new CountdownSetSendCommand(0, countdownType));
 		}
 		catch(SocketException e)
 		{
 			Logger.error(e);
 			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
 		}
+		
+		if(timelineHandler.getTimelines().get(timelineIndex).getTimeline() != null)
+		{
+			timelineHandler.getTimelines().get(timelineIndex).getTimeline().stop();
+		}
+		currentLabel.setText("--:--");
+		currentLabel.setStyle("");
+		currentVbox.setStyle("");
+	}
+	
+	private void setCountdown(CountdownType countdownType)
+	{
+		int timelineIndex;
+		Label currentLabel;
+		VBox currentVbox;
+		String pauseTime;
+		String message;
+		if(countdownType.equals(CountdownType.PAUSE))
+		{
+			timelineIndex = 0;
+			currentLabel = labelPause;
+			currentVbox = vboxPause;
+			pauseTime = textFieldPause.getText().trim();
+			message = "Please enter a pause time";
+		}
+		else
+		{
+			timelineIndex = 1;
+			currentLabel = labelNextPause;
+			currentVbox = vboxNextPause;
+			pauseTime = textFieldNextPause.getText().trim();
+			message = "Please enter a next pause time";
+		}
+		
+		if(pauseTime == null || pauseTime.equals(""))
+		{
+			AlertGenerator.showAlert(AlertType.WARNING, "Warning", "", message, icon, stage, null, false);
+			return;
+		}
+		
+		resetCountdown(countdownType);
+		
+		final int minutes = Integer.parseInt(pauseTime);
+		try
+		{
+			socket.write(new CountdownSetSendCommand(minutes, countdownType));
+		}
+		catch(SocketException e)
+		{
+			Logger.error(e);
+			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
+		}		
+		
+		int remainingSeconds = minutes * 60;
+		currentLabel.setText(getMinuteStringFromSeconds(remainingSeconds));
 
-		remainingSeconds = minutes * 60;
-		labelPause.setText(getMinuteStringFromSeconds(remainingSeconds));
-
-		timeline = new Timeline();
-		timeline.setCycleCount(Timeline.INDEFINITE);
-		timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), (event) -> {
-			remainingSeconds--;
-			labelPause.setText(getMinuteStringFromSeconds(remainingSeconds));
-			if(remainingSeconds <= 0)
+		timelineHandler.getTimelines().set(timelineIndex, new TimelineInstance(new Timeline(), remainingSeconds));
+		timelineHandler.getTimelines().get(timelineIndex).getTimeline().setCycleCount(Timeline.INDEFINITE);
+		timelineHandler.getTimelines().get(timelineIndex).getTimeline().getKeyFrames().add(new KeyFrame(Duration.seconds(1), (event) -> {
+			timelineHandler.getTimelines().get(timelineIndex).reduceRemainingSeconds();
+			currentLabel.setText(getMinuteStringFromSeconds(timelineHandler.getTimelines().get(timelineIndex).getRemainingSeconds()));
+			if(timelineHandler.getTimelines().get(timelineIndex).getRemainingSeconds() <= COUNTDOWN_WARNING_TIME)
 			{
-				timeline.stop();
+				currentVbox.setStyle("-fx-background-color: rgba(204, 0, 0, 0.3)");
+			}
+			else if(timelineHandler.getTimelines().get(timelineIndex).getRemainingSeconds() <= COUNTDOWN_PRE_WARNING_TIME)
+			{
+				currentVbox.setStyle("-fx-background-color: rgba(255, 165, 0, 0.3)");
+			}
+			else
+			{
+				currentVbox.setStyle("");
+			}			
+			
+			if(timelineHandler.getTimelines().get(timelineIndex).getRemainingSeconds() <= 0)
+			{
+				timelineHandler.getTimelines().get(timelineIndex).getTimeline().stop();
+				currentVbox.setStyle("-fx-background-color: rgba(204, 0, 0, 0.5)");
 			}
 		}));
 
-		timeline.playFromStart();
+		timelineHandler.getTimelines().get(timelineIndex).getTimeline().playFromStart();
 	}
+
+	@FXML
+	void resetPause()
+	{
+		resetCountdown(CountdownType.PAUSE);
+	}
+	
+	@FXML
+	void resetNextPause()
+	{
+		resetCountdown(CountdownType.NEXT_PAUSE);
+	}
+	
+	@FXML
+	public void setNextPause()
+	{
+		setCountdown(CountdownType.NEXT_PAUSE);
+	}
+
+	@FXML
+	public void setPause()
+	{
+		setCountdown(CountdownType.PAUSE);
+	}
+	
 	
 	@FXML
 	public void setSmallBlind()
@@ -648,25 +806,6 @@ public class Controller implements DataAccessable
 		int secondsRest = seconds % 60;
 
 		return String.format("%02d", minutes) + ":" + String.format("%02d", secondsRest);
-	}
-
-	@FXML
-	void resetPause()
-	{
-		try
-		{
-			socket.write(new CountdownSetSendCommand(0));
-		}
-		catch(SocketException e)
-		{
-			Logger.error(e);
-			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
-		}
-		if(timeline != null)
-		{
-			timeline.stop();
-		}
-		labelPause.setText("--:--");
 	}
 
 	@FXML public void newRound()

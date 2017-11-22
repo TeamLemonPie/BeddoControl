@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 public class PlayerList implements Iterable<Player> {
 
     private List<Player> data = new ArrayList<>();
-    private int playerIndex = 0;
     private List<PlayerListListener> listeners;
 
     public PlayerList() {

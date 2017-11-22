@@ -4,10 +4,11 @@ import com.google.gson.JsonPrimitive;
 import de.lemonpie.beddocontrol.network.CommandName;
 import de.lemonpie.beddocontrol.network.ControlCommandData;
 import de.lemonpie.beddocontrol.network.Scope;
+import de.lemonpie.beddocontrol.ui.CountdownType;
 
 public class CountdownSetSendCommand extends ControlCommandData {
-	public CountdownSetSendCommand(int minutes) {
-		super(Scope.ADMIN, CommandName.COUNTDOWN, 0);
+	public CountdownSetSendCommand(int minutes, CountdownType type) {
+		super(Scope.ADMIN, CommandName.COUNTDOWN, type.ordinal());
 		setValue(new JsonPrimitive(minutes));
 	}
 }
