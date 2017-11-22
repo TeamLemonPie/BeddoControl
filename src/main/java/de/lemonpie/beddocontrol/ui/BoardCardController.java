@@ -15,6 +15,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+@SuppressWarnings("unused")
 public class BoardCardController
 {
 	@FXML private AnchorPane mainPane;
