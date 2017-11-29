@@ -12,19 +12,16 @@ public class ReaderSendCommand extends ControlCommandData {
         BOARD
     }
 
-    public ReaderSendCommand(ReaderType type, int readerId) {
-        super(Scope.ADMIN, CommandName.READER, readerId);
-        JsonObject object = new JsonObject();
-        object.addProperty("type", type.ordinal());
-        setValue(object);
-    }
-
     public ReaderSendCommand(ReaderType type, int readerId, int playerId) {
         super(Scope.ADMIN, CommandName.READER, readerId);
         JsonObject object = new JsonObject();
         object.addProperty("type", type.ordinal());
         if (type == ReaderType.PLAYER) {
             object.addProperty("playerId", playerId);
+        }
+        else
+        {
+        	object.addProperty("oldReaderId", playerId);
         }
         setValue(object);
     }

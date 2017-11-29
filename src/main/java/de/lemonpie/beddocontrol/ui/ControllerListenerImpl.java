@@ -113,7 +113,7 @@ public class ControllerListenerImpl implements BoardListener, PlayerListener, Pl
 	}
 
 	@Override
-	public void boardReaderIdDidChange(int index, int readerId)
+	public void boardReaderIdDidChange(int index, int readerId, int oldReaderId)
 	{
 		String style = readerId == -2 ? "-fx-border-color: #CC0000; -fx-border-width: 2" : "-fx-border-color: #48DB5E; -fx-border-width: 2";
 		switch(index)

@@ -1,12 +1,9 @@
 package de.lemonpie.beddocontrol.network.command.read;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
 import com.google.gson.JsonPrimitive;
+
 import de.lemonpie.beddocontrol.model.Board;
 import de.lemonpie.beddocontrol.model.DataAccessable;
 import de.lemonpie.beddocontrol.model.Player;

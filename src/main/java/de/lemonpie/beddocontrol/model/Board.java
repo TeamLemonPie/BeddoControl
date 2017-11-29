@@ -41,8 +41,9 @@ public class Board {
 	}
 	
 	public void setReaderId(int index, int readerId) throws IndexOutOfBoundsException {
+		int oldReaderId = readerIds[index];
 		readerIds[index] = readerId;
-		fireListener(listener -> listener.boardReaderIdDidChange(index, readerId));
+		fireListener(listener -> listener.boardReaderIdDidChange(index, readerId, oldReaderId));
 	}
 
 	public int getSmallBlind() {

@@ -22,9 +22,9 @@ public class BoardListenerImpl implements BoardListener {
 	}
 
 	@Override
-	public void boardReaderIdDidChange(int index, int readerId)
+	public void boardReaderIdDidChange(int index, int readerId, int oldReaderId)
 	{
-		ReaderSendCommand cmd = new ReaderSendCommand(ReaderType.BOARD, readerId);
+		ReaderSendCommand cmd = new ReaderSendCommand(ReaderType.BOARD, readerId, oldReaderId);
         try {
             socket.write(cmd);
         } catch (SocketException e) {
