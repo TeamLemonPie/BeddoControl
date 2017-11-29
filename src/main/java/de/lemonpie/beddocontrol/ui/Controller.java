@@ -109,6 +109,7 @@ public class Controller implements DataAccessable
 	@FXML private Button buttonNextPause;
 	@FXML private Button buttonNextPauseReset;
 	@FXML private VBox vboxNextPause;
+	@FXML private Label labelConnectedBeddoFabriks;
 	@FXML private Label labelStatus;
 	@FXML private Label labelServer;
 	@FXML private Button buttonMasterLock;
@@ -175,6 +176,7 @@ public class Controller implements DataAccessable
 
 		labelStatus.setText("Connecting...");
 		labelStatus.setStyle("-fx-text-fill: orange");
+		labelConnectedBeddoFabriks.setText("0 BeddoFabrik connected");
 
 		Object possibleSettings = ObjectJSONHandler.loadObjectFromJSON(bundle.getString("folder"), "settings", new Settings());
 		if (possibleSettings == null)
