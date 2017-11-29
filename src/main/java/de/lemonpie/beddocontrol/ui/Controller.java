@@ -575,7 +575,7 @@ public class Controller implements DataAccessable
 				}
 				else
 				{
-					textField.clear();
+					textField.setText(String.valueOf(board.getReaderId(position)));
 					textField.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
 				}
 			}
@@ -983,8 +983,14 @@ public class Controller implements DataAccessable
 		}
 	}
 	
-	private boolean checkNewReaderID(int newReaderID)
+	private boolean checkNewReaderID(int ownReaderID, int newReaderID)
 	{
+		if(ownReaderID == newReaderID)
+		{
+			return true;
+		}
+		
+		
 		for(Player currentPlayer : players)
 		{
 			if(currentPlayer.getReaderId() == newReaderID)
@@ -1008,7 +1014,7 @@ public class Controller implements DataAccessable
 		
 	public boolean setReaderIDForPlayer(Player player, int newReaderID)
 	{
-		if(checkNewReaderID(newReaderID))
+		if(checkNewReaderID(player.getReaderId(), newReaderID))
 		{			
 			player.setReaderId(newReaderID);
 			return true;
@@ -1019,7 +1025,7 @@ public class Controller implements DataAccessable
 	
 	public boolean setReaderIDForBoard(int boardIndex, int newReaderID)
 	{
-		if(checkNewReaderID(newReaderID))
+		if(checkNewReaderID(board.getReaderId(boardIndex), newReaderID))
 		{
 			board.setReaderId(boardIndex, newReaderID);
 			return true;

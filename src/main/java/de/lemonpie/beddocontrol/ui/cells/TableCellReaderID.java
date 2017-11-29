@@ -48,7 +48,7 @@ public class TableCellReaderID extends TableCell<Player, Integer>
 					}
 					else
 					{
-						textFieldReader.clear();
+						textFieldReader.setText(String.valueOf(currentPlayer.getReaderId()));
 						textFieldReader.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
 					}
 				}
