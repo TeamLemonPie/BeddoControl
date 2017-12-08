@@ -3,7 +3,6 @@ package de.lemonpie.beddocontrol.network.command.read;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-
 import de.lemonpie.beddocontrol.model.Board;
 import de.lemonpie.beddocontrol.model.DataAccessable;
 import de.lemonpie.beddocontrol.model.Player;
@@ -33,6 +32,7 @@ public class DataReadCommand implements Command {
 			JsonArray players = values.getAsJsonArray("players");
 			JsonArray board = values.getAsJsonArray("board");
 			JsonArray boardReader = values.getAsJsonArray("board-reader");
+			JsonPrimitive readerCount = values.getAsJsonPrimitive("reader-count");
 
 			if (players != null) {
 				// Clear old data
@@ -88,6 +88,11 @@ public class DataReadCommand implements Command {
 						i[0] += 1;
 					}
 				});
+			}
+
+			if (readerCount != null) {
+				int count = readerCount.getAsInt();
+				dataAccessable.setBeddoFabrikCount(count);
 			}
 		}
 	}

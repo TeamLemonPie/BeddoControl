@@ -12,4 +12,10 @@ public interface DataAccessable
 	public Optional<Player> getPlayer(int id);
 
 	public Board getBoard();
+
+	public void increaseBeddoFabrikCount();
+
+	public void decreaseBeddoFabrikCount();
+
+	public void setBeddoFabrikCount(int count);
 }

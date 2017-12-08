@@ -12,7 +12,9 @@ public enum CommandName {
     PLAYER_STATE("state"),
     PLAYER_CHIP("chip"),
     PLAYER_OP("player-op"),
-	WINPROBABILITY("winprobability"),
+
+	WIN_PROBABILITY("winprobability"),
+	READER_COUNT("reader-count"),
 
 	DATA("data"),
 
