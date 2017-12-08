@@ -145,7 +145,6 @@ public class Controller implements DataAccessable
 
 		labelStatus.setText("Connecting...");
 		labelStatus.setStyle("-fx-text-fill: orange");
-		labelConnectedBeddoFabriks.setText("0 BeddoFabrik connected");
 
 		Object possibleSettings = ObjectJSONHandler.loadObjectFromJSON(bundle.getString("folder"), "settings", new Settings());
 		if (possibleSettings == null)
