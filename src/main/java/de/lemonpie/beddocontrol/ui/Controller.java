@@ -85,6 +85,7 @@ public class Controller implements DataAccessable
 	@FXML private TextField textFieldBigBlind;
 	@FXML private Button buttonSmallBlind;
 	@FXML private Button buttonBigBlind;
+	@FXML private Label labelStatusMIDI;
 
 	@FXML ImageView imageViewBoard1;
 	@FXML ImageView imageViewBoard2;
@@ -169,6 +170,9 @@ public class Controller implements DataAccessable
 		}
 
 		try {
+			labelStatusMIDI.setText("MIDI available");
+			labelStatusMIDI.setStyle("-fx-background-color: rgba(72, 219, 94, 0.5); -fx-padding: 5px 7px 5px 7px; -fx-background-radius: 3px");
+			
 			Path midiSettingsPath = Paths.get(PathUtils.getOSindependentPath() + bundle.getString("folder") + "midi.json");
 
 			if (Files.notExists(midiSettingsPath)) {
@@ -189,7 +193,8 @@ public class Controller implements DataAccessable
 		} catch (MidiUnavailableException | IOException e) {
 			Logger.error(e);
 			Platform.runLater(() -> {
-				AlertGenerator.showAlert(AlertType.ERROR, "Error", "", "Midi unavailable (Make midi great again)", icon, stage, null, false);
+				labelStatusMIDI.setText("MIDI unavailable");
+				labelStatusMIDI.setStyle("-fx-background-color: rgba(204, 0, 0, 0.5); -fx-padding: 5px 7px 5px 7px; -fx-background-radius: 3px");
 			});
 		}
 
@@ -620,6 +625,7 @@ public class Controller implements DataAccessable
 			currentVbox = vboxPause;
 			pauseTime = textFieldPause.getText().trim();
 			message = "Please enter a pause time";
+			resetCountdown(CountdownType.NEXT_PAUSE);
 		}
 		else
 		{
