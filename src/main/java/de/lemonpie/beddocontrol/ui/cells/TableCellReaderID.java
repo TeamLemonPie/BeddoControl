@@ -42,6 +42,12 @@ public class TableCellReaderID extends TableCell<Player, Integer>
 			textFieldReader.setOnKeyPressed(ke -> {
 				if(ke.getCode().equals(KeyCode.ENTER))
 				{
+					if(textFieldReader.getText().trim().equals(""))
+					{
+						currentPlayer.setReaderId(-3);
+						return;
+					}
+					
 					if(controller.setReaderIDForPlayer(currentPlayer, Integer.parseInt(textFieldReader.getText().trim())))
 					{
 						textFieldReader.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");

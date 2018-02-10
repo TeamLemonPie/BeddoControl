@@ -529,10 +529,6 @@ public class Controller implements DataAccessable
 
 	private void initTextFieldBoard(TextField textField, int position)
 	{
-		textField.textProperty().addListener((a, b, c) -> {
-			textField.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
-		});
-
 		textField.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
 
 		textField.setTextFormatter(new NumberTextFormatter());
@@ -540,6 +536,12 @@ public class Controller implements DataAccessable
 		textField.setOnKeyPressed(ke -> {
 			if(ke.getCode().equals(KeyCode.ENTER))
 			{
+				if(textField.getText().trim().equals(""))
+				{
+					board.setReaderId(position, -3);
+					return;
+				}
+				
 				if(setReaderIDForBoard(position, Integer.parseInt(textField.getText().trim())))
 				{
 					textField.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
