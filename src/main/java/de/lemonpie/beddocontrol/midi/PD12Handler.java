@@ -41,7 +41,12 @@ public class PD12Handler implements MidiListener {
 						List<Player> players = controller.getPlayerList().getPlayer();
 						int additionalInfo = midiAction.getAdditionalInfo();
 						if (players.size() > additionalInfo && additionalInfo >= 0) {
-							players.get(additionalInfo).setPlayerState(PlayerState.OUT_OF_ROUND);
+							Player player = players.get(additionalInfo);
+							if (player.getPlayerState() == PlayerState.ACTIVE) {
+								player.setPlayerState(PlayerState.OUT_OF_ROUND);
+							} else if (player.getPlayerState() == PlayerState.OUT_OF_ROUND) {
+								player.setPlayerState(PlayerState.ACTIVE);
+							}
 						}
 						break;
 					case NEW_ROUND:
@@ -58,6 +63,9 @@ public class PD12Handler implements MidiListener {
 						break;
 					case UNLOCK_BOARD:
 						Platform.runLater(() -> controller.lockBoard(false));
+						break;
+					case BOARD_CLEAR:
+						Platform.runLater(() -> controller.clearBoard());
 						break;
 				}
 			}

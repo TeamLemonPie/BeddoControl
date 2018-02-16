@@ -7,7 +7,8 @@ public class MidiAction {
 		CONFIRM,
 		LOCK_ALL_TOGGLE,
 		UNLOCK_BOARD,
-		NEW_ROUND
+		NEW_ROUND,
+		BOARD_CLEAR;
 	}
 
 	private int key;
