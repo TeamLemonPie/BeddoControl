@@ -145,11 +145,13 @@ public class ControllerListenerImpl implements BoardListener, PlayerListener, Pl
 
 	@Override
 	public void smallBlindDidChange(int newValue) {
-
 	}
 
 	@Override
 	public void bigBlindDidChange(int newValue) {
+	}
 
+	@Override
+	public void anteDidChange(int newValue) {
 	}
 }

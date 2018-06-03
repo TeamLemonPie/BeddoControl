@@ -34,11 +34,13 @@ public class BoardListenerImpl implements BoardListener {
 
 	@Override
 	public void smallBlindDidChange(int newValue) {
-
 	}
 
 	@Override
 	public void bigBlindDidChange(int newValue) {
+	}
 
+	@Override
+	public void anteDidChange(int newValue) {
 	}
 }

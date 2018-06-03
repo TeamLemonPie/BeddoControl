@@ -17,6 +17,7 @@ public class Board {
 
 	private int smallBlind;
 	private int bigBlind;
+	private int ante;
 
 	public Board() {
 		listeners = new LinkedList<>();
@@ -64,6 +65,15 @@ public class Board {
 		fireListener(listener -> listener.bigBlindDidChange(bigBlind));
 	}
 
+	public int getAnte() {
+		return ante;
+	}
+
+	public void setAnte(int ante) {
+		this.ante = ante;
+		fireListener(listener -> listener.anteDidChange(ante));
+	}
+
 	public void addListener(BoardListener boardListener) {
 		this.listeners.add(boardListener);
 	}
@@ -83,7 +93,7 @@ public class Board {
 	}
 
 	public int getNumberOfMissingCards() {
-		return (int) Stream.of(cards).filter(c -> c == Card.EMPTY).count();
+		return (int) Stream.of(cards).filter(card -> card.equals(Card.EMPTY)).count();
 	}
 
 	public void clearCards() {

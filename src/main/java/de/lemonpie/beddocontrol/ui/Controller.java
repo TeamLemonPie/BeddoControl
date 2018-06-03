@@ -83,8 +83,12 @@ public class Controller implements DataAccessable
 	@FXML private VBox vboxAll;
 	@FXML private TextField textFieldSmallBlind;
 	@FXML private TextField textFieldBigBlind;
+	@FXML
+	private TextField textFieldAnte;
 	@FXML private Button buttonSmallBlind;
 	@FXML private Button buttonBigBlind;
+	@FXML
+	private Button buttonAnte;
 	@FXML private Label labelStatusMIDI;
 
 	@FXML ImageView imageViewBoard1;
@@ -250,6 +254,12 @@ public class Controller implements DataAccessable
 				setBigBlind();
 			}
 		});
+		textFieldAnte.setTextFormatter(new NumberTextFormatter());
+		textFieldAnte.setOnKeyPressed(ke -> {
+			if (ke.getCode().equals(KeyCode.ENTER)) {
+				setAnte();
+			}
+		});
 		
 		buttonPause.setGraphic(new FontIcon(FontIconType.MAIL_FORWARD, 14, Color.BLACK));
 		buttonPauseReset.setGraphic(new FontIcon(FontIconType.TRASH, 14, Color.BLACK));
@@ -257,6 +267,7 @@ public class Controller implements DataAccessable
 		buttonNextPauseReset.setGraphic(new FontIcon(FontIconType.TRASH, 14, Color.BLACK));
 		buttonSmallBlind.setGraphic(new FontIcon(FontIconType.MAIL_FORWARD, 14, Color.BLACK));
 		buttonBigBlind.setGraphic(new FontIcon(FontIconType.MAIL_FORWARD, 14, Color.BLACK));
+		buttonAnte.setGraphic(new FontIcon(FontIconType.MAIL_FORWARD, 14, Color.BLACK));
 
 		imageViewBoard1.setOnMouseClicked((e)->{showBoardCardGUI(0);});
 		imageViewBoard2.setOnMouseClicked((e)->{showBoardCardGUI(1);});
@@ -744,8 +755,8 @@ public class Controller implements DataAccessable
 		String bigBlindText = textFieldBigBlind.getText().trim();
 		if(bigBlindText == null || bigBlindText.equals(""))
 		{
-			AlertGenerator.showAlert(AlertType.WARNING, "Warning", "", "Please enter a small blind value", icon, stage, null, false);
-			textFieldSmallBlind.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
+			AlertGenerator.showAlert(AlertType.WARNING, "Warning", "", "Please enter a big blind value", icon, stage, null, false);
+			textFieldBigBlind.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
 			return;
 		}	
 
@@ -763,6 +774,28 @@ public class Controller implements DataAccessable
 		}
 		
 		textFieldBigBlind.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
+	}
+
+	@FXML
+	public void setAnte() {
+		String anteText = textFieldAnte.getText().trim();
+		if (anteText == null || anteText.equals("")) {
+			AlertGenerator.showAlert(AlertType.WARNING, "Warning", "", "Please enter an ante value", icon, stage, null, false);
+			textFieldAnte.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
+			return;
+		}
+
+		final int ante = Integer.parseInt(anteText);
+		try {
+			board.setAnte(ante);
+			socket.write(new AnteSendCommand(ante));
+		} catch (SocketException e) {
+			Logger.error(e);
+			textFieldAnte.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
+			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
+		}
+
+		textFieldAnte.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
 	}
 
 	@FXML

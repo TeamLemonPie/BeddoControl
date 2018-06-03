@@ -10,4 +10,6 @@ public interface BoardListener {
 	void smallBlindDidChange(int newValue);
 
 	void bigBlindDidChange(int newValue);
+
+	void anteDidChange(int newValue);
 }

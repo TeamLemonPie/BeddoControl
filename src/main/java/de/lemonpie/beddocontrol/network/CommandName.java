@@ -22,7 +22,8 @@ public enum CommandName {
 
 	PAUSE("pause"),
 	SMALL_BLIND("small-blind"),
-	BIG_BLIND("big-blind");
+	BIG_BLIND("big-blind"),
+	ANTE("ante");
 
     private String name;
 
