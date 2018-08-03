@@ -2,6 +2,7 @@ package de.lemonpie.beddocontrol.network;
 
 import com.google.gson.Gson;
 import de.lemonpie.beddocontrol.ui.Controller;
+import de.tobias.utils.net.DiscoveryClient;
 import javafx.application.Platform;
 import logger.Logger;
 
@@ -42,9 +43,8 @@ public class ControlSocket implements Runnable
 
 	private Thread readerThread;
 
-	public ControlSocket(String host, int port, ControlSocketDelegate delegate)
+	public ControlSocket(int port, ControlSocketDelegate delegate)
 	{
-		this.host = host;
 		this.port = port;
 		this.delegate = delegate;
 
@@ -67,6 +67,14 @@ public class ControlSocket implements Runnable
 
 	public boolean connect()
 	{
+		if(host == null)
+		{
+			DiscoveryClient discoveryClient = new DiscoveryClient();
+			discoveryClient.setPort(9990);
+			discoveryClient.setMessageKey("BEDDOMISCHER");
+			host = discoveryClient.discover().getHostAddress();
+		}
+
 		message = "Trying to connect to " + host + ":" + port + "...";
 
 		Logger.debug(message);
@@ -107,6 +115,8 @@ public class ControlSocket implements Runnable
 
 	private void initConnection() throws IOException
 	{
+
+
 		socket = new Socket();
 		socket.connect(new InetSocketAddress(host, port));
 

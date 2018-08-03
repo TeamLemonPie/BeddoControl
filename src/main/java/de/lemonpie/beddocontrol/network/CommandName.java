@@ -14,7 +14,7 @@ public enum CommandName
 	PLAYER_CHIP("chip"),
 	PLAYER_OP("player-op"),
 
-	WIN_PROBABILITY("winprobability"),
+	WIN_PROBABILITY("winProbability"),
 	READER_COUNT("reader-count"),
 
 	DATA("data"),
