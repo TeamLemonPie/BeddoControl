@@ -5,17 +5,17 @@ import java.util.Optional;
 
 public interface DataAccessable
 {
-	public List<Player> getPlayers();
-	
-	public void addPlayer(Player player);
+	List<Player> getPlayers();
 
-	public Optional<Player> getPlayer(int id);
+	void addPlayer(Player player);
 
-	public Board getBoard();
+	Optional<Player> getPlayer(int id);
 
-	public void increaseBeddoFabrikCount();
+	Board getBoard();
 
-	public void decreaseBeddoFabrikCount();
+	void increaseBeddoFabrikCount();
 
-	public void setBeddoFabrikCount(int count);
+	void decreaseBeddoFabrikCount();
+
+	void setBeddoFabrikCount(int count);
 }

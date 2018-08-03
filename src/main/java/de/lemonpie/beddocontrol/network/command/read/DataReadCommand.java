@@ -12,34 +12,41 @@ import de.lemonpie.beddocontrol.network.Command;
 import de.lemonpie.beddocontrol.network.CommandName;
 import de.lemonpie.beddocontrol.network.ControlCommandData;
 
-public class DataReadCommand implements Command {
+public class DataReadCommand implements Command
+{
 
 	private DataAccessable dataAccessable;
 
-	public DataReadCommand(DataAccessable dataAccessable) {
+	public DataReadCommand(DataAccessable dataAccessable)
+	{
 		this.dataAccessable = dataAccessable;
 	}
 
 	@Override
-	public CommandName name() {
+	public CommandName name()
+	{
 		return CommandName.DATA;
 	}
 
 	@Override
-	public void execute(ControlCommandData data) {
-		if (data.getValue() instanceof JsonObject) {
+	public void execute(ControlCommandData data)
+	{
+		if(data.getValue() instanceof JsonObject)
+		{
 			JsonObject values = (JsonObject) data.getValue();
 			JsonArray players = values.getAsJsonArray("players");
 			JsonArray board = values.getAsJsonArray("board");
 			JsonArray boardReader = values.getAsJsonArray("board-reader");
 			JsonPrimitive readerCount = values.getAsJsonPrimitive("reader-count");
 
-			if (players != null) {
+			if(players != null)
+			{
 				// Clear old data
 				dataAccessable.getPlayers().clear();
 
 				players.forEach(elem -> {
-					if (elem instanceof JsonObject) {
+					if(elem instanceof JsonObject)
+					{
 						JsonObject obj = (JsonObject) elem;
 						int id = obj.getAsJsonPrimitive("id").getAsInt();
 						String name = obj.getAsJsonPrimitive("name").getAsString();
@@ -64,11 +71,13 @@ public class DataReadCommand implements Command {
 				});
 			}
 
-			if (board != null) {
+			if(board != null)
+			{
 				Board b = dataAccessable.getBoard();
 
 				board.forEach(elem -> {
-					if (elem instanceof JsonObject) {
+					if(elem instanceof JsonObject)
+					{
 						JsonObject obj = (JsonObject) elem;
 						int id = obj.getAsJsonPrimitive("id").getAsInt();
 						Card card = Card.fromString(obj.getAsJsonPrimitive("card").getAsString());
@@ -80,9 +89,11 @@ public class DataReadCommand implements Command {
 			}
 
 			int[] i = {0};
-			if (boardReader != null) {
+			if(boardReader != null)
+			{
 				boardReader.forEach(reader -> {
-					if (reader instanceof JsonPrimitive) {
+					if(reader instanceof JsonPrimitive)
+					{
 						Board b = dataAccessable.getBoard();
 						b.setReaderId(i[0], reader.getAsInt());
 						i[0] += 1;
@@ -90,7 +101,8 @@ public class DataReadCommand implements Command {
 				});
 			}
 
-			if (readerCount != null) {
+			if(readerCount != null)
+			{
 				int count = readerCount.getAsInt();
 				dataAccessable.setBeddoFabrikCount(count);
 			}

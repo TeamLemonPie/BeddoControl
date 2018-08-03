@@ -63,50 +63,87 @@ import java.util.ResourceBundle;
 
 public class Controller implements DataAccessable
 {
-	@FXML private AnchorPane mainPane;
-	@FXML TableView<Player> tableView;
-	@FXML private Button buttonAdd;
-	@FXML private TextField textFieldPause;
-	@FXML private Label labelPause;
-	@FXML private Button buttonPause;
-	@FXML private Button buttonPauseReset;
-	@FXML private VBox vboxPause;
-	@FXML private TextField textFieldNextPause;
-	@FXML private Label labelNextPause;
-	@FXML private Button buttonNextPause;
-	@FXML private Button buttonNextPauseReset;
-	@FXML private VBox vboxNextPause;
-	@FXML private Label labelConnectedBeddoFabriks;
-	@FXML private Label labelStatus;
-	@FXML private Label labelServer;
-	@FXML private Button buttonMasterLock;
-	@FXML private VBox vboxAll;
-	@FXML private TextField textFieldSmallBlind;
-	@FXML private TextField textFieldBigBlind;
+	@FXML
+	private AnchorPane mainPane;
+	@FXML
+	TableView<Player> tableView;
+	@FXML
+	private Button buttonAdd;
+	@FXML
+	private TextField textFieldPause;
+	@FXML
+	private Label labelPause;
+	@FXML
+	private Button buttonPause;
+	@FXML
+	private Button buttonPauseReset;
+	@FXML
+	private VBox vboxPause;
+	@FXML
+	private TextField textFieldNextPause;
+	@FXML
+	private Label labelNextPause;
+	@FXML
+	private Button buttonNextPause;
+	@FXML
+	private Button buttonNextPauseReset;
+	@FXML
+	private VBox vboxNextPause;
+	@FXML
+	private Label labelConnectedBeddoFabriks;
+	@FXML
+	private Label labelStatus;
+	@FXML
+	private Label labelServer;
+	@FXML
+	private Button buttonMasterLock;
+	@FXML
+	private VBox vboxAll;
+	@FXML
+	private TextField textFieldSmallBlind;
+	@FXML
+	private TextField textFieldBigBlind;
 	@FXML
 	private TextField textFieldAnte;
-	@FXML private Button buttonSmallBlind;
-	@FXML private Button buttonBigBlind;
+	@FXML
+	private Button buttonSmallBlind;
+	@FXML
+	private Button buttonBigBlind;
 	@FXML
 	private Button buttonAnte;
-	@FXML private Label labelStatusMIDI;
+	@FXML
+	private Label labelStatusMIDI;
 
-	@FXML ImageView imageViewBoard1;
-	@FXML ImageView imageViewBoard2;
-	@FXML ImageView imageViewBoard3;
-	@FXML ImageView imageViewBoard4;
-	@FXML ImageView imageViewBoard5;
-	@FXML TextField textFieldBoard1;
-	@FXML TextField textFieldBoard2;
-	@FXML TextField textFieldBoard3;
-	@FXML TextField textFieldBoard4;
-	@FXML TextField textFieldBoard5;
-	@FXML private HBox hboxBoard;
+	@FXML
+	ImageView imageViewBoard1;
+	@FXML
+	ImageView imageViewBoard2;
+	@FXML
+	ImageView imageViewBoard3;
+	@FXML
+	ImageView imageViewBoard4;
+	@FXML
+	ImageView imageViewBoard5;
+	@FXML
+	TextField textFieldBoard1;
+	@FXML
+	TextField textFieldBoard2;
+	@FXML
+	TextField textFieldBoard3;
+	@FXML
+	TextField textFieldBoard4;
+	@FXML
+	TextField textFieldBoard5;
+	@FXML
+	private HBox hboxBoard;
 
-	@FXML private Button buttonClearBoard;
-	@FXML private Button buttonNewRound;
-	@FXML private Button buttonLockBoard;
-	
+	@FXML
+	private Button buttonClearBoard;
+	@FXML
+	private Button buttonNewRound;
+	@FXML
+	private Button buttonLockBoard;
+
 
 	Stage stage;
 	Image icon;
@@ -143,7 +180,7 @@ public class Controller implements DataAccessable
 		players.addListener(listenerImpl);
 
 		modalText = new SimpleStringProperty();
-		
+
 		timelineHandler = new TimelineHandler();
 		timelineHandler.getTimelines().add(new TimelineInstance(new Timeline(), 0));
 		timelineHandler.getTimelines().add(new TimelineInstance(new Timeline(), 0));
@@ -152,7 +189,7 @@ public class Controller implements DataAccessable
 		labelStatus.setStyle("-fx-text-fill: orange");
 
 		Object possibleSettings = ObjectJSONHandler.loadObjectFromJSON(bundle.getString("folder"), "settings", new Settings());
-		if (possibleSettings == null)
+		if(possibleSettings == null)
 		{
 			Logger.error("Missing or invalid settings.json - Created default JSON");
 			try
@@ -167,20 +204,23 @@ public class Controller implements DataAccessable
 				Logger.error(e1);
 			}
 
-			Platform.runLater(()->{
+			Platform.runLater(() -> {
 				AlertGenerator.showAlert(AlertType.ERROR, "Error", "", "Missing or invalid settings.json.\nA default settings.json has been created.", icon, stage, null, false);
 				System.exit(0);
 			});
 		}
 
-		try {
+		try
+		{
 			labelStatusMIDI.setText("MIDI available");
 			labelStatusMIDI.setStyle("-fx-background-color: rgba(72, 219, 94, 0.5); -fx-padding: 5px 7px 5px 7px; -fx-background-radius: 3px");
-			
+
 			Path midiSettingsPath = Paths.get(PathUtils.getOSindependentPath() + bundle.getString("folder") + "midi.json");
 
-			if (Files.notExists(midiSettingsPath)) {
-				if (Files.notExists(midiSettingsPath.getParent())) {
+			if(Files.notExists(midiSettingsPath))
+			{
+				if(Files.notExists(midiSettingsPath.getParent()))
+				{
 					Files.createDirectories(midiSettingsPath.getParent());
 				}
 
@@ -189,12 +229,15 @@ public class Controller implements DataAccessable
 			}
 
 			BufferedReader inputStream = Files.newBufferedReader(midiSettingsPath);
-			Type type = new TypeToken<List<MidiAction>>() {
+			Type type = new TypeToken<List<MidiAction>>()
+			{
 			}.getType();
 			midiActionList = new Gson().fromJson(inputStream, type);
 			Midi.getInstance().lookupMidiDevice("PD 12");
 			Midi.getInstance().setListener(new PD12Handler(this, midiActionList));
-		} catch (MidiUnavailableException | IOException e) {
+		}
+		catch(MidiUnavailableException | IOException e)
+		{
 			Logger.error(e);
 			Platform.runLater(() -> {
 				labelStatusMIDI.setText("MIDI unavailable");
@@ -202,21 +245,17 @@ public class Controller implements DataAccessable
 			});
 		}
 
-		settings = (Settings)possibleSettings;
+		settings = (Settings) possibleSettings;
 		labelServer.setText(settings.getHostName() + ":" + settings.getPort());
 
 		buttonLockBoard.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
-		buttonLockBoard.setOnAction((e)->{
-			lockBoard(!isBoardLocked);
-		});
+		buttonLockBoard.setOnAction((e) -> lockBoard(!isBoardLocked));
 
 		buttonMasterLock.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
 		buttonMasterLock.setFocusTraversable(false);
-		buttonMasterLock.setOnAction((e)->{
-			lockAll(!isAllLocked);
-		});
+		buttonMasterLock.setOnAction((e) -> lockAll(!isAllLocked));
 
-		mainPane.setOnKeyPressed((e)->
+		mainPane.setOnKeyPressed((e) ->
 		{
 			if(e.getCode() == KeyCode.F1)
 			{
@@ -231,7 +270,7 @@ public class Controller implements DataAccessable
 				setPause();
 			}
 		});
-		
+
 		textFieldNextPause.setTextFormatter(new NumberTextFormatter());
 		textFieldNextPause.setOnKeyPressed(ke -> {
 			if(ke.getCode().equals(KeyCode.ENTER))
@@ -239,7 +278,7 @@ public class Controller implements DataAccessable
 				setNextPause();
 			}
 		});
-		
+
 		textFieldSmallBlind.setTextFormatter(new NumberTextFormatter());
 		textFieldSmallBlind.setOnKeyPressed(ke -> {
 			if(ke.getCode().equals(KeyCode.ENTER))
@@ -256,11 +295,12 @@ public class Controller implements DataAccessable
 		});
 		textFieldAnte.setTextFormatter(new NumberTextFormatter());
 		textFieldAnte.setOnKeyPressed(ke -> {
-			if (ke.getCode().equals(KeyCode.ENTER)) {
+			if(ke.getCode().equals(KeyCode.ENTER))
+			{
 				setAnte();
 			}
 		});
-		
+
 		buttonPause.setGraphic(new FontIcon(FontIconType.MAIL_FORWARD, 14, Color.BLACK));
 		buttonPauseReset.setGraphic(new FontIcon(FontIconType.TRASH, 14, Color.BLACK));
 		buttonNextPause.setGraphic(new FontIcon(FontIconType.MAIL_FORWARD, 14, Color.BLACK));
@@ -269,11 +309,11 @@ public class Controller implements DataAccessable
 		buttonBigBlind.setGraphic(new FontIcon(FontIconType.MAIL_FORWARD, 14, Color.BLACK));
 		buttonAnte.setGraphic(new FontIcon(FontIconType.MAIL_FORWARD, 14, Color.BLACK));
 
-		imageViewBoard1.setOnMouseClicked((e)->{showBoardCardGUI(0);});
-		imageViewBoard2.setOnMouseClicked((e)->{showBoardCardGUI(1);});
-		imageViewBoard3.setOnMouseClicked((e)->{showBoardCardGUI(2);});
-		imageViewBoard4.setOnMouseClicked((e)->{showBoardCardGUI(3);});
-		imageViewBoard5.setOnMouseClicked((e)->{showBoardCardGUI(4);});
+		imageViewBoard1.setOnMouseClicked((e) -> showBoardCardGUI(0));
+		imageViewBoard2.setOnMouseClicked((e) -> showBoardCardGUI(1));
+		imageViewBoard3.setOnMouseClicked((e) -> showBoardCardGUI(2));
+		imageViewBoard4.setOnMouseClicked((e) -> showBoardCardGUI(3));
+		imageViewBoard5.setOnMouseClicked((e) -> showBoardCardGUI(4));
 
 		initTableView();
 		initBoard();
@@ -342,12 +382,12 @@ public class Controller implements DataAccessable
 				Platform.runLater(() -> {
 					if(modalStage != null)
 						modalStage.close();
-					
+
 					Alert alert = new Alert(AlertType.ERROR);
 					alert.setTitle("Error");
 					alert.setHeaderText("");
 					alert.setContentText("Connection could not be established.");
-					Stage dialogStage = (Stage)alert.getDialogPane().getScene().getWindow();
+					Stage dialogStage = (Stage) alert.getDialogPane().getScene().getWindow();
 					dialogStage.getIcons().add(icon);
 					dialogStage.initOwner(stage);
 
@@ -406,7 +446,7 @@ public class Controller implements DataAccessable
 		try
 		{
 			String base = "/de/lemonpie/beddocontrol/cards/";
-			if (card == null || card.equals(Card.EMPTY))
+			if(card == null || card.equals(Card.EMPTY))
 			{
 				return new Image(base + "back.png");
 			}
@@ -439,87 +479,71 @@ public class Controller implements DataAccessable
 		tableView.setEditable(true);
 
 		TableColumn<Player, Integer> columnID = new TableColumn<>();
-		columnID.setCellValueFactory(new PropertyValueFactory<Player, Integer>("id"));
+		columnID.setCellValueFactory(new PropertyValueFactory<>("id"));
 		columnID.setStyle("-fx-alignment: CENTER;");
 		columnID.setText("Nr.");
 		columnID.prefWidthProperty().bind(tableView.widthProperty().multiply(0.03).subtract(2));
 		tableView.getColumns().add(columnID);
 
 		TableColumn<Player, Integer> columnReader = new TableColumn<>();
-		columnReader.setCellValueFactory(new PropertyValueFactory<Player, Integer>("readerId"));
-		columnReader.setCellFactory(param -> {
-			return new TableCellReaderID(this);
-		});
+		columnReader.setCellValueFactory(new PropertyValueFactory<>("readerId"));
+		columnReader.setCellFactory(param -> new TableCellReaderID(this));
 		columnReader.setStyle("-fx-alignment: CENTER;");
 		columnReader.setText("Reader ID");
 		columnReader.prefWidthProperty().bind(tableView.widthProperty().multiply(0.05).subtract(2));
 		tableView.getColumns().add(columnReader);
 
 		TableColumn<Player, String> columnName = new TableColumn<>();
-		columnName.setCellValueFactory(new PropertyValueFactory<Player, String>("name"));
-		columnName.setCellFactory(param -> {
-			return new TableCellName();
-		});
+		columnName.setCellValueFactory(new PropertyValueFactory<>("name"));
+		columnName.setCellFactory(param -> new TableCellName());
 		columnName.setStyle("-fx-alignment: CENTER;");
 		columnName.setText("Name");
 		columnName.prefWidthProperty().bind(tableView.widthProperty().multiply(0.15).subtract(2));
 		tableView.getColumns().add(columnName);
 
 		TableColumn<Player, String> columnTwitchName = new TableColumn<>();
-		columnTwitchName.setCellValueFactory(new PropertyValueFactory<Player, String>("twitchName"));
-		columnTwitchName.setCellFactory(param -> {
-			return new TableCellTwitchName();
-		});
+		columnTwitchName.setCellValueFactory(new PropertyValueFactory<>("twitchName"));
+		columnTwitchName.setCellFactory(param -> new TableCellTwitchName());
 		columnTwitchName.setStyle("-fx-alignment: CENTER;");
 		columnTwitchName.setText("Twitch Name");
 		tableView.getColumns().add(columnTwitchName);
 		columnTwitchName.prefWidthProperty().bind(tableView.widthProperty().multiply(0.15).subtract(2));
 
 		TableColumn<Player, Integer> columnCards = new TableColumn<>();
-		columnCards.setCellValueFactory(new PropertyValueFactory<Player, Integer>("id"));
-		columnCards.setCellFactory(param -> {
-			return new TableCellCards(columnCards, this);
-		});
+		columnCards.setCellValueFactory(new PropertyValueFactory<>("id"));
+		columnCards.setCellFactory(param -> new TableCellCards(columnCards, this));
 		columnCards.setStyle("-fx-alignment: CENTER;");
 		columnCards.setText("Cards");
 		columnCards.prefWidthProperty().bind(tableView.widthProperty().multiply(0.20).subtract(2));
 		tableView.getColumns().add(columnCards);
 
 		TableColumn<Player, Integer> columnChips = new TableColumn<>();
-		columnChips.setCellValueFactory(new PropertyValueFactory<Player, Integer>("chips"));
-		columnChips.setCellFactory(param -> {
-			return new TableCellChips();
-		});
+		columnChips.setCellValueFactory(new PropertyValueFactory<>("chips"));
+		columnChips.setCellFactory(param -> new TableCellChips());
 		columnChips.setStyle("-fx-alignment: CENTER;");
 		columnChips.setText("Chips");
 		columnChips.prefWidthProperty().bind(tableView.widthProperty().multiply(0.09).subtract(2));
 		tableView.getColumns().add(columnChips);
 
 		TableColumn<Player, Integer> columnWinProbability = new TableColumn<>();
-		columnWinProbability.setCellValueFactory(new PropertyValueFactory<Player, Integer>("winprobability"));
-		columnWinProbability.setCellFactory(param -> {
-			return new TableCellWinProbability();
-		});
+		columnWinProbability.setCellValueFactory(new PropertyValueFactory<>("winprobability"));
+		columnWinProbability.setCellFactory(param -> new TableCellWinProbability());
 		columnWinProbability.setStyle("-fx-alignment: CENTER;");
 		columnWinProbability.setText("Win %");
 		columnWinProbability.prefWidthProperty().bind(tableView.widthProperty().multiply(0.05).subtract(2));
 		tableView.getColumns().add(columnWinProbability);
 
 		TableColumn<Player, PlayerState> columnStatus = new TableColumn<>();
-		columnStatus.setCellValueFactory(new PropertyValueFactory<Player, PlayerState>("playerState"));
-		columnStatus.setCellFactory(param -> {
-			return new TableCellStatus();
-		});
+		columnStatus.setCellValueFactory(new PropertyValueFactory<>("playerState"));
+		columnStatus.setCellFactory(param -> new TableCellStatus());
 		columnStatus.setStyle("-fx-alignment: CENTER;");
 		columnStatus.setText("Status");
 		columnStatus.prefWidthProperty().bind(tableView.widthProperty().multiply(0.10).subtract(2));
 		tableView.getColumns().add(columnStatus);
 
 		TableColumn<Player, PlayerState> columnButtons = new TableColumn<>();
-		columnButtons.setCellValueFactory(new PropertyValueFactory<Player, PlayerState>("playerState"));
-		columnButtons.setCellFactory(param -> {
-			return new TableCellActions(this);
-		});
+		columnButtons.setCellValueFactory(new PropertyValueFactory<>("playerState"));
+		columnButtons.setCellFactory(param -> new TableCellActions(this));
 		columnButtons.setStyle("-fx-alignment: CENTER;");
 		columnButtons.setText("Actions");
 		columnButtons.prefWidthProperty().bind(tableView.widthProperty().multiply(0.18).subtract(2));
@@ -557,7 +581,7 @@ public class Controller implements DataAccessable
 					board.setReaderId(position, -3);
 					return;
 				}
-				
+
 				if(setReaderIDForBoard(position, Integer.parseInt(textField.getText().trim())))
 				{
 					textField.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
@@ -584,7 +608,7 @@ public class Controller implements DataAccessable
 			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), icon, stage, null, false);
 		}
 	}
-	
+
 	private void resetCountdown(CountdownType countdownType)
 	{
 		int timelineIndex;
@@ -602,7 +626,7 @@ public class Controller implements DataAccessable
 			currentLabel = labelNextPause;
 			currentVbox = vboxNextPause;
 		}
-		
+
 		try
 		{
 			socket.write(new CountdownSetSendCommand(0, countdownType));
@@ -612,7 +636,7 @@ public class Controller implements DataAccessable
 			Logger.error(e);
 			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
 		}
-		
+
 		if(timelineHandler.getTimelines().get(timelineIndex).getTimeline() != null)
 		{
 			timelineHandler.getTimelines().get(timelineIndex).getTimeline().stop();
@@ -621,7 +645,7 @@ public class Controller implements DataAccessable
 		currentLabel.setStyle("");
 		currentVbox.setStyle("");
 	}
-	
+
 	private void setCountdown(CountdownType countdownType)
 	{
 		int timelineIndex;
@@ -646,15 +670,15 @@ public class Controller implements DataAccessable
 			pauseTime = textFieldNextPause.getText().trim();
 			message = "Please enter a next pause time";
 		}
-		
+
 		if(pauseTime == null || pauseTime.equals(""))
 		{
 			AlertGenerator.showAlert(AlertType.WARNING, "Warning", "", message, icon, stage, null, false);
 			return;
 		}
-		
+
 		resetCountdown(countdownType);
-		
+
 		final int minutes = Integer.parseInt(pauseTime);
 		try
 		{
@@ -664,8 +688,8 @@ public class Controller implements DataAccessable
 		{
 			Logger.error(e);
 			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
-		}		
-		
+		}
+
 		int remainingSeconds = minutes * 60;
 		currentLabel.setText(getMinuteStringFromSeconds(remainingSeconds));
 
@@ -685,8 +709,8 @@ public class Controller implements DataAccessable
 			else
 			{
 				currentVbox.setStyle("");
-			}			
-			
+			}
+
 			if(timelineHandler.getTimelines().get(timelineIndex).getRemainingSeconds() <= 0)
 			{
 				timelineHandler.getTimelines().get(timelineIndex).getTimeline().stop();
@@ -702,13 +726,13 @@ public class Controller implements DataAccessable
 	{
 		resetCountdown(CountdownType.PAUSE);
 	}
-	
+
 	@FXML
 	void resetNextPause()
 	{
 		resetCountdown(CountdownType.NEXT_PAUSE);
 	}
-	
+
 	@FXML
 	public void setNextPause()
 	{
@@ -720,8 +744,8 @@ public class Controller implements DataAccessable
 	{
 		setCountdown(CountdownType.PAUSE);
 	}
-	
-	
+
+
 	@FXML
 	public void setSmallBlind()
 	{
@@ -731,7 +755,7 @@ public class Controller implements DataAccessable
 			AlertGenerator.showAlert(AlertType.WARNING, "Warning", "", "Please enter a small blind value", icon, stage, null, false);
 			textFieldSmallBlind.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
 			return;
-		}	
+		}
 
 		final int smallBlind = Integer.parseInt(smallBlindText);
 		try
@@ -745,10 +769,10 @@ public class Controller implements DataAccessable
 			textFieldSmallBlind.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
 			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
 		}
-		
+
 		textFieldSmallBlind.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
 	}
-	
+
 	@FXML
 	public void setBigBlind()
 	{
@@ -758,7 +782,7 @@ public class Controller implements DataAccessable
 			AlertGenerator.showAlert(AlertType.WARNING, "Warning", "", "Please enter a big blind value", icon, stage, null, false);
 			textFieldBigBlind.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
 			return;
-		}	
+		}
 
 		final int bigBlind = Integer.parseInt(bigBlindText);
 		try
@@ -772,24 +796,29 @@ public class Controller implements DataAccessable
 			textFieldBigBlind.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
 			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
 		}
-		
+
 		textFieldBigBlind.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
 	}
 
 	@FXML
-	public void setAnte() {
+	public void setAnte()
+	{
 		String anteText = textFieldAnte.getText().trim();
-		if (anteText == null || anteText.equals("")) {
+		if(anteText == null || anteText.equals(""))
+		{
 			AlertGenerator.showAlert(AlertType.WARNING, "Warning", "", "Please enter an ante value", icon, stage, null, false);
 			textFieldAnte.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
 			return;
 		}
 
 		final int ante = Integer.parseInt(anteText);
-		try {
+		try
+		{
 			board.setAnte(ante);
 			socket.write(new AnteSendCommand(ante));
-		} catch (SocketException e) {
+		}
+		catch(SocketException e)
+		{
 			Logger.error(e);
 			textFieldAnte.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
 			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
@@ -810,7 +839,7 @@ public class Controller implements DataAccessable
 		{
 			Logger.error(e);
 			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
-		}		
+		}
 	}
 
 	private String getMinuteStringFromSeconds(int seconds)
@@ -821,7 +850,8 @@ public class Controller implements DataAccessable
 		return String.format("%02d", minutes) + ":" + String.format("%02d", secondsRest);
 	}
 
-	@FXML public void newRound()
+	@FXML
+	public void newRound()
 	{
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("New Round");
@@ -886,7 +916,8 @@ public class Controller implements DataAccessable
 		}
 	}
 
-	public boolean isBoardLocked() {
+	public boolean isBoardLocked()
+	{
 		return isBoardLocked;
 	}
 
@@ -920,7 +951,8 @@ public class Controller implements DataAccessable
 		}
 	}
 
-	public boolean isAllLocked() {
+	public boolean isAllLocked()
+	{
 		return isAllLocked;
 	}
 
@@ -950,19 +982,22 @@ public class Controller implements DataAccessable
 	}
 
 	@Override
-	public void increaseBeddoFabrikCount() {
+	public void increaseBeddoFabrikCount()
+	{
 		beddoFabrikCount = beddoFabrikCount + 1;
 		Platform.runLater(() -> labelConnectedBeddoFabriks.setText(String.valueOf(beddoFabrikCount)));
 	}
 
 	@Override
-	public void decreaseBeddoFabrikCount() {
+	public void decreaseBeddoFabrikCount()
+	{
 		beddoFabrikCount = beddoFabrikCount - 1;
 		Platform.runLater(() -> labelConnectedBeddoFabriks.setText(String.valueOf(beddoFabrikCount)));
 	}
 
 	@Override
-	public void setBeddoFabrikCount(int count) {
+	public void setBeddoFabrikCount(int count)
+	{
 		beddoFabrikCount = count;
 		Platform.runLater(() -> labelConnectedBeddoFabriks.setText(String.valueOf(beddoFabrikCount)));
 	}
@@ -976,9 +1011,9 @@ public class Controller implements DataAccessable
 	{
 		try
 		{
-			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("de/lemonpie/beddocontrol/ui/BoardCardGUI.fxml"));;
+			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("de/lemonpie/beddocontrol/ui/BoardCardGUI.fxml"));
 
-			Parent root = (Parent)loader.load();
+			Parent root = loader.load();
 			Stage newStage = new Stage();
 			Scene scene = new Scene(root, 650, 270);
 			newStage.setScene(scene);
@@ -1012,15 +1047,15 @@ public class Controller implements DataAccessable
 			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
 		}
 	}
-	
+
 	private boolean checkNewReaderID(int ownReaderID, int newReaderID)
 	{
 		if(ownReaderID == newReaderID)
 		{
 			return true;
 		}
-		
-		
+
+
 		for(Player currentPlayer : players)
 		{
 			if(currentPlayer.getReaderId() == newReaderID)
@@ -1029,7 +1064,7 @@ public class Controller implements DataAccessable
 				return false;
 			}
 		}
-		
+
 		for(int i = 0; i < 5; i++)
 		{
 			if(board.getReaderId(i) == newReaderID)
@@ -1038,21 +1073,21 @@ public class Controller implements DataAccessable
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-		
+
 	public boolean setReaderIDForPlayer(Player player, int newReaderID)
 	{
 		if(checkNewReaderID(player.getReaderId(), newReaderID))
-		{			
+		{
 			player.setReaderId(newReaderID);
 			return true;
 		}
-		
-		return false;		
+
+		return false;
 	}
-	
+
 	public boolean setReaderIDForBoard(int boardIndex, int newReaderID)
 	{
 		if(checkNewReaderID(board.getReaderId(boardIndex), newReaderID))
@@ -1060,7 +1095,7 @@ public class Controller implements DataAccessable
 			board.setReaderId(boardIndex, newReaderID);
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -1069,7 +1104,7 @@ public class Controller implements DataAccessable
 		try
 		{
 			FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/de/lemonpie/beddocontrol/ui/Modal.fxml"));
-			Parent root = (Parent)fxmlLoader.load();
+			Parent root = (Parent) fxmlLoader.load();
 			Stage newStage = new Stage();
 			newStage.initOwner(owner);
 			newStage.initModality(Modality.APPLICATION_MODAL);

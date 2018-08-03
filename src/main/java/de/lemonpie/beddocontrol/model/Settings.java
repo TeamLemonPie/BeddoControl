@@ -4,14 +4,14 @@ public class Settings
 {
 	private String hostName;
 	private int port;
-	
+
 	public Settings()
 	{
-		
+
 	}
-	
+
 	public Settings(String hostName, int port)
-	{		
+	{
 		this.hostName = hostName;
 		this.port = port;
 	}

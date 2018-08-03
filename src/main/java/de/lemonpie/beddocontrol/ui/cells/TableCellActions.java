@@ -1,31 +1,27 @@
 package de.lemonpie.beddocontrol.ui.cells;
 
-import java.util.Optional;
-
 import de.lemonpie.beddocontrol.model.Player;
 import de.lemonpie.beddocontrol.model.PlayerState;
 import de.lemonpie.beddocontrol.ui.Controller;
 import fontAwesome.FontIconType;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 
+import java.util.Optional;
+
 public class TableCellActions extends TableCell<Player, PlayerState>
-{	
+{
 	private Controller controller;
 
 	public TableCellActions(Controller controller)
 	{
 		this.controller = controller;
 	}
-	
+
 	@Override
 	public void updateItem(PlayerState item, boolean empty)
 	{
@@ -40,7 +36,7 @@ public class TableCellActions extends TableCell<Player, PlayerState>
 			buttonActivate.setStyle("-fx-background-color: #48DB5E;");
 			buttonActivate.setTooltip(new Tooltip("Activate"));
 			buttonActivate.setOnAction((e) -> {
-				((Player)getTableRow().getItem()).setPlayerState(PlayerState.ACTIVE);
+				((Player) getTableRow().getItem()).setPlayerState(PlayerState.ACTIVE);
 				controller.getTableView().refresh();
 			});
 			hboxButtons.getChildren().add(buttonActivate);
@@ -50,7 +46,7 @@ public class TableCellActions extends TableCell<Player, PlayerState>
 			buttonOutOfRound.setStyle("-fx-background-color: orange;");
 			buttonOutOfRound.setTooltip(new Tooltip("Fold"));
 			buttonOutOfRound.setOnAction((e) -> {
-				((Player)getTableRow().getItem()).setPlayerState(PlayerState.OUT_OF_ROUND);
+				((Player) getTableRow().getItem()).setPlayerState(PlayerState.OUT_OF_ROUND);
 				controller.getTableView().refresh();
 			});
 			hboxButtons.getChildren().add(buttonOutOfRound);
@@ -60,7 +56,7 @@ public class TableCellActions extends TableCell<Player, PlayerState>
 			buttonOutOfGame.setStyle("-fx-background-color: #CC0000;");
 			buttonOutOfGame.setTooltip(new Tooltip("Deactivate"));
 			buttonOutOfGame.setOnAction((e) -> {
-				((Player)getTableRow().getItem()).setPlayerState(PlayerState.OUT_OF_GAME);
+				((Player) getTableRow().getItem()).setPlayerState(PlayerState.OUT_OF_GAME);
 				controller.getTableView().refresh();
 			});
 			hboxButtons.getChildren().add(buttonOutOfGame);
@@ -70,7 +66,7 @@ public class TableCellActions extends TableCell<Player, PlayerState>
 			buttonDelete.setStyle("-fx-background-color: #CCCCCC;");
 			buttonDelete.setTooltip(new Tooltip("Delete"));
 			buttonDelete.setOnAction((e) -> {
-				Player player = ((Player)getTableRow().getItem());
+				Player player = ((Player) getTableRow().getItem());
 				Alert alert = new Alert(AlertType.CONFIRMATION);
 				alert.setTitle("Delete player " + player.getId());
 				alert.setHeaderText("");
@@ -86,7 +82,7 @@ public class TableCellActions extends TableCell<Player, PlayerState>
 				}
 			});
 			hboxButtons.getChildren().add(buttonDelete);
-			
+
 			setGraphic(hboxButtons);
 		}
 		else

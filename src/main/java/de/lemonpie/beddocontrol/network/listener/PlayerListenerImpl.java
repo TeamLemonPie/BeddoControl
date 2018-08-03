@@ -13,70 +13,93 @@ import de.lemonpie.beddocontrol.network.command.send.player.PlayerStateSendComma
 
 import java.net.SocketException;
 
-public class PlayerListenerImpl implements PlayerListener {
+public class PlayerListenerImpl implements PlayerListener
+{
 
-    private ControlSocket socket;
+	private ControlSocket socket;
 
-    public PlayerListenerImpl(ControlSocket socket) {
-        this.socket = socket;
-    }
-
-    @Override
-    public void nameDidChange(Player player, String name) {
-        PlayerNameSendCommand cmd = new PlayerNameSendCommand(PlayerNameSendCommand.NameType.NAME, player.getId(), name);
-        try {
-            socket.write(cmd);
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-    }
+	public PlayerListenerImpl(ControlSocket socket)
+	{
+		this.socket = socket;
+	}
 
 	@Override
-	public void stateDidChange(Player player, PlayerState state) {
-		PlayerStateSendCommand cmd = new PlayerStateSendCommand(player.getId(), state);
-		try {
+	public void nameDidChange(Player player, String name)
+	{
+		PlayerNameSendCommand cmd = new PlayerNameSendCommand(PlayerNameSendCommand.NameType.NAME, player.getId(), name);
+		try
+		{
 			socket.write(cmd);
-		} catch (SocketException e) {
+		}
+		catch(SocketException e)
+		{
 			e.printStackTrace();
 		}
 	}
 
-    @Override
-    public void twitchNameDidChange(Player player, String twitchName) {
-        PlayerNameSendCommand cmd = new PlayerNameSendCommand(PlayerNameSendCommand.NameType.TWITCH, player.getId(), twitchName);
-        try {
-            socket.write(cmd);
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-    }
+	@Override
+	public void stateDidChange(Player player, PlayerState state)
+	{
+		PlayerStateSendCommand cmd = new PlayerStateSendCommand(player.getId(), state);
+		try
+		{
+			socket.write(cmd);
+		}
+		catch(SocketException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
-    @Override
-    public void cardDidChangeAtIndex(Player player, int index, Card card) {
-    }
+	@Override
+	public void twitchNameDidChange(Player player, String twitchName)
+	{
+		PlayerNameSendCommand cmd = new PlayerNameSendCommand(PlayerNameSendCommand.NameType.TWITCH, player.getId(), twitchName);
+		try
+		{
+			socket.write(cmd);
+		}
+		catch(SocketException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
-    @Override
-    public void chipsDidChange(Player player, int chips) {
-    	PlayerChipsSendCommand cmd = new PlayerChipsSendCommand(player.getId(), chips);
-        try {
-            socket.write(cmd);
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-    }
+	@Override
+	public void cardDidChangeAtIndex(Player player, int index, Card card)
+	{
+	}
+
+	@Override
+	public void chipsDidChange(Player player, int chips)
+	{
+		PlayerChipsSendCommand cmd = new PlayerChipsSendCommand(player.getId(), chips);
+		try
+		{
+			socket.write(cmd);
+		}
+		catch(SocketException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void readerIdDidChange(Player player, int readerId)
 	{
 		ReaderSendCommand cmd = new ReaderSendCommand(ReaderType.PLAYER, readerId, player.getId());
-        try {
-            socket.write(cmd);
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
+		try
+		{
+			socket.write(cmd);
+		}
+		catch(SocketException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void winProbabilityDidChange(Player player, int value) {
+	public void winProbabilityDidChange(Player player, int value)
+	{
 	}
 }

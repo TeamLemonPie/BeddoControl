@@ -4,15 +4,18 @@ import de.lemonpie.beddocontrol.network.CommandName;
 import de.lemonpie.beddocontrol.network.ControlCommandData;
 import de.lemonpie.beddocontrol.network.Scope;
 
-public class BlockSendCommand extends ControlCommandData {
+public class BlockSendCommand extends ControlCommandData
+{
 
-	public enum Option {
+	public enum Option
+	{
 		NONE,
 		BOARD,
-		ALL;
+		ALL
 	}
 
-	public BlockSendCommand(Option option) {
+	public BlockSendCommand(Option option)
+	{
 		super(Scope.ADMIN, CommandName.BLOCK, option.ordinal());
 	}
 }

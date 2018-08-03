@@ -13,9 +13,7 @@ public class TableCellTwitchName extends TableCell<Player, String>
 		if(!empty && item != null)
 		{
 			TextField textFieldTwitchName = new TextField();
-			textFieldTwitchName.textProperty().addListener((a, b, c) -> {
-				textFieldTwitchName.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
-			});
+			textFieldTwitchName.textProperty().addListener((a, b, c) -> textFieldTwitchName.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2"));
 
 			Object currentItem = getTableRow().getItem();
 
@@ -25,7 +23,7 @@ public class TableCellTwitchName extends TableCell<Player, String>
 				return;
 			}
 
-			Player currentPlayer = (Player)currentItem;
+			Player currentPlayer = (Player) currentItem;
 			textFieldTwitchName.setText(currentPlayer.getTwitchName());
 			textFieldTwitchName.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
 

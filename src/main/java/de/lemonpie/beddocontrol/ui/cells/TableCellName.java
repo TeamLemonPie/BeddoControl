@@ -13,9 +13,7 @@ public class TableCellName extends TableCell<Player, String>
 		if(!empty && item != null)
 		{
 			TextField textFieldName = new TextField();
-			textFieldName.textProperty().addListener((a, b, c) -> {
-				textFieldName.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
-			});
+			textFieldName.textProperty().addListener((a, b, c) -> textFieldName.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2"));
 
 			Object currentItem = getTableRow().getItem();
 
@@ -25,7 +23,7 @@ public class TableCellName extends TableCell<Player, String>
 				return;
 			}
 
-			Player currentPlayer = (Player)currentItem;
+			Player currentPlayer = (Player) currentItem;
 			textFieldName.setText(currentPlayer.getName());
 			textFieldName.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
 

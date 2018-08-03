@@ -1,9 +1,10 @@
 package de.lemonpie.beddocontrol.network;
 
-public interface ControlSocketDelegate {
-    void init(ControlSocket socket);
+public interface ControlSocketDelegate
+{
+	void init(ControlSocket socket);
 
-    void onConnectionEstablished();
+	void onConnectionEstablished();
 
-    void onConnectionClosed();
+	void onConnectionClosed();
 }

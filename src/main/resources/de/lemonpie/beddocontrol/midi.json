@@ -1,53 +1,53 @@
 [
-  {
-    "key": 36,
-    "type": "PLAYER_FOLD",
-    "additionalInfo": 0
-  },
-  {
-    "key": 37,
-    "type": "PLAYER_FOLD",
-    "additionalInfo": 1
-  },
-  {
-    "key": 38,
-    "type": "PLAYER_FOLD",
-    "additionalInfo": 2
-  },
-  {
-    "key": 39,
-    "type": "PLAYER_FOLD",
-    "additionalInfo": 3
-  },
-  {
-    "key": 40,
-    "type": "PLAYER_FOLD",
-    "additionalInfo": 4
-  },
-  {
-    "key": 41,
-    "type": "PLAYER_FOLD",
-    "additionalInfo": 5
-  },
-  {
-    "key": 42,
-    "type": "PLAYER_FOLD",
-    "additionalInfo": 6
-  },
-  {
-    "key": 44,
-    "type": "CONFIRM"
-  },
-  {
-    "key": 45,
-    "type": "LOCK_ALL_TOGGLE"
-  },
-  {
-    "key": 46,
-    "type": "UNLOCK_BOARD"
-  },
-  {
-    "key": 47,
-    "type": "NEW_ROUND"
-  }
+    {
+        "key": 36,
+        "type": "PLAYER_FOLD",
+        "additionalInfo": 0
+    },
+    {
+        "key": 37,
+        "type": "PLAYER_FOLD",
+        "additionalInfo": 1
+    },
+    {
+        "key": 38,
+        "type": "PLAYER_FOLD",
+        "additionalInfo": 2
+    },
+    {
+        "key": 39,
+        "type": "PLAYER_FOLD",
+        "additionalInfo": 3
+    },
+    {
+        "key": 40,
+        "type": "PLAYER_FOLD",
+        "additionalInfo": 4
+    },
+    {
+        "key": 41,
+        "type": "PLAYER_FOLD",
+        "additionalInfo": 5
+    },
+    {
+        "key": 42,
+        "type": "PLAYER_FOLD",
+        "additionalInfo": 6
+    },
+    {
+        "key": 44,
+        "type": "CONFIRM"
+    },
+    {
+        "key": 45,
+        "type": "LOCK_ALL_TOGGLE"
+    },
+    {
+        "key": 46,
+        "type": "UNLOCK_BOARD"
+    },
+    {
+        "key": 47,
+        "type": "NEW_ROUND"
+    }
 ]

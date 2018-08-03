@@ -41,6 +41,7 @@ public class ControlSocket implements Runnable
 	private ControlSocketDelegate delegate;
 
 	private Thread readerThread;
+
 	public ControlSocket(String host, int port, ControlSocketDelegate delegate)
 	{
 		this.host = host;
@@ -67,8 +68,10 @@ public class ControlSocket implements Runnable
 	public boolean connect()
 	{
 		message = "Trying to connect to " + host + ":" + port + "...";
+
 		Logger.debug(message);
-		Platform.runLater(()->{Controller.modalText.set(message);});
+		Platform.runLater(() -> Controller.modalText.set(message));
+
 		int counter = 0;
 		while(counter < MAX)
 		{
@@ -86,7 +89,7 @@ public class ControlSocket implements Runnable
 			{
 				message = e.getMessage() + " Retry " + (counter + 1) + "/" + MAX + ".\nNext Retry in " + (SLEEP_TIME / 1000) + " seconds...";
 				Logger.error(message);
-				Platform.runLater(()->{Controller.modalText.set(message);});
+				Platform.runLater(() -> Controller.modalText.set(message));
 				try
 				{
 					Thread.sleep(SLEEP_TIME);
@@ -144,7 +147,8 @@ public class ControlSocket implements Runnable
 
 	public void write(String data) throws SocketException
 	{
-		if (isNewValueComingFromServer()) {
+		if(isNewValueComingFromServer())
+		{
 			return;
 		}
 
@@ -165,17 +169,24 @@ public class ControlSocket implements Runnable
 		}
 	}
 
-	public static boolean isNewValueComingFromServer() {
+	public static boolean isNewValueComingFromServer()
+	{
 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-		for (StackTraceElement element : stackTrace) {
-			try {
-				if (element.getClassName().startsWith("de.")) {
+		for(StackTraceElement element : stackTrace)
+		{
+			try
+			{
+				if(element.getClassName().startsWith("de."))
+				{
 					Class<?> clazz = Class.forName(element.getClassName());
-					if (Command.class.isAssignableFrom(clazz)) {
+					if(Command.class.isAssignableFrom(clazz))
+					{
 						return true;
 					}
 				}
-			} catch (Exception e) {
+			}
+			catch(Exception e)
+			{
 				e.printStackTrace();
 			}
 		}
@@ -194,7 +205,7 @@ public class ControlSocket implements Runnable
 				ControlCommandData commandData = gson.fromJson(line, ControlCommandData.class);
 
 				commands.forEach((name, command) -> {
-					if (name.getName().equalsIgnoreCase(commandData.getCommand()))
+					if(name.getName().equalsIgnoreCase(commandData.getCommand()))
 					{
 						command.execute(commandData);
 					}

@@ -10,21 +10,19 @@ import tools.NumberTextFormatter;
 public class TableCellReaderID extends TableCell<Player, Integer>
 {
 	private Controller controller;
-	
+
 	public TableCellReaderID(Controller controller)
 	{
 		this.controller = controller;
 	}
-	
+
 	@Override
 	public void updateItem(Integer item, boolean empty)
 	{
 		if(!empty && item != null)
 		{
 			TextField textFieldReader = new TextField();
-			textFieldReader.textProperty().addListener((a, b, c) -> {
-				textFieldReader.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
-			});
+			textFieldReader.textProperty().addListener((a, b, c) -> textFieldReader.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2"));
 			textFieldReader.setTextFormatter(new NumberTextFormatter());
 
 			Object currentItem = getTableRow().getItem();
@@ -35,7 +33,7 @@ public class TableCellReaderID extends TableCell<Player, Integer>
 				return;
 			}
 
-			Player currentPlayer = (Player)currentItem;
+			Player currentPlayer = (Player) currentItem;
 			textFieldReader.setText(String.valueOf(currentPlayer.getReaderId()));
 			textFieldReader.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
 
@@ -47,7 +45,7 @@ public class TableCellReaderID extends TableCell<Player, Integer>
 						currentPlayer.setReaderId(-3);
 						return;
 					}
-					
+
 					if(controller.setReaderIDForPlayer(currentPlayer, Integer.parseInt(textFieldReader.getText().trim())))
 					{
 						textFieldReader.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");

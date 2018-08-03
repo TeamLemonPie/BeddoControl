@@ -2,7 +2,8 @@ package de.lemonpie.beddocontrol.listener;
 
 import de.lemonpie.beddocontrol.model.card.Card;
 
-public interface PlayerListener {
+public interface PlayerListener
+{
 	void nameDidChange(String name);
 
 	void twitchNameDidChange(String twitchName);

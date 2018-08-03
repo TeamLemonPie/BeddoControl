@@ -56,4 +56,10 @@
         </dependency>
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>releases</id>
+            <url>https://maven.thecodelabs.de/nexus/content/repositories/releases</url>
+        </repository>
+    </repositories>
 </project>

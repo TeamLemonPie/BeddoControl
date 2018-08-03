@@ -5,25 +5,30 @@ import de.lemonpie.beddocontrol.network.CommandName;
 import de.lemonpie.beddocontrol.network.ControlCommandData;
 import de.lemonpie.beddocontrol.network.Scope;
 
-public class PlayerNameSendCommand extends ControlCommandData {
+public class PlayerNameSendCommand extends ControlCommandData
+{
 
-    public enum NameType {
-        NAME(CommandName.PLAYER_NAME),
-        TWITCH(CommandName.PLAYER_TWITCH);
+	public enum NameType
+	{
+		NAME(CommandName.PLAYER_NAME),
+		TWITCH(CommandName.PLAYER_TWITCH);
 
-        private CommandName command;
+		private CommandName command;
 
-        NameType(CommandName command) {
-            this.command = command;
-        }
+		NameType(CommandName command)
+		{
+			this.command = command;
+		}
 
-        public CommandName getCommand() {
-            return command;
-        }
-    }
+		public CommandName getCommand()
+		{
+			return command;
+		}
+	}
 
-    public PlayerNameSendCommand(NameType nameType, int playerId, String value) {
-        super(Scope.ADMIN, nameType.getCommand(), playerId);
-        setValue(new JsonPrimitive(value));
-    }
+	public PlayerNameSendCommand(NameType nameType, int playerId, String value)
+	{
+		super(Scope.ADMIN, nameType.getCommand(), playerId);
+		setValue(new JsonPrimitive(value));
+	}
 }

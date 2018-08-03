@@ -8,13 +8,15 @@ import de.lemonpie.beddocontrol.network.command.send.ReaderSendCommand.ReaderTyp
 
 import java.net.SocketException;
 
-public class BoardListenerImpl implements BoardListener {
+public class BoardListenerImpl implements BoardListener
+{
 
-    private ControlSocket socket;
+	private ControlSocket socket;
 
-    public BoardListenerImpl(ControlSocket socket) {
-        this.socket = socket;
-    }
+	public BoardListenerImpl(ControlSocket socket)
+	{
+		this.socket = socket;
+	}
 
 	@Override
 	public void cardDidChangeAtIndex(int index, Card card)
@@ -25,22 +27,28 @@ public class BoardListenerImpl implements BoardListener {
 	public void boardReaderIdDidChange(int index, int readerId, int oldReaderId)
 	{
 		ReaderSendCommand cmd = new ReaderSendCommand(ReaderType.BOARD, readerId, oldReaderId);
-        try {
-            socket.write(cmd);
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
+		try
+		{
+			socket.write(cmd);
+		}
+		catch(SocketException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void smallBlindDidChange(int newValue) {
+	public void smallBlindDidChange(int newValue)
+	{
 	}
 
 	@Override
-	public void bigBlindDidChange(int newValue) {
+	public void bigBlindDidChange(int newValue)
+	{
 	}
 
 	@Override
-	public void anteDidChange(int newValue) {
+	public void anteDidChange(int newValue)
+	{
 	}
 }

@@ -1,25 +1,25 @@
 package de.lemonpie.beddocontrol.ui.cells;
 
-import java.net.SocketException;
-import java.util.Optional;
-
 import de.lemonpie.beddocontrol.model.Player;
 import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
 import de.lemonpie.beddocontrol.ui.Controller;
 import fontAwesome.FontIconType;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.Tooltip;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import logger.Logger;
 import tools.AlertGenerator;
+
+import java.net.SocketException;
+import java.util.Optional;
 
 public class TableCellCards extends TableCell<Player, Integer>
 {

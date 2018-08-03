@@ -15,7 +15,7 @@ public class CalculatedHand
 		this.handType = handType;
 		this.highestCards = highestCards;
 	}
-	
+
 	public CalculatedHand(HandType handType, Card highestCard)
 	{
 		this.handType = handType;
@@ -28,7 +28,7 @@ public class CalculatedHand
 		return handType;
 	}
 
-	public ArrayList<Card>  getHighestCard()
+	public ArrayList<Card> getHighestCard()
 	{
 		return highestCards;
 	}

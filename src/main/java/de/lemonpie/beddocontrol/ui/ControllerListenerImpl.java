@@ -17,13 +17,13 @@ import java.net.SocketException;
 public class ControllerListenerImpl implements BoardListener, PlayerListener, PlayerListListener
 {
 	private Controller controller;
-	
+
 	public ControllerListenerImpl(Controller controller)
 	{
 		this.controller = controller;
 	}
-	
-	
+
+
 	// PlayerList Listener
 	@Override
 	public void addPlayerToList(Player player)
@@ -46,9 +46,10 @@ public class ControllerListenerImpl implements BoardListener, PlayerListener, Pl
 			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), controller.icon, controller.stage, null, false);
 		}
 	}
-	
+
 	@Override
-	public void nameDidChange(Player player, String name) {
+	public void nameDidChange(Player player, String name)
+	{
 		controller.tableView.refresh();
 	}
 
@@ -108,7 +109,8 @@ public class ControllerListenerImpl implements BoardListener, PlayerListener, Pl
 	}
 
 	@Override
-	public void winProbabilityDidChange(Player player, int value) {
+	public void winProbabilityDidChange(Player player, int value)
+	{
 		controller.tableView.refresh();
 	}
 
@@ -144,14 +146,17 @@ public class ControllerListenerImpl implements BoardListener, PlayerListener, Pl
 	}
 
 	@Override
-	public void smallBlindDidChange(int newValue) {
+	public void smallBlindDidChange(int newValue)
+	{
 	}
 
 	@Override
-	public void bigBlindDidChange(int newValue) {
+	public void bigBlindDidChange(int newValue)
+	{
 	}
 
 	@Override
-	public void anteDidChange(int newValue) {
+	public void anteDidChange(int newValue)
+	{
 	}
 }

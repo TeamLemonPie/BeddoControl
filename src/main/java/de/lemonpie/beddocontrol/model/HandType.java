@@ -1,6 +1,7 @@
 package de.lemonpie.beddocontrol.model;
 
-public enum HandType {
+public enum HandType
+{
 	HIGHEST_CARD(1),
 	PAIR(2),
 	TWO_PAIRS(3),
@@ -14,11 +15,13 @@ public enum HandType {
 
 	private int value;
 
-	private HandType(int value) {
+	HandType(int value)
+	{
 		this.value = value;
 	}
 
-	public int getValue() {
+	public int getValue()
+	{
 		return value;
 	}
 }

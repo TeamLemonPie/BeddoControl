@@ -6,8 +6,10 @@ import de.lemonpie.beddocontrol.network.CommandName;
 import de.lemonpie.beddocontrol.network.ControlCommandData;
 import de.lemonpie.beddocontrol.network.Scope;
 
-public class CountdownSetSendCommand extends ControlCommandData {
-	public CountdownSetSendCommand(int minutes, CountdownType type) {
+public class CountdownSetSendCommand extends ControlCommandData
+{
+	public CountdownSetSendCommand(int minutes, CountdownType type)
+	{
 		super(Scope.ADMIN, CommandName.PAUSE, type.ordinal());
 		setValue(new JsonPrimitive(minutes));
 	}

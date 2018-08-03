@@ -1,10 +1,11 @@
 package de.lemonpie.beddocontrol.network;
 
-public enum Scope {
-    ADMIN,
-    READER,
+public enum Scope
+{
+	ADMIN,
+	READER,
 
-    PLAYER,
-    BOARD,
-    CHIP;
+	PLAYER,
+	BOARD,
+	CHIP
 }

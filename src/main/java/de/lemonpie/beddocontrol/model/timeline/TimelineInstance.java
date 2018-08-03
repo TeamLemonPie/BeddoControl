@@ -32,7 +32,7 @@ public class TimelineInstance
 	{
 		this.remainingSeconds = remainingSeconds;
 	}
-	
+
 	public void reduceRemainingSeconds()
 	{
 		this.remainingSeconds--;

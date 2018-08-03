@@ -6,9 +6,11 @@ import de.lemonpie.beddocontrol.network.CommandName;
 import de.lemonpie.beddocontrol.network.ControlCommandData;
 import de.lemonpie.beddocontrol.network.Scope;
 
-public class BoardCardSetSendCommand extends ControlCommandData {
+public class BoardCardSetSendCommand extends ControlCommandData
+{
 
-	public BoardCardSetSendCommand(int index, Card card) {
+	public BoardCardSetSendCommand(int index, Card card)
+	{
 		super(Scope.ADMIN, CommandName.BOARD_CARD, index);
 		setValue(new JsonPrimitive(card.getName()));
 	}

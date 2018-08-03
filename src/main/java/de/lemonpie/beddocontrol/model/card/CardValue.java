@@ -1,6 +1,7 @@
 package de.lemonpie.beddocontrol.model.card;
 
-public enum CardValue{
+public enum CardValue
+{
 
 	BACK("b", 0),
 	TWO("2", 2),
@@ -20,27 +21,35 @@ public enum CardValue{
 	private String name;
 	private int weight;
 
-	CardValue(String name, int weight) {
+	CardValue(String name, int weight)
+	{
 		this.name = name;
 		this.weight = weight;
 	}
 
-	public int getWeight() {
+	public int getWeight()
+	{
 		return weight;
 	}
 
-	public static CardValue fromWeight(int weight) {
-		for (CardValue currentValue : values()) {
-			if (currentValue.weight == weight) {
+	public static CardValue fromWeight(int weight)
+	{
+		for(CardValue currentValue : values())
+		{
+			if(currentValue.weight == weight)
+			{
 				return currentValue;
 			}
 		}
 		return null;
 	}
 
-	public static CardValue get(String name) {
-		for (CardValue currentValue : values()) {
-			if (currentValue.name.equals(name)) {
+	public static CardValue get(String name)
+	{
+		for(CardValue currentValue : values())
+		{
+			if(currentValue.name.equals(name))
+			{
 				return currentValue;
 			}
 		}
@@ -48,7 +57,8 @@ public enum CardValue{
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return name;
 	}
 }

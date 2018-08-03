@@ -26,8 +26,8 @@ public class BeddoControlMain extends Application
 	}
 
 	@Override
-	public void start(Stage primaryStage) throws Exception
-	{		
+	public void start(Stage primaryStage)
+	{
 		try
 		{
 			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("de/lemonpie/beddocontrol/ui/GUI.fxml"));
@@ -39,7 +39,7 @@ public class BeddoControlMain extends Application
 			Controller controller = loader.getController();
 			controller.init(primaryStage, icon, bundle);
 			primaryStage.getIcons().add(icon);
-			primaryStage.setTitle(bundle.getString("app.name") + " - " + bundle.getString("version.name")+ " (" + bundle.getString("version.code") + ")");
+			primaryStage.setTitle(bundle.getString("app.name") + " - " + bundle.getString("version.name") + " (" + bundle.getString("version.code") + ")");
 			primaryStage.setScene(scene);
 
 			primaryStage.show();
@@ -49,22 +49,24 @@ public class BeddoControlMain extends Application
 			Logger.error(e);
 		}
 	}
-	
+
 	@Override
-	public void init() throws Exception {
+	public void init()
+	{
 		Parameters params = getParameters();
-		String logLevelParam = params.getNamed().get("loglevel");		
+		String logLevelParam = params.getNamed().get("loglevel");
 		Logger.setLevel(logLevelParam);
 
 		File logFolder = new File(PathUtils.getOSindependentPath() + "LemonPie/" + bundle.getString("app.name"));
 		PathUtils.checkFolder(logFolder);
 		Logger.enableFileOutput(logFolder, System.out, System.err, FileOutputMode.COMBINED);
-		
-		Logger.appInfo(bundle.getString("app.name"), bundle.getString("version.name"), bundle.getString("version.code"), bundle.getString("version.date"));		
+
+		Logger.appInfo(bundle.getString("app.name"), bundle.getString("version.name"), bundle.getString("version.code"), bundle.getString("version.date"));
 	}
 
 	@Override
-	public void stop() throws Exception {
+	public void stop() throws Exception
+	{
 		Midi.getInstance().close();
 	}
 }

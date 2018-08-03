@@ -14,9 +14,7 @@ public class TableCellChips extends TableCell<Player, Integer>
 		if(!empty && item != null)
 		{
 			TextField textFieldChips = new TextField();
-			textFieldChips.textProperty().addListener((a, b, c) -> {
-				textFieldChips.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
-			});
+			textFieldChips.textProperty().addListener((a, b, c) -> textFieldChips.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2"));
 			textFieldChips.setTextFormatter(new NumberTextFormatter());
 
 			Object currentItem = getTableRow().getItem();
@@ -27,7 +25,7 @@ public class TableCellChips extends TableCell<Player, Integer>
 				return;
 			}
 
-			Player currentPlayer = (Player)currentItem;
+			Player currentPlayer = (Player) currentItem;
 			textFieldChips.setText(String.valueOf(currentPlayer.getChips()));
 			textFieldChips.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
 
