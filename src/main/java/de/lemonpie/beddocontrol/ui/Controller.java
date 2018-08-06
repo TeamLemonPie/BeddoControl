@@ -325,6 +325,8 @@ public class Controller implements DataAccessable
 			connect();
 			board.addListener(new BoardListenerImpl(socket));
 		});
+
+		buttonNewRound.requestFocus();
 	}
 
 	private void updateStatusLabel(Label label, String text, StatusLabelType statusLabeType)
@@ -1155,6 +1157,29 @@ public class Controller implements DataAccessable
 	@FXML
 	public void manageReaders()
 	{
+		try
+		{
+			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("de/lemonpie/beddocontrol/ui/ManageReaders.fxml"));
 
+			Parent root = loader.load();
+			Stage newStage = new Stage();
+			Scene scene = new Scene(root, 300, 350);
+			newStage.setScene(scene);
+			newStage.setTitle("Manage Readers");
+			newStage.initOwner(stage);
+
+			newStage.getIcons().add(icon);
+			ManageReadersController newController = loader.getController();
+			newController.init(newStage, icon, bundle, this);
+
+			newStage.initModality(Modality.APPLICATION_MODAL);
+			newStage.setResizable(true);
+			newStage.show();
+		}
+		catch(IOException e1)
+		{
+			Logger.error(e1);
+			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), icon, stage, null, false);
+		}
 	}
 }
