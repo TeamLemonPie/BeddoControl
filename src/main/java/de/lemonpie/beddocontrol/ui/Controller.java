@@ -185,8 +185,7 @@ public class Controller implements DataAccessable
 		timelineHandler.getTimelines().add(new TimelineInstance(new Timeline(), 0));
 		timelineHandler.getTimelines().add(new TimelineInstance(new Timeline(), 0));
 
-		labelStatus.setText("Connecting...");
-		labelStatus.setStyle("-fx-text-fill: orange");
+		updateStatusLabel(labelStatus, "Connecting...", StatusLabelType.WARNING);
 
 		Object possibleSettings = ObjectJSONHandler.loadObjectFromJSON(bundle.getString("folder"), "settings", new Settings());
 		if(possibleSettings == null)
@@ -212,8 +211,7 @@ public class Controller implements DataAccessable
 
 		try
 		{
-			labelStatusMIDI.setText("MIDI available");
-			labelStatusMIDI.setStyle("-fx-background-color: rgba(72, 219, 94, 0.5); -fx-padding: 5px 7px 5px 7px; -fx-background-radius: 3px");
+			updateStatusLabel(labelStatusMIDI, "MIDI available", StatusLabelType.SUCCESS);
 
 			Path midiSettingsPath = Paths.get(PathUtils.getOSindependentPath() + bundle.getString("folder") + "midi.json");
 
@@ -240,8 +238,7 @@ public class Controller implements DataAccessable
 		{
 			Logger.error(e);
 			Platform.runLater(() -> {
-				labelStatusMIDI.setText("MIDI unavailable");
-				labelStatusMIDI.setStyle("-fx-background-color: rgba(204, 0, 0, 0.5); -fx-padding: 5px 7px 5px 7px; -fx-background-radius: 3px");
+				updateStatusLabel(labelStatusMIDI, "MIDI unavailable", StatusLabelType.ERROR);
 			});
 		}
 
@@ -330,6 +327,23 @@ public class Controller implements DataAccessable
 		});
 	}
 
+	private void updateStatusLabel(Label label, String text, StatusLabelType statusLabeType)
+	{
+		label.setText(text);
+		switch(statusLabeType)
+		{
+			case ERROR:
+				label.setStyle("-fx-background-color: rgba(204, 0, 0, 0.5); -fx-padding: 5px 7px 5px 7px; -fx-background-radius: 3px");
+				break;
+			case WARNING:
+				label.setStyle("-fx-background-color: rgba(255, 165, 0, 0.5); -fx-padding: 5px 7px 5px 7px; -fx-background-radius: 3px");
+				break;
+			case SUCCESS:
+				label.setStyle("-fx-background-color: rgba(72, 219, 94, 0.5); -fx-padding: 5px 7px 5px 7px; -fx-background-radius: 3px");
+				break;
+		}
+	}
+
 	public ControlSocket getSocket()
 	{
 		return socket;
@@ -412,8 +426,7 @@ public class Controller implements DataAccessable
 			{
 				Logger.debug("Connection established.");
 				Platform.runLater(() -> {
-					labelStatus.setText("Connected");
-					labelStatus.setStyle("-fx-text-fill: #48DB5E");
+					updateStatusLabel(labelStatus, "Connected", StatusLabelType.SUCCESS);
 				});
 			}
 
@@ -422,8 +435,7 @@ public class Controller implements DataAccessable
 			{
 				Logger.debug("Connection closed.");
 				Platform.runLater(() -> {
-					labelStatus.setText("Disconnected");
-					labelStatus.setStyle("-fx-text-fill: #CC0000");
+					updateStatusLabel(labelStatus, "Disconnected", StatusLabelType.ERROR);
 					connect();
 				});
 			}
@@ -985,21 +997,36 @@ public class Controller implements DataAccessable
 	public void increaseBeddoFabrikCount()
 	{
 		beddoFabrikCount = beddoFabrikCount + 1;
-		Platform.runLater(() -> labelConnectedBeddoFabriks.setText(String.valueOf(beddoFabrikCount)));
+		updateBeddoFabrikCountLabel();
 	}
 
 	@Override
 	public void decreaseBeddoFabrikCount()
 	{
 		beddoFabrikCount = beddoFabrikCount - 1;
-		Platform.runLater(() -> labelConnectedBeddoFabriks.setText(String.valueOf(beddoFabrikCount)));
+		updateBeddoFabrikCountLabel();
 	}
 
 	@Override
 	public void setBeddoFabrikCount(int count)
 	{
 		beddoFabrikCount = count;
-		Platform.runLater(() -> labelConnectedBeddoFabriks.setText(String.valueOf(beddoFabrikCount)));
+		updateBeddoFabrikCountLabel();
+	}
+
+	private void updateBeddoFabrikCountLabel()
+	{
+		Platform.runLater(()->{
+			if(beddoFabrikCount <= 0)
+			{
+				updateStatusLabel(labelConnectedBeddoFabriks, String.valueOf(beddoFabrikCount) + " BeddoFabriken", StatusLabelType.ERROR);
+			}
+			else
+			{
+				updateStatusLabel(labelConnectedBeddoFabriks, String.valueOf(beddoFabrikCount) + " BeddoFabriken", StatusLabelType.SUCCESS);
+
+			}
+		});
 	}
 
 	public void about()
@@ -1123,5 +1150,11 @@ public class Controller implements DataAccessable
 			Logger.error(e);
 			return null;
 		}
+	}
+
+	@FXML
+	public void manageReaders()
+	{
+
 	}
 }
