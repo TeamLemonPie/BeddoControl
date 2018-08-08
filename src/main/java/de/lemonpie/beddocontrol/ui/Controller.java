@@ -146,7 +146,7 @@ public class Controller implements DataAccessable
 
 	Stage stage;
 	Image icon;
-	private ResourceBundle bundle;
+	ResourceBundle bundle;
 	private Board board;
 	private PlayerList players;
 	ControlSocket socket;
@@ -156,7 +156,6 @@ public class Controller implements DataAccessable
 	private boolean isBoardLocked = false;
 	private boolean isAllLocked = false;
 	private Settings settings;
-	private List<MidiAction> midiActionList = new ArrayList<>();
 	PlayerTableView tableViewPlayer;
 
 	private int beddoFabrikCount = 0;
@@ -209,38 +208,8 @@ public class Controller implements DataAccessable
 			});
 		}
 
-		try
-		{
-			updateStatusLabel(labelStatusMIDI, "MIDI available", StatusLabelType.SUCCESS);
-
-			Path midiSettingsPath = Paths.get(PathUtils.getOSindependentPath() + bundle.getString("folder") + "midi.json");
-
-			if(Files.notExists(midiSettingsPath))
-			{
-				if(Files.notExists(midiSettingsPath.getParent()))
-				{
-					Files.createDirectories(midiSettingsPath.getParent());
-				}
-
-				InputStream iStr = getClass().getClassLoader().getResourceAsStream("de/lemonpie/beddocontrol/midi.json");
-				Files.copy(iStr, midiSettingsPath);
-			}
-
-			BufferedReader inputStream = Files.newBufferedReader(midiSettingsPath);
-			Type type = new TypeToken<List<MidiAction>>()
-			{
-			}.getType();
-			midiActionList = new Gson().fromJson(inputStream, type);
-			Midi.getInstance().lookupMidiDevice("PD 12");
-			Midi.getInstance().setListener(new PD12Handler(this, midiActionList));
-		}
-		catch(MidiUnavailableException | IOException e)
-		{
-			Logger.error(e);
-			Platform.runLater(() -> {
-				updateStatusLabel(labelStatusMIDI, "MIDI unavailable", StatusLabelType.ERROR);
-			});
-		}
+		MidiHandler midiHandler = new MidiHandler(this);
+		midiHandler.init(labelStatusMIDI);
 
 		settings = (Settings) possibleSettings;
 		labelServer.setText(settings.getHostName() + ":" + settings.getPort());
@@ -329,7 +298,7 @@ public class Controller implements DataAccessable
 		buttonNewRound.requestFocus();
 	}
 
-	private void updateStatusLabel(Label label, String text, StatusLabelType statusLabeType)
+	public void updateStatusLabel(Label label, String text, StatusLabelType statusLabeType)
 	{
 		label.setText(text);
 		switch(statusLabeType)
@@ -935,11 +904,6 @@ public class Controller implements DataAccessable
 
 			}
 		});
-	}
-
-	public void about()
-	{
-		AlertGenerator.showAboutAlert(bundle.getString("app.name"), bundle.getString("version.name"), bundle.getString("version.code"), bundle.getString("version.date"), bundle.getString("author"), icon, stage, null, false);
 	}
 
 	private void showBoardCardGUI(int index)
