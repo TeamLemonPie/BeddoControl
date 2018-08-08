@@ -3,6 +3,7 @@ package de.lemonpie.beddocontrol.model;
 public class Settings
 {
 	private String hostName;
+	private boolean discover = true;
 	private int port;
 
 	public Settings()
@@ -24,6 +25,16 @@ public class Settings
 	public void setHostName(String hostName)
 	{
 		this.hostName = hostName;
+	}
+
+	public boolean isDiscover()
+	{
+		return discover;
+	}
+
+	public void setDiscover(boolean discover)
+	{
+		this.discover = discover;
 	}
 
 	public int getPort()

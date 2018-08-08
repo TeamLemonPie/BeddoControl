@@ -1,6 +1,7 @@
 package de.lemonpie.beddocontrol.network;
 
 import com.google.gson.Gson;
+import de.lemonpie.beddocontrol.model.Settings;
 import de.lemonpie.beddocontrol.ui.Controller;
 import de.tobias.utils.net.DiscoveryClient;
 import javafx.application.Platform;
@@ -32,6 +33,7 @@ public class ControlSocket implements Runnable
 
 	private Map<CommandName, Command> commands;
 
+	private Settings settings;
 	private String host;
 	private int port;
 
@@ -43,9 +45,14 @@ public class ControlSocket implements Runnable
 
 	private Thread readerThread;
 
-	public ControlSocket(int port, ControlSocketDelegate delegate)
+	public ControlSocket(Settings settings, ControlSocketDelegate delegate)
 	{
-		this.port = port;
+		this.settings = settings;
+		if(!settings.isDiscover())
+		{
+			this.host = settings.getHostName();
+		}
+		this.port = settings.getPort();
 		this.delegate = delegate;
 
 		commands = new HashMap<>();
@@ -67,7 +74,7 @@ public class ControlSocket implements Runnable
 
 	public boolean connect()
 	{
-		if(host == null)
+		if(host == null && settings.isDiscover())
 		{
 			DiscoveryClient discoveryClient = new DiscoveryClient();
 			discoveryClient.setPort(9990);

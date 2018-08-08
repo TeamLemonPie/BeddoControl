@@ -421,7 +421,7 @@ public class Controller implements DataAccessable
 
 	private void initConnection()
 	{
-		socket = new ControlSocket(settings.getPort(), new ControlSocketDelegate()
+		socket = new ControlSocket(settings, new ControlSocketDelegate()
 		{
 			@Override
 			public void onConnectionEstablished()
