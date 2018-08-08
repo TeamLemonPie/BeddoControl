@@ -89,19 +89,19 @@ public class ControllerListenerImpl implements BoardListener, PlayerListener, Pl
 		switch(index)
 		{
 			case 0:
-				controller.imageViewBoard1.setImage(controller.getImageForCard(card));
+				controller.imageViewBoard1.setImage(ImageHandler.getImageForCard(card));
 				break;
 			case 1:
-				controller.imageViewBoard2.setImage(controller.getImageForCard(card));
+				controller.imageViewBoard2.setImage(ImageHandler.getImageForCard(card));
 				break;
 			case 2:
-				controller.imageViewBoard3.setImage(controller.getImageForCard(card));
+				controller.imageViewBoard3.setImage(ImageHandler.getImageForCard(card));
 				break;
 			case 3:
-				controller.imageViewBoard4.setImage(controller.getImageForCard(card));
+				controller.imageViewBoard4.setImage(ImageHandler.getImageForCard(card));
 				break;
 			case 4:
-				controller.imageViewBoard5.setImage(controller.getImageForCard(card));
+				controller.imageViewBoard5.setImage(ImageHandler.getImageForCard(card));
 				break;
 			default:
 				break;

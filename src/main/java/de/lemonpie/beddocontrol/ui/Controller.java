@@ -454,26 +454,6 @@ public class Controller implements DataAccessable
 		});
 	}
 
-	public Image getImageForCard(Card card)
-	{
-		Image image = null;
-		try
-		{
-			String base = "/de/lemonpie/beddocontrol/cards/";
-			if(card == null || card.equals(Card.EMPTY))
-			{
-				return new Image(base + "back.png");
-			}
-
-			image = new Image(base + card.getSymbol() + "-" + card.getValue() + ".png");
-		}
-		catch(Exception e)
-		{
-			Logger.error(e);
-		}
-		return image;
-	}
-
 	public FontIcon getFontIcon(FontIconType type, int size, Color color)
 	{
 		FontIcon icon = new FontIcon(type);

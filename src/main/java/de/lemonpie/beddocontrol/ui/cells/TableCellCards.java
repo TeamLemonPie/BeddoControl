@@ -3,6 +3,7 @@ package de.lemonpie.beddocontrol.ui.cells;
 import de.lemonpie.beddocontrol.model.Player;
 import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
 import de.lemonpie.beddocontrol.ui.Controller;
+import de.lemonpie.beddocontrol.ui.ImageHandler;
 import fontAwesome.FontIconType;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -46,13 +47,13 @@ public class TableCellCards extends TableCell<Player, Integer>
 				hboxCards.setAlignment(Pos.CENTER);
 				hboxCards.setSpacing(15);
 
-				Image imageCardLeft = controller.getImageForCard(currentPlayer.getCardLeft());
+				Image imageCardLeft = ImageHandler.getImageForCard(currentPlayer.getCardLeft());
 				ImageView imageViewCardLeft = new ImageView(imageCardLeft);
 				imageViewCardLeft.setFitHeight(50);
 				imageViewCardLeft.fitWidthProperty().bind(columnCards.widthProperty().divide(4));
 				hboxCards.getChildren().add(imageViewCardLeft);
 
-				Image imageCardRight = controller.getImageForCard(currentPlayer.getCardRight());
+				Image imageCardRight = ImageHandler.getImageForCard(currentPlayer.getCardRight());
 				ImageView imageViewCardRight = new ImageView(imageCardRight);
 				imageViewCardRight.setFitHeight(50);
 				imageViewCardRight.fitWidthProperty().bind(columnCards.widthProperty().divide(4));

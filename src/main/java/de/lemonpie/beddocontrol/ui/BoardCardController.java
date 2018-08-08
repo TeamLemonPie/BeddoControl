@@ -98,7 +98,7 @@ public class BoardCardController
 
 	private void addImageViewForCard(Set<Card> alreadyUsedCards, Card card, HBox parent)
 	{
-		Image image = controller.getImageForCard(card);
+		Image image = ImageHandler.getImageForCard(card);
 		ImageView imageView = new ImageView(image);
 		imageView.setFitHeight(50);
 		imageView.setFitWidth(40);
