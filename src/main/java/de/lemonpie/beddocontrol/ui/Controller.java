@@ -1,10 +1,5 @@
 package de.lemonpie.beddocontrol.ui;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import de.lemonpie.beddocontrol.midi.Midi;
-import de.lemonpie.beddocontrol.midi.MidiAction;
-import de.lemonpie.beddocontrol.midi.PD12Handler;
 import de.lemonpie.beddocontrol.model.*;
 import de.lemonpie.beddocontrol.model.card.Card;
 import de.lemonpie.beddocontrol.model.timeline.CountdownType;
@@ -44,18 +39,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import logger.Logger;
-import tools.*;
+import tools.AlertGenerator;
+import tools.NumberTextFormatter;
+import tools.ObjectJSONHandler;
+import tools.Worker;
 
-import javax.sound.midi.MidiUnavailableException;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.net.SocketException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -136,8 +126,6 @@ public class Controller implements DataAccessable
 	@FXML
 	private HBox hboxBoard;
 
-	@FXML
-	private Button buttonClearBoard;
 	@FXML
 	private Button buttonNewRound;
 	@FXML
@@ -803,11 +791,6 @@ public class Controller implements DataAccessable
 			Logger.error(e);
 			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
 		}
-	}
-
-	public boolean isBoardLocked()
-	{
-		return isBoardLocked;
 	}
 
 	public void lockAll(boolean lock)
