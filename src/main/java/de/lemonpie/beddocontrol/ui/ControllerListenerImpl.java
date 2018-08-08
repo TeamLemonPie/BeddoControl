@@ -50,37 +50,37 @@ public class ControllerListenerImpl implements BoardListener, PlayerListener, Pl
 	@Override
 	public void nameDidChange(Player player, String name)
 	{
-		controller.tableView.refresh();
+		controller.getTableView().refresh();
 	}
 
 	@Override
 	public void twitchNameDidChange(Player player, String twitchName)
 	{
-		controller.tableView.refresh();
+		controller.getTableView().refresh();
 	}
 
 	@Override
 	public void cardDidChangeAtIndex(Player player, int index, Card card)
 	{
-		controller.tableView.refresh();
+		controller.getTableView().refresh();
 	}
 
 	@Override
 	public void chipsDidChange(Player player, int chips)
 	{
-		controller.tableView.refresh();
+		controller.getTableView().refresh();
 	}
 
 	@Override
 	public void stateDidChange(Player player, PlayerState state)
 	{
-		controller.tableView.refresh();
+		controller.getTableView().refresh();
 	}
 
 	@Override
 	public void readerIdDidChange(Player player, int readerId)
 	{
-		controller.tableView.refresh();
+		controller.getTableView().refresh();
 	}
 
 	@Override
@@ -111,7 +111,7 @@ public class ControllerListenerImpl implements BoardListener, PlayerListener, Pl
 	@Override
 	public void winProbabilityDidChange(Player player, int value)
 	{
-		controller.tableView.refresh();
+		controller.getTableView().refresh();
 	}
 
 	@Override

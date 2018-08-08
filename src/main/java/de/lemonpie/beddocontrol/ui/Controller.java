@@ -17,7 +17,6 @@ import de.lemonpie.beddocontrol.network.command.send.*;
 import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand.Option;
 import de.lemonpie.beddocontrol.network.command.send.player.PlayerOpSendCommand;
 import de.lemonpie.beddocontrol.network.listener.BoardListenerImpl;
-import de.lemonpie.beddocontrol.ui.cells.*;
 import fontAwesome.FontIcon;
 import fontAwesome.FontIconType;
 import javafx.animation.KeyFrame;
@@ -33,12 +32,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
@@ -66,7 +65,7 @@ public class Controller implements DataAccessable
 	@FXML
 	private AnchorPane mainPane;
 	@FXML
-	TableView<Player> tableView;
+	private VBox vboxPlayerTable;
 	@FXML
 	private Button buttonAdd;
 	@FXML
@@ -147,17 +146,18 @@ public class Controller implements DataAccessable
 
 	Stage stage;
 	Image icon;
-	ResourceBundle bundle;
-	Board board;
-	PlayerList players;
+	private ResourceBundle bundle;
+	private Board board;
+	private PlayerList players;
 	ControlSocket socket;
-	TimelineHandler timelineHandler;
-	Stage modalStage;
+	private TimelineHandler timelineHandler;
+	private Stage modalStage;
 	public static StringProperty modalText;
-	boolean isBoardLocked = false;
-	boolean isAllLocked = false;
-	Settings settings;
-	List<MidiAction> midiActionList = new ArrayList<>();
+	private boolean isBoardLocked = false;
+	private boolean isAllLocked = false;
+	private Settings settings;
+	private List<MidiAction> midiActionList = new ArrayList<>();
+	PlayerTableView tableViewPlayer;
 
 	private int beddoFabrikCount = 0;
 
@@ -363,7 +363,7 @@ public class Controller implements DataAccessable
 
 	public TableView<Player> getTableView()
 	{
-		return tableView;
+		return tableViewPlayer;
 	}
 
 	public PlayerList getPlayerList()
@@ -485,91 +485,9 @@ public class Controller implements DataAccessable
 
 	private void initTableView()
 	{
-		Label labelPlaceholder = new Label("No data available");
-		labelPlaceholder.setStyle("-fx-font-size: 16");
-		tableView.setPlaceholder(labelPlaceholder);
-
-		tableView.setFixedCellSize(60);
-		tableView.setEditable(true);
-
-		TableColumn<Player, Integer> columnID = new TableColumn<>();
-		columnID.setCellValueFactory(new PropertyValueFactory<>("id"));
-		columnID.setStyle("-fx-alignment: CENTER;");
-		columnID.setText("Nr.");
-		columnID.prefWidthProperty().bind(tableView.widthProperty().multiply(0.03).subtract(2));
-		tableView.getColumns().add(columnID);
-
-		TableColumn<Player, Integer> columnReader = new TableColumn<>();
-		columnReader.setCellValueFactory(new PropertyValueFactory<>("readerId"));
-		columnReader.setCellFactory(param -> new TableCellReaderID(this));
-		columnReader.setStyle("-fx-alignment: CENTER;");
-		columnReader.setText("Reader ID");
-		columnReader.prefWidthProperty().bind(tableView.widthProperty().multiply(0.05).subtract(2));
-		tableView.getColumns().add(columnReader);
-
-		TableColumn<Player, String> columnName = new TableColumn<>();
-		columnName.setCellValueFactory(new PropertyValueFactory<>("name"));
-		columnName.setCellFactory(param -> new TableCellName());
-		columnName.setStyle("-fx-alignment: CENTER;");
-		columnName.setText("Name");
-		columnName.prefWidthProperty().bind(tableView.widthProperty().multiply(0.15).subtract(2));
-		tableView.getColumns().add(columnName);
-
-		TableColumn<Player, String> columnTwitchName = new TableColumn<>();
-		columnTwitchName.setCellValueFactory(new PropertyValueFactory<>("twitchName"));
-		columnTwitchName.setCellFactory(param -> new TableCellTwitchName());
-		columnTwitchName.setStyle("-fx-alignment: CENTER;");
-		columnTwitchName.setText("Twitch Name");
-		tableView.getColumns().add(columnTwitchName);
-		columnTwitchName.prefWidthProperty().bind(tableView.widthProperty().multiply(0.15).subtract(2));
-
-		TableColumn<Player, Integer> columnCards = new TableColumn<>();
-		columnCards.setCellValueFactory(new PropertyValueFactory<>("id"));
-		columnCards.setCellFactory(param -> new TableCellCards(columnCards, this));
-		columnCards.setStyle("-fx-alignment: CENTER;");
-		columnCards.setText("Cards");
-		columnCards.prefWidthProperty().bind(tableView.widthProperty().multiply(0.20).subtract(2));
-		tableView.getColumns().add(columnCards);
-
-		TableColumn<Player, Integer> columnChips = new TableColumn<>();
-		columnChips.setCellValueFactory(new PropertyValueFactory<>("chips"));
-		columnChips.setCellFactory(param -> new TableCellChips());
-		columnChips.setStyle("-fx-alignment: CENTER;");
-		columnChips.setText("Chips");
-		columnChips.prefWidthProperty().bind(tableView.widthProperty().multiply(0.09).subtract(2));
-		tableView.getColumns().add(columnChips);
-
-		TableColumn<Player, Integer> columnWinProbability = new TableColumn<>();
-		columnWinProbability.setCellValueFactory(new PropertyValueFactory<>("winprobability"));
-		columnWinProbability.setCellFactory(param -> new TableCellWinProbability());
-		columnWinProbability.setStyle("-fx-alignment: CENTER;");
-		columnWinProbability.setText("Win %");
-		columnWinProbability.prefWidthProperty().bind(tableView.widthProperty().multiply(0.05).subtract(2));
-		tableView.getColumns().add(columnWinProbability);
-
-		TableColumn<Player, PlayerState> columnStatus = new TableColumn<>();
-		columnStatus.setCellValueFactory(new PropertyValueFactory<>("playerState"));
-		columnStatus.setCellFactory(param -> new TableCellStatus());
-		columnStatus.setStyle("-fx-alignment: CENTER;");
-		columnStatus.setText("Status");
-		columnStatus.prefWidthProperty().bind(tableView.widthProperty().multiply(0.10).subtract(2));
-		tableView.getColumns().add(columnStatus);
-
-		TableColumn<Player, PlayerState> columnButtons = new TableColumn<>();
-		columnButtons.setCellValueFactory(new PropertyValueFactory<>("playerState"));
-		columnButtons.setCellFactory(param -> new TableCellActions(this));
-		columnButtons.setStyle("-fx-alignment: CENTER;");
-		columnButtons.setText("Actions");
-		columnButtons.prefWidthProperty().bind(tableView.widthProperty().multiply(0.18).subtract(2));
-		tableView.getColumns().add(columnButtons);
-	}
-
-	public void refreshTableView()
-	{
-		tableView.getItems().clear();
-
-		ObservableList<Player> objectsForTable = FXCollections.observableArrayList(players.getPlayer());
-		tableView.setItems(objectsForTable);
+		tableViewPlayer = new PlayerTableView(this);
+		vboxPlayerTable.getChildren().add(tableViewPlayer);
+		VBox.setVgrow(tableViewPlayer, Priority.ALWAYS);
 	}
 
 	private void initBoard()
@@ -579,6 +497,14 @@ public class Controller implements DataAccessable
 		initTextFieldBoard(textFieldBoard3, 2);
 		initTextFieldBoard(textFieldBoard4, 3);
 		initTextFieldBoard(textFieldBoard5, 4);
+	}
+
+	public void refreshTableView()
+	{
+		tableViewPlayer.getItems().clear();
+
+		ObservableList<Player> objectsForTable = FXCollections.observableArrayList(players.getPlayer());
+		tableViewPlayer.setItems(objectsForTable);
 	}
 
 	private void initTextFieldBoard(TextField textField, int position)
