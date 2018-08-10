@@ -22,9 +22,6 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
@@ -586,30 +583,8 @@ public class Controller extends NVC implements DataAccessable
 
 	private void showBoardCardGUI(int index)
 	{
-		try
-		{
-			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("de/lemonpie/beddocontrol/ui/BoardCardGUI.fxml"));
-
-			Parent root = loader.load();
-			Stage newStage = new Stage();
-			Scene scene = new Scene(root, 650, 270);
-			newStage.setScene(scene);
-			newStage.setTitle("Override Board Card");
-			newStage.initOwner(getContainingWindow());
-
-			newStage.getIcons().add(ImageHandler.getIcon());
-			BoardCardController newController = loader.getController();
-			newController.init(getContainingWindow(), ImageHandler.getIcon(), getBundle(), this, index);
-
-			newStage.initModality(Modality.APPLICATION_MODAL);
-			newStage.setResizable(true);
-			newStage.show();
-		}
-		catch(IOException e1)
-		{
-			Logger.error(e1);
-			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), ImageHandler.getIcon(), getContainingWindow(), null, false);
-		}
+		BoardCardController boardCardController = new BoardCardController(getContainingWindow(), this, index);
+		boardCardController.showStage();
 	}
 
 	public void overrideBoardCard(int index, Card card)

@@ -4,19 +4,20 @@ import de.lemonpie.beddocontrol.model.Player;
 import de.lemonpie.beddocontrol.model.card.Card;
 import de.lemonpie.beddocontrol.model.card.CardSymbol;
 import de.lemonpie.beddocontrol.model.card.CardValue;
+import de.tobias.utils.nui.NVC;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import java.util.HashSet;
-import java.util.ResourceBundle;
 import java.util.Set;
 
-@SuppressWarnings("unused")
-public class BoardCardController
+public class BoardCardController extends NVC
 {
 	@FXML
 	private AnchorPane mainPane;
@@ -29,23 +30,32 @@ public class BoardCardController
 	@FXML
 	private HBox hboxCross;
 
-	private Window stage;
-	private Image icon;
-	private ResourceBundle bundle;
 	private Controller controller;
 	private int boardCardIndex;
 
-	public void init(Window stage, Image icon, ResourceBundle bundle, Controller controller, int boardCardIndex)
+	public BoardCardController(Window owner, Controller controller, int boardCardIndex)
 	{
-		this.stage = stage;
-		this.icon = icon;
-		this.bundle = bundle;
 		this.controller = controller;
 		this.boardCardIndex = boardCardIndex;
+		load("de/lemonpie/beddocontrol/ui", "BoardCardGUI");
+		applyViewControllerToStage().initOwner(owner).initModality(Modality.WINDOW_MODAL);
+	}
 
+	@Override
+	public void init()
+	{
 		mainPane.setStyle("-fx-background-color: #212121");
 
 		prefill();
+	}
+
+	@Override
+	public void initStage(Stage stage)
+	{
+		stage.setWidth(650);
+		stage.setHeight(270);
+		stage.getIcons().add(ImageHandler.getIcon());
+		stage.setTitle("Override Board Card");
 	}
 
 	private Set<Card> getAlreadyUsedCards()
@@ -112,7 +122,7 @@ public class BoardCardController
 			imageView.setOnMouseClicked((e) ->
 			{
 				controller.overrideBoardCard(boardCardIndex, card);
-				//stage.close(); TODO
+				closeStage();
 			});
 		}
 		parent.getChildren().add(imageView);
