@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>LemonPieMaster</artifactId>
+        <artifactId>BeddoMaster</artifactId>
         <groupId>de.lemonpie</groupId>
         <version>1.0.0</version>
-        <relativePath>../LemonPieMaster</relativePath>
+        <relativePath>../BeddoMaster</relativePath>
     </parent>
 
     <artifactId>BeddoControl</artifactId>
