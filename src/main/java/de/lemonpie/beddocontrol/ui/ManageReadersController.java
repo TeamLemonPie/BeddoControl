@@ -1,18 +1,18 @@
 package de.lemonpie.beddocontrol.ui;
 
+import de.tobias.utils.nui.NVC;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 
-import java.util.ResourceBundle;
 
-@SuppressWarnings("unused")
-public class ManageReadersController
+public class ManageReadersController extends NVC
 {
 	@FXML
 	private AnchorPane mainPane;
@@ -23,20 +23,26 @@ public class ManageReadersController
 	@FXML
 	private VBox hboxBoard;
 
-	private Window stage;
-	private Image icon;
-	private ResourceBundle bundle;
-	private Controller controller;
-
-	public void init(Window stage, Image icon, ResourceBundle bundle, Controller controller)
+	public ManageReadersController(Window owner)
 	{
-		this.stage = stage;
-		this.icon = icon;
-		this.bundle = bundle;
-		this.controller = controller;
+		load("de/lemonpie/beddocontrol/ui", "ManageReadersGUI");
+		applyViewControllerToStage().initModality(Modality.WINDOW_MODAL).initOwner(owner);
+	}
 
+	@Override
+	public void init()
+	{
 		initSeats();
 		initBoard();
+	}
+
+	@Override
+	public void initStage(Stage stage)
+	{
+		stage.setWidth(300);
+		stage.setHeight(350);
+		stage.setTitle("Manage Readers");
+		stage.getIcons().add(ImageHandler.getIcon());
 	}
 
 	private void initSeats()

@@ -13,6 +13,7 @@ import de.lemonpie.beddocontrol.network.command.send.DataSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.player.PlayerOpSendCommand;
 import de.lemonpie.beddocontrol.network.listener.BoardListenerImpl;
 import de.tobias.utils.nui.NVC;
+import de.tobias.utils.nui.NVCStage;
 import fontAwesome.FontIcon;
 import fontAwesome.FontIconType;
 import javafx.application.Platform;
@@ -26,7 +27,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -36,7 +36,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import logger.Logger;
 import tools.AlertGenerator;
 import tools.NumberTextFormatter;
@@ -251,7 +250,8 @@ public class Controller extends NVC implements DataAccessable
 
 	private void connect()
 	{
-		modalStage = showModal("Trying to connect to " + settings.getHostName() + ":" + settings.getPort(), "Connect to server...", getContainingWindow(), ImageHandler.getIcon());
+		modalText.set("Trying to connect to " + settings.getHostName() + ":" + settings.getPort());
+		modalStage = showModal("Connect to server...");
 
 		Worker.runLater(() -> {
 			if(socket.connect())
@@ -676,58 +676,18 @@ public class Controller extends NVC implements DataAccessable
 		return false;
 	}
 
-	public Stage showModal(String title, String message, Window owner, Image icon)
+	public Stage showModal(String title)
 	{
-		try
-		{
-			FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/de/lemonpie/beddocontrol/ui/Modal.fxml"));
-			Parent root = (Parent) fxmlLoader.load();
-			Stage newStage = new Stage();
-			newStage.initOwner(owner);
-			newStage.initModality(Modality.APPLICATION_MODAL);
-			newStage.setTitle(title);
-			newStage.setScene(new Scene(root));
-			newStage.getIcons().add(icon);
-			newStage.setResizable(false);
-			ModalController newController = fxmlLoader.getController();
-			newController.init(getContainingWindow(), modalText);
-			newStage.show();
-
-			return newStage;
-		}
-		catch(IOException e)
-		{
-			Logger.error(e);
-			return null;
-		}
+		ModalController modalController = new ModalController(getContainingWindow(), modalText, title);
+		modalController.showStage();
+		final Optional<NVCStage> stageContainer = modalController.getStageContainer();
+		return stageContainer.map(NVCStage::getStage).orElse(null);
 	}
 
 	@FXML
 	public void manageReaders()
 	{
-		try
-		{
-			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("de/lemonpie/beddocontrol/ui/ManageReaders.fxml"));
-
-			Parent root = loader.load();
-			Stage newStage = new Stage();
-			Scene scene = new Scene(root, 300, 350);
-			newStage.setScene(scene);
-			newStage.setTitle("Manage Readers");
-			newStage.initOwner(getContainingWindow());
-
-			newStage.getIcons().add(ImageHandler.getIcon());
-			ManageReadersController newController = loader.getController();
-			newController.init(getContainingWindow(), ImageHandler.getIcon(), getBundle(), this);
-
-			newStage.initModality(Modality.APPLICATION_MODAL);
-			newStage.setResizable(true);
-			newStage.show();
-		}
-		catch(IOException e1)
-		{
-			Logger.error(e1);
-			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), ImageHandler.getIcon(), getContainingWindow(), null, false);
-		}
+		ManageReadersController manageReadersController = new ManageReadersController(getContainingWindow());
+		manageReadersController.showStage();
 	}
 }

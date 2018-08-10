@@ -2,6 +2,7 @@ package de.lemonpie.beddocontrol.main;
 
 import de.lemonpie.beddocontrol.midi.Midi;
 import de.lemonpie.beddocontrol.ui.Controller;
+import de.tobias.utils.nui.NVCStage;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import logger.FileOutputMode;
@@ -27,6 +28,7 @@ public class BeddoControlMain extends Application
 	{
 		try
 		{
+			NVCStage.setDisabledSizeLoading(true);
 			Controller controller = new Controller(primaryStage, bundle);
 			controller.showStage();
 		}
