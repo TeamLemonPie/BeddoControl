@@ -43,7 +43,7 @@ public class ControllerListenerImpl implements BoardListener, PlayerListener, Pl
 		catch(SocketException e1)
 		{
 			Logger.error(e1);
-			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), controller.icon, controller.stage, null, false);
+			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), ImageHandler.getIcon(), controller.getContainingWindow(), null, false);
 		}
 	}
 

@@ -6,6 +6,17 @@ import logger.Logger;
 
 public class ImageHandler
 {
+	private static Image programIcon;
+
+	public static Image getIcon()
+	{
+		if(programIcon == null)
+		{
+			programIcon = new Image("/de/lemonpie/beddocontrol/icon.png");
+		}
+		return programIcon;
+	}
+
 	public static Image getImageForCard(Card card)
 	{
 		Image image = null;

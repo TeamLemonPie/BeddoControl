@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<VBox alignment="CENTER" spacing="15.0" HBox.hgrow="ALWAYS" xmlns="http://javafx.com/javafx/8.0.111"
+      xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Blinds" underline="true">
+            <font>
+                <Font name="System Bold" size="16.0"/>
+            </font>
+        </Label>
+        <HBox alignment="CENTER" spacing="14.0">
+            <children>
+                <VBox alignment="CENTER" spacing="10.0">
+                    <children>
+                        <HBox alignment="CENTER" spacing="15.0" VBox.vgrow="ALWAYS">
+                            <children>
+                                <Label alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" text="Small:"
+                                       HBox.hgrow="ALWAYS">
+                                    <font>
+                                        <Font size="14.0"/>
+                                    </font>
+                                </Label>
+                                <TextField fx:id="textFieldSmallBlind" prefHeight="0.0" prefWidth="80.0"/>
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER" spacing="15.0" VBox.vgrow="ALWAYS">
+                            <children>
+                                <Label alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" text="Big:"
+                                       HBox.hgrow="ALWAYS">
+                                    <font>
+                                        <Font size="14.0"/>
+                                    </font>
+                                </Label>
+                                <TextField fx:id="textFieldBigBlind" prefHeight="0.0" prefWidth="80.0"/>
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER" spacing="15.0">
+                            <children>
+                                <Label alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" text="Ante:"
+                                       HBox.hgrow="ALWAYS">
+                                    <font>
+                                        <Font size="14.0"/>
+                                    </font>
+                                </Label>
+                                <TextField fx:id="textFieldAnte" prefHeight="0.0" prefWidth="80.0"/>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+                <VBox spacing="10.0">
+                    <children>
+                        <Button fx:id="buttonSmallBlind" mnemonicParsing="false" onAction="#setSmallBlind">
+                            <font>
+                                <Font name="System Bold" size="13.0"/>
+                            </font>
+                        </Button>
+                        <Button fx:id="buttonBigBlind" mnemonicParsing="false" onAction="#setBigBlind">
+                            <font>
+                                <Font name="System Bold" size="13.0"/>
+                            </font>
+                        </Button>
+                        <Button fx:id="buttonAnte" mnemonicParsing="false" onAction="#setAnte">
+                            <font>
+                                <Font name="System Bold" size="13.0"/>
+                            </font>
+                        </Button>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
+</VBox>

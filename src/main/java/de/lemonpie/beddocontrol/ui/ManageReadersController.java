@@ -1,14 +1,13 @@
 package de.lemonpie.beddocontrol.ui;
 
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.util.ResourceBundle;
 
@@ -24,12 +23,12 @@ public class ManageReadersController
 	@FXML
 	private VBox hboxBoard;
 
-	private Stage stage;
+	private Window stage;
 	private Image icon;
 	private ResourceBundle bundle;
 	private Controller controller;
 
-	public void init(Stage stage, Image icon, ResourceBundle bundle, Controller controller)
+	public void init(Window stage, Image icon, ResourceBundle bundle, Controller controller)
 	{
 		this.stage = stage;
 		this.icon = icon;

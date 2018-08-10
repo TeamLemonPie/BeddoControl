@@ -71,7 +71,7 @@ public class TableCellCards extends TableCell<Player, Integer>
 					catch(SocketException e1)
 					{
 						Logger.error(e1);
-						AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), controller.getIcon(), controller.getStage(), null, false);
+						AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), ImageHandler.getIcon(), controller.getContainingWindow(), null, false);
 					}
 				});
 				hboxCards.getChildren().add(buttonClear);

@@ -70,7 +70,7 @@ public class TableCellActions extends TableCell<Player, PlayerState>
 				Alert alert = new Alert(AlertType.CONFIRMATION);
 				alert.setTitle("Delete player " + player.getId());
 				alert.setHeaderText("");
-				alert.initOwner(controller.getStage());
+				alert.initOwner(controller.getContainingWindow());
 				alert.initModality(Modality.APPLICATION_MODAL);
 				alert.setContentText("Do you really want to delete player " + player.getId() + "?");
 

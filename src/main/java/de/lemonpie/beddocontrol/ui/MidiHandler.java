@@ -38,7 +38,7 @@ public class MidiHandler
 		{
 			controller.updateStatusLabel(labelStatusMIDI, "MIDI available", StatusLabelType.SUCCESS);
 
-			Path midiSettingsPath = Paths.get(PathUtils.getOSindependentPath() + controller.bundle.getString("folder") + "midi.json");
+			Path midiSettingsPath = Paths.get(PathUtils.getOSindependentPath() + controller.getBundle().getString("folder") + "midi.json");
 
 			if(Files.notExists(midiSettingsPath))
 			{

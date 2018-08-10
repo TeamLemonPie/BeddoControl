@@ -3,14 +3,11 @@ package de.lemonpie.beddocontrol.main;
 import de.lemonpie.beddocontrol.midi.Midi;
 import de.lemonpie.beddocontrol.ui.Controller;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import logger.FileOutputMode;
 import logger.Logger;
 import tools.PathUtils;
+import tools.Worker;
 
 import java.io.File;
 import java.util.Locale;
@@ -30,19 +27,8 @@ public class BeddoControlMain extends Application
 	{
 		try
 		{
-			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("de/lemonpie/beddocontrol/ui/GUI.fxml"));
-			Parent root = loader.load();
-
-			Scene scene = new Scene(root, 900, 800);
-
-			Image icon = new Image("/de/lemonpie/beddocontrol/icon.png");
-			Controller controller = loader.getController();
-			controller.init(primaryStage, icon, bundle);
-			primaryStage.getIcons().add(icon);
-			primaryStage.setTitle(bundle.getString("app.name") + " - " + bundle.getString("version.name") + " (" + bundle.getString("version.code") + ")");
-			primaryStage.setScene(scene);
-
-			primaryStage.show();
+			Controller controller = new Controller(primaryStage, bundle);
+			controller.showStage();
 		}
 		catch(Exception e)
 		{
@@ -68,5 +54,7 @@ public class BeddoControlMain extends Application
 	public void stop() throws Exception
 	{
 		Midi.getInstance().close();
+		Worker.shutdown();
+		System.exit(0);
 	}
 }

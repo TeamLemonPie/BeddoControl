@@ -2,20 +2,19 @@ package de.lemonpie.beddocontrol.ui;
 
 import de.lemonpie.beddocontrol.model.*;
 import de.lemonpie.beddocontrol.model.card.Card;
-import de.lemonpie.beddocontrol.model.timeline.CountdownType;
-import de.lemonpie.beddocontrol.model.timeline.TimelineHandler;
-import de.lemonpie.beddocontrol.model.timeline.TimelineInstance;
 import de.lemonpie.beddocontrol.network.ControlSocket;
 import de.lemonpie.beddocontrol.network.ControlSocketDelegate;
 import de.lemonpie.beddocontrol.network.command.read.*;
-import de.lemonpie.beddocontrol.network.command.send.*;
+import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand.Option;
+import de.lemonpie.beddocontrol.network.command.send.BoardCardSetSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.DataSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.player.PlayerOpSendCommand;
 import de.lemonpie.beddocontrol.network.listener.BoardListenerImpl;
+import de.tobias.utils.nui.NVC;
 import fontAwesome.FontIcon;
 import fontAwesome.FontIconType;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -37,7 +36,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Duration;
+import javafx.stage.Window;
 import logger.Logger;
 import tools.AlertGenerator;
 import tools.NumberTextFormatter;
@@ -50,7 +49,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class Controller implements DataAccessable
+public class Controller extends NVC implements DataAccessable
 {
 	@FXML
 	private AnchorPane mainPane;
@@ -58,26 +57,6 @@ public class Controller implements DataAccessable
 	private VBox vboxPlayerTable;
 	@FXML
 	private Button buttonAdd;
-	@FXML
-	private TextField textFieldPause;
-	@FXML
-	private Label labelPause;
-	@FXML
-	private Button buttonPause;
-	@FXML
-	private Button buttonPauseReset;
-	@FXML
-	private VBox vboxPause;
-	@FXML
-	private TextField textFieldNextPause;
-	@FXML
-	private Label labelNextPause;
-	@FXML
-	private Button buttonNextPause;
-	@FXML
-	private Button buttonNextPauseReset;
-	@FXML
-	private VBox vboxNextPause;
 	@FXML
 	private Label labelConnectedBeddoFabriks;
 	@FXML
@@ -88,18 +67,6 @@ public class Controller implements DataAccessable
 	private Button buttonMasterLock;
 	@FXML
 	private VBox vboxAll;
-	@FXML
-	private TextField textFieldSmallBlind;
-	@FXML
-	private TextField textFieldBigBlind;
-	@FXML
-	private TextField textFieldAnte;
-	@FXML
-	private Button buttonSmallBlind;
-	@FXML
-	private Button buttonBigBlind;
-	@FXML
-	private Button buttonAnte;
 	@FXML
 	private Label labelStatusMIDI;
 
@@ -127,18 +94,19 @@ public class Controller implements DataAccessable
 	private HBox hboxBoard;
 
 	@FXML
+	private HBox hboxGameSettings;
+
+	@FXML
 	private Button buttonNewRound;
 	@FXML
 	private Button buttonLockBoard;
 
+	private CountdownController countdownController;
+	private BlindController blindController;
 
-	Stage stage;
-	Image icon;
-	ResourceBundle bundle;
 	private Board board;
 	private PlayerList players;
 	ControlSocket socket;
-	private TimelineHandler timelineHandler;
 	private Stage modalStage;
 	public static StringProperty modalText;
 	private boolean isBoardLocked = false;
@@ -148,16 +116,17 @@ public class Controller implements DataAccessable
 
 	private int beddoFabrikCount = 0;
 
-	private final int COUNTDOWN_WARNING_TIME = 30;
-	private final int COUNTDOWN_PRE_WARNING_TIME = 60;
-
 	private ControllerListenerImpl listenerImpl;
 
-	public void init(Stage stage, Image icon, ResourceBundle bundle)
+	public Controller(Stage stage, ResourceBundle bundle)
 	{
-		this.stage = stage;
-		this.icon = icon;
-		this.bundle = bundle;
+		load("de/lemonpie/beddocontrol/ui", "GUI", bundle);
+		applyViewControllerToStage(stage);
+	}
+
+	@Override
+	public void init()
+	{
 		this.listenerImpl = new ControllerListenerImpl(this);
 
 		board = new Board();
@@ -168,13 +137,9 @@ public class Controller implements DataAccessable
 
 		modalText = new SimpleStringProperty();
 
-		timelineHandler = new TimelineHandler();
-		timelineHandler.getTimelines().add(new TimelineInstance(new Timeline(), 0));
-		timelineHandler.getTimelines().add(new TimelineInstance(new Timeline(), 0));
-
 		updateStatusLabel(labelStatus, "Connecting...", StatusLabelType.WARNING);
 
-		Object possibleSettings = ObjectJSONHandler.loadObjectFromJSON(bundle.getString("folder"), "settings", new Settings());
+		Object possibleSettings = ObjectJSONHandler.loadObjectFromJSON(getBundle().getString("folder"), "settings", new Settings());
 		if(possibleSettings == null)
 		{
 			Logger.error("Missing or invalid settings.json - Created default JSON");
@@ -183,7 +148,7 @@ public class Controller implements DataAccessable
 				Settings s = new Settings();
 				s.setHostName("localhost");
 				s.setPort(9998);
-				ObjectJSONHandler.saveObjectToJSON(bundle.getString("folder"), "settings", s);
+				ObjectJSONHandler.saveObjectToJSON(getBundle().getString("folder"), "settings", s);
 			}
 			catch(IOException e1)
 			{
@@ -191,7 +156,7 @@ public class Controller implements DataAccessable
 			}
 
 			Platform.runLater(() -> {
-				AlertGenerator.showAlert(AlertType.ERROR, "Error", "", "Missing or invalid settings.json.\nA default settings.json has been created.", icon, stage, null, false);
+				AlertGenerator.showAlert(AlertType.ERROR, "Error", "", "Missing or invalid settings.json.\nA default settings.json has been created.", ImageHandler.getIcon(), getContainingWindow(), null, false);
 				System.exit(0);
 			});
 		}
@@ -217,52 +182,6 @@ public class Controller implements DataAccessable
 			}
 		});
 
-		textFieldPause.setTextFormatter(new NumberTextFormatter());
-		textFieldPause.setOnKeyPressed(ke -> {
-			if(ke.getCode().equals(KeyCode.ENTER))
-			{
-				setPause();
-			}
-		});
-
-		textFieldNextPause.setTextFormatter(new NumberTextFormatter());
-		textFieldNextPause.setOnKeyPressed(ke -> {
-			if(ke.getCode().equals(KeyCode.ENTER))
-			{
-				setNextPause();
-			}
-		});
-
-		textFieldSmallBlind.setTextFormatter(new NumberTextFormatter());
-		textFieldSmallBlind.setOnKeyPressed(ke -> {
-			if(ke.getCode().equals(KeyCode.ENTER))
-			{
-				setSmallBlind();
-			}
-		});
-		textFieldBigBlind.setTextFormatter(new NumberTextFormatter());
-		textFieldBigBlind.setOnKeyPressed(ke -> {
-			if(ke.getCode().equals(KeyCode.ENTER))
-			{
-				setBigBlind();
-			}
-		});
-		textFieldAnte.setTextFormatter(new NumberTextFormatter());
-		textFieldAnte.setOnKeyPressed(ke -> {
-			if(ke.getCode().equals(KeyCode.ENTER))
-			{
-				setAnte();
-			}
-		});
-
-		buttonPause.setGraphic(new FontIcon(FontIconType.MAIL_FORWARD, 14, Color.BLACK));
-		buttonPauseReset.setGraphic(new FontIcon(FontIconType.TRASH, 14, Color.BLACK));
-		buttonNextPause.setGraphic(new FontIcon(FontIconType.MAIL_FORWARD, 14, Color.BLACK));
-		buttonNextPauseReset.setGraphic(new FontIcon(FontIconType.TRASH, 14, Color.BLACK));
-		buttonSmallBlind.setGraphic(new FontIcon(FontIconType.MAIL_FORWARD, 14, Color.BLACK));
-		buttonBigBlind.setGraphic(new FontIcon(FontIconType.MAIL_FORWARD, 14, Color.BLACK));
-		buttonAnte.setGraphic(new FontIcon(FontIconType.MAIL_FORWARD, 14, Color.BLACK));
-
 		imageViewBoard1.setOnMouseClicked((e) -> showBoardCardGUI(0));
 		imageViewBoard2.setOnMouseClicked((e) -> showBoardCardGUI(1));
 		imageViewBoard3.setOnMouseClicked((e) -> showBoardCardGUI(2));
@@ -272,18 +191,30 @@ public class Controller implements DataAccessable
 		initTableView();
 		initBoard();
 
-		stage.setOnCloseRequest((event) -> {
-			Worker.shutdown();
-			System.exit(0);
-		});
-
 		Platform.runLater(() -> {
 			initConnection();
+
+			countdownController = new CountdownController(socket);
+			blindController = new BlindController(socket, board);
+
+			hboxGameSettings.getChildren().add(countdownController.getParent());
+			hboxGameSettings.getChildren().add(blindController.getParent());
+
 			connect();
 			board.addListener(new BoardListenerImpl(socket));
-		});
 
-		buttonNewRound.requestFocus();
+			buttonNewRound.requestFocus();
+		});
+	}
+
+	@Override
+	public void initStage(Stage stage)
+	{
+		stage.setWidth(900);
+		stage.setHeight(800);
+
+		stage.getIcons().add(ImageHandler.getIcon());
+		stage.setTitle(getBundle().getString("app.name") + " - " + getBundle().getString("version.name") + " (" + getBundle().getString("version.code") + ")");
 	}
 
 	public void updateStatusLabel(Label label, String text, StatusLabelType statusLabeType)
@@ -308,16 +239,6 @@ public class Controller implements DataAccessable
 		return socket;
 	}
 
-	public Image getIcon()
-	{
-		return icon;
-	}
-
-	public Stage getStage()
-	{
-		return stage;
-	}
-
 	public TableView<Player> getTableView()
 	{
 		return tableViewPlayer;
@@ -330,7 +251,7 @@ public class Controller implements DataAccessable
 
 	private void connect()
 	{
-		modalStage = showModal("Trying to connect to " + settings.getHostName() + ":" + settings.getPort(), "Connect to server...", stage, icon);
+		modalStage = showModal("Trying to connect to " + settings.getHostName() + ":" + settings.getPort(), "Connect to server...", getContainingWindow(), ImageHandler.getIcon());
 
 		Worker.runLater(() -> {
 			if(socket.connect())
@@ -361,8 +282,8 @@ public class Controller implements DataAccessable
 					alert.setHeaderText("");
 					alert.setContentText("Connection could not be established.");
 					Stage dialogStage = (Stage) alert.getDialogPane().getScene().getWindow();
-					dialogStage.getIcons().add(icon);
-					dialogStage.initOwner(stage);
+					dialogStage.getIcons().add(ImageHandler.getIcon());
+					dialogStage.initOwner(getContainingWindow());
 
 					ButtonType buttonTypeOne = new ButtonType("Retry");
 					alert.getButtonTypes().setAll(buttonTypeOne);
@@ -482,226 +403,8 @@ public class Controller implements DataAccessable
 		catch(SocketException e1)
 		{
 			Logger.error(e1);
-			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), icon, stage, null, false);
+			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), ImageHandler.getIcon(), getContainingWindow(), null, false);
 		}
-	}
-
-	private void resetCountdown(CountdownType countdownType)
-	{
-		int timelineIndex;
-		Label currentLabel;
-		VBox currentVbox;
-		if(countdownType.equals(CountdownType.PAUSE))
-		{
-			timelineIndex = 0;
-			currentLabel = labelPause;
-			currentVbox = vboxPause;
-		}
-		else
-		{
-			timelineIndex = 1;
-			currentLabel = labelNextPause;
-			currentVbox = vboxNextPause;
-		}
-
-		try
-		{
-			socket.write(new CountdownSetSendCommand(0, countdownType));
-		}
-		catch(SocketException e)
-		{
-			Logger.error(e);
-			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
-		}
-
-		if(timelineHandler.getTimelines().get(timelineIndex).getTimeline() != null)
-		{
-			timelineHandler.getTimelines().get(timelineIndex).getTimeline().stop();
-		}
-		currentLabel.setText("--:--");
-		currentLabel.setStyle("");
-		currentVbox.setStyle("");
-	}
-
-	private void setCountdown(CountdownType countdownType)
-	{
-		int timelineIndex;
-		Label currentLabel;
-		VBox currentVbox;
-		String pauseTime;
-		String message;
-		if(countdownType.equals(CountdownType.PAUSE))
-		{
-			timelineIndex = 0;
-			currentLabel = labelPause;
-			currentVbox = vboxPause;
-			pauseTime = textFieldPause.getText().trim();
-			message = "Please enter a pause time";
-			resetCountdown(CountdownType.NEXT_PAUSE);
-		}
-		else
-		{
-			timelineIndex = 1;
-			currentLabel = labelNextPause;
-			currentVbox = vboxNextPause;
-			pauseTime = textFieldNextPause.getText().trim();
-			message = "Please enter a next pause time";
-		}
-
-		if(pauseTime == null || pauseTime.equals(""))
-		{
-			AlertGenerator.showAlert(AlertType.WARNING, "Warning", "", message, icon, stage, null, false);
-			return;
-		}
-
-		resetCountdown(countdownType);
-
-		final int minutes = Integer.parseInt(pauseTime);
-		try
-		{
-			socket.write(new CountdownSetSendCommand(minutes, countdownType));
-		}
-		catch(SocketException e)
-		{
-			Logger.error(e);
-			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
-		}
-
-		int remainingSeconds = minutes * 60;
-		currentLabel.setText(getMinuteStringFromSeconds(remainingSeconds));
-
-		timelineHandler.getTimelines().set(timelineIndex, new TimelineInstance(new Timeline(), remainingSeconds));
-		timelineHandler.getTimelines().get(timelineIndex).getTimeline().setCycleCount(Timeline.INDEFINITE);
-		timelineHandler.getTimelines().get(timelineIndex).getTimeline().getKeyFrames().add(new KeyFrame(Duration.seconds(1), (event) -> {
-			timelineHandler.getTimelines().get(timelineIndex).reduceRemainingSeconds();
-			currentLabel.setText(getMinuteStringFromSeconds(timelineHandler.getTimelines().get(timelineIndex).getRemainingSeconds()));
-			if(timelineHandler.getTimelines().get(timelineIndex).getRemainingSeconds() <= COUNTDOWN_WARNING_TIME)
-			{
-				currentVbox.setStyle("-fx-background-color: rgba(204, 0, 0, 0.3)");
-			}
-			else if(timelineHandler.getTimelines().get(timelineIndex).getRemainingSeconds() <= COUNTDOWN_PRE_WARNING_TIME)
-			{
-				currentVbox.setStyle("-fx-background-color: rgba(255, 165, 0, 0.3)");
-			}
-			else
-			{
-				currentVbox.setStyle("");
-			}
-
-			if(timelineHandler.getTimelines().get(timelineIndex).getRemainingSeconds() <= 0)
-			{
-				timelineHandler.getTimelines().get(timelineIndex).getTimeline().stop();
-				currentVbox.setStyle("-fx-background-color: rgba(204, 0, 0, 0.5)");
-			}
-		}));
-
-		timelineHandler.getTimelines().get(timelineIndex).getTimeline().playFromStart();
-	}
-
-	@FXML
-	void resetPause()
-	{
-		resetCountdown(CountdownType.PAUSE);
-	}
-
-	@FXML
-	void resetNextPause()
-	{
-		resetCountdown(CountdownType.NEXT_PAUSE);
-	}
-
-	@FXML
-	public void setNextPause()
-	{
-		setCountdown(CountdownType.NEXT_PAUSE);
-	}
-
-	@FXML
-	public void setPause()
-	{
-		setCountdown(CountdownType.PAUSE);
-	}
-
-
-	@FXML
-	public void setSmallBlind()
-	{
-		String smallBlindText = textFieldSmallBlind.getText().trim();
-		if(smallBlindText == null || smallBlindText.equals(""))
-		{
-			AlertGenerator.showAlert(AlertType.WARNING, "Warning", "", "Please enter a small blind value", icon, stage, null, false);
-			textFieldSmallBlind.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
-			return;
-		}
-
-		final int smallBlind = Integer.parseInt(smallBlindText);
-		try
-		{
-			board.setSmallBlind(smallBlind);
-			socket.write(new SmallBlindSendCommand(smallBlind));
-		}
-		catch(SocketException e)
-		{
-			Logger.error(e);
-			textFieldSmallBlind.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
-			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
-		}
-
-		textFieldSmallBlind.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
-	}
-
-	@FXML
-	public void setBigBlind()
-	{
-		String bigBlindText = textFieldBigBlind.getText().trim();
-		if(bigBlindText == null || bigBlindText.equals(""))
-		{
-			AlertGenerator.showAlert(AlertType.WARNING, "Warning", "", "Please enter a big blind value", icon, stage, null, false);
-			textFieldBigBlind.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
-			return;
-		}
-
-		final int bigBlind = Integer.parseInt(bigBlindText);
-		try
-		{
-			board.setBigBlind(bigBlind);
-			socket.write(new BigBlindSendCommand(bigBlind));
-		}
-		catch(SocketException e)
-		{
-			Logger.error(e);
-			textFieldBigBlind.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
-			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
-		}
-
-		textFieldBigBlind.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
-	}
-
-	@FXML
-	public void setAnte()
-	{
-		String anteText = textFieldAnte.getText().trim();
-		if(anteText == null || anteText.equals(""))
-		{
-			AlertGenerator.showAlert(AlertType.WARNING, "Warning", "", "Please enter an ante value", icon, stage, null, false);
-			textFieldAnte.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
-			return;
-		}
-
-		final int ante = Integer.parseInt(anteText);
-		try
-		{
-			board.setAnte(ante);
-			socket.write(new AnteSendCommand(ante));
-		}
-		catch(SocketException e)
-		{
-			Logger.error(e);
-			textFieldAnte.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
-			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
-		}
-
-		textFieldAnte.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
 	}
 
 	@FXML
@@ -715,16 +418,8 @@ public class Controller implements DataAccessable
 		catch(SocketException | IndexOutOfBoundsException e)
 		{
 			Logger.error(e);
-			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
+			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), ImageHandler.getIcon(), getContainingWindow(), null, false);
 		}
-	}
-
-	private String getMinuteStringFromSeconds(int seconds)
-	{
-		int minutes = seconds / 60;
-		int secondsRest = seconds % 60;
-
-		return String.format("%02d", minutes) + ":" + String.format("%02d", secondsRest);
 	}
 
 	@FXML
@@ -733,7 +428,7 @@ public class Controller implements DataAccessable
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("New Round");
 		alert.setHeaderText("");
-		alert.initOwner(stage);
+		alert.initOwner(getContainingWindow());
 		alert.initModality(Modality.APPLICATION_MODAL);
 		alert.setContentText("Do you really want to start a new round?");
 
@@ -757,7 +452,7 @@ public class Controller implements DataAccessable
 			catch(SocketException e1)
 			{
 				Logger.error(e1);
-				AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), icon, stage, null, false);
+				AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), ImageHandler.getIcon(), getContainingWindow(), null, false);
 			}
 		}
 
@@ -789,7 +484,7 @@ public class Controller implements DataAccessable
 		catch(SocketException e)
 		{
 			Logger.error(e);
-			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
+			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), ImageHandler.getIcon(), getContainingWindow(), null, false);
 		}
 	}
 
@@ -819,7 +514,7 @@ public class Controller implements DataAccessable
 		catch(SocketException e)
 		{
 			Logger.error(e);
-			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
+			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), ImageHandler.getIcon(), getContainingWindow(), null, false);
 		}
 	}
 
@@ -876,7 +571,7 @@ public class Controller implements DataAccessable
 
 	private void updateBeddoFabrikCountLabel()
 	{
-		Platform.runLater(()->{
+		Platform.runLater(() -> {
 			if(beddoFabrikCount <= 0)
 			{
 				updateStatusLabel(labelConnectedBeddoFabriks, String.valueOf(beddoFabrikCount) + " BeddoFabriken", StatusLabelType.ERROR);
@@ -900,11 +595,11 @@ public class Controller implements DataAccessable
 			Scene scene = new Scene(root, 650, 270);
 			newStage.setScene(scene);
 			newStage.setTitle("Override Board Card");
-			newStage.initOwner(stage);
+			newStage.initOwner(getContainingWindow());
 
-			newStage.getIcons().add(icon);
+			newStage.getIcons().add(ImageHandler.getIcon());
 			BoardCardController newController = loader.getController();
-			newController.init(newStage, icon, bundle, this, index);
+			newController.init(getContainingWindow(), ImageHandler.getIcon(), getBundle(), this, index);
 
 			newStage.initModality(Modality.APPLICATION_MODAL);
 			newStage.setResizable(true);
@@ -913,7 +608,7 @@ public class Controller implements DataAccessable
 		catch(IOException e1)
 		{
 			Logger.error(e1);
-			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), icon, stage, null, false);
+			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), ImageHandler.getIcon(), getContainingWindow(), null, false);
 		}
 	}
 
@@ -926,7 +621,7 @@ public class Controller implements DataAccessable
 		catch(SocketException e)
 		{
 			Logger.error(e);
-			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), icon, stage, null, false);
+			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), ImageHandler.getIcon(), getContainingWindow(), null, false);
 		}
 	}
 
@@ -942,7 +637,7 @@ public class Controller implements DataAccessable
 		{
 			if(currentPlayer.getReaderId() == newReaderID)
 			{
-				AlertGenerator.showAlert(AlertType.ERROR, "Warning", "", "The reader ID \"" + newReaderID + "\" is already in use for player " + currentPlayer.getId(), icon, stage, null, false);
+				AlertGenerator.showAlert(AlertType.ERROR, "Warning", "", "The reader ID \"" + newReaderID + "\" is already in use for player " + currentPlayer.getId(), ImageHandler.getIcon(), getContainingWindow(), null, false);
 				return false;
 			}
 		}
@@ -951,7 +646,7 @@ public class Controller implements DataAccessable
 		{
 			if(board.getReaderId(i) == newReaderID)
 			{
-				AlertGenerator.showAlert(AlertType.ERROR, "Warning", "", "The reader ID \"" + newReaderID + "\" is already in use for board card " + i, icon, stage, null, false);
+				AlertGenerator.showAlert(AlertType.ERROR, "Warning", "", "The reader ID \"" + newReaderID + "\" is already in use for board card " + i, ImageHandler.getIcon(), getContainingWindow(), null, false);
 				return false;
 			}
 		}
@@ -981,7 +676,7 @@ public class Controller implements DataAccessable
 		return false;
 	}
 
-	public Stage showModal(String title, String message, Stage owner, Image icon)
+	public Stage showModal(String title, String message, Window owner, Image icon)
 	{
 		try
 		{
@@ -995,7 +690,7 @@ public class Controller implements DataAccessable
 			newStage.getIcons().add(icon);
 			newStage.setResizable(false);
 			ModalController newController = fxmlLoader.getController();
-			newController.init(newStage, modalText);
+			newController.init(getContainingWindow(), modalText);
 			newStage.show();
 
 			return newStage;
@@ -1019,11 +714,11 @@ public class Controller implements DataAccessable
 			Scene scene = new Scene(root, 300, 350);
 			newStage.setScene(scene);
 			newStage.setTitle("Manage Readers");
-			newStage.initOwner(stage);
+			newStage.initOwner(getContainingWindow());
 
-			newStage.getIcons().add(icon);
+			newStage.getIcons().add(ImageHandler.getIcon());
 			ManageReadersController newController = loader.getController();
-			newController.init(newStage, icon, bundle, this);
+			newController.init(getContainingWindow(), ImageHandler.getIcon(), getBundle(), this);
 
 			newStage.initModality(Modality.APPLICATION_MODAL);
 			newStage.setResizable(true);
@@ -1032,7 +727,7 @@ public class Controller implements DataAccessable
 		catch(IOException e1)
 		{
 			Logger.error(e1);
-			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), icon, stage, null, false);
+			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), ImageHandler.getIcon(), getContainingWindow(), null, false);
 		}
 	}
 }

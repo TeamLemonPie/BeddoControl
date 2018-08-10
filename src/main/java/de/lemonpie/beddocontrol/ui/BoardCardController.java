@@ -9,7 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.util.HashSet;
 import java.util.ResourceBundle;
@@ -29,13 +29,13 @@ public class BoardCardController
 	@FXML
 	private HBox hboxCross;
 
-	private Stage stage;
+	private Window stage;
 	private Image icon;
 	private ResourceBundle bundle;
 	private Controller controller;
 	private int boardCardIndex;
 
-	public void init(Stage stage, Image icon, ResourceBundle bundle, Controller controller, int boardCardIndex)
+	public void init(Window stage, Image icon, ResourceBundle bundle, Controller controller, int boardCardIndex)
 	{
 		this.stage = stage;
 		this.icon = icon;
@@ -112,7 +112,7 @@ public class BoardCardController
 			imageView.setOnMouseClicked((e) ->
 			{
 				controller.overrideBoardCard(boardCardIndex, card);
-				stage.close();
+				//stage.close(); TODO
 			});
 		}
 		parent.getChildren().add(imageView);
