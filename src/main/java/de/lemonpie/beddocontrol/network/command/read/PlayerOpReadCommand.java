@@ -1,10 +1,10 @@
 package de.lemonpie.beddocontrol.network.command.read;
 
+import de.lemonpie.beddocommon.network.Command;
+import de.lemonpie.beddocommon.network.CommandName;
+import de.lemonpie.beddocommon.network.ControlCommandData;
 import de.lemonpie.beddocontrol.model.DataAccessable;
 import de.lemonpie.beddocontrol.model.Player;
-import de.lemonpie.beddocontrol.network.Command;
-import de.lemonpie.beddocontrol.network.CommandName;
-import de.lemonpie.beddocontrol.network.ControlCommandData;
 
 public class PlayerOpReadCommand implements Command
 {

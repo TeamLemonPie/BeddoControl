@@ -1,10 +1,10 @@
 package de.lemonpie.beddocontrol.network.command.send.player;
 
 import com.google.gson.JsonPrimitive;
+import de.lemonpie.beddocommon.network.CommandName;
+import de.lemonpie.beddocommon.network.ControlCommandData;
+import de.lemonpie.beddocommon.network.Scope;
 import de.lemonpie.beddocontrol.model.PlayerState;
-import de.lemonpie.beddocontrol.network.CommandName;
-import de.lemonpie.beddocontrol.network.ControlCommandData;
-import de.lemonpie.beddocontrol.network.Scope;
 
 public class PlayerStateSendCommand extends ControlCommandData
 {

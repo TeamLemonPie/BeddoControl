@@ -1,9 +1,9 @@
 package de.lemonpie.beddocontrol.ui;
 
+import de.lemonpie.beddocommon.network.ControlSocket;
 import de.lemonpie.beddocontrol.model.timeline.CountdownType;
 import de.lemonpie.beddocontrol.model.timeline.TimelineHandler;
 import de.lemonpie.beddocontrol.model.timeline.TimelineInstance;
-import de.lemonpie.beddocontrol.network.ControlSocket;
 import de.lemonpie.beddocontrol.network.command.send.CountdownSetSendCommand;
 import de.tobias.utils.nui.NVC;
 import fontAwesome.FontIcon;

@@ -1,10 +1,10 @@
 package de.lemonpie.beddocontrol.network.listener;
 
+import de.lemonpie.beddocommon.network.ControlSocket;
 import de.lemonpie.beddocontrol.model.Player;
 import de.lemonpie.beddocontrol.model.PlayerState;
 import de.lemonpie.beddocontrol.model.card.Card;
 import de.lemonpie.beddocontrol.model.listener.PlayerListener;
-import de.lemonpie.beddocontrol.network.ControlSocket;
 import de.lemonpie.beddocontrol.network.command.send.ReaderSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.ReaderSendCommand.ReaderType;
 import de.lemonpie.beddocontrol.network.command.send.player.PlayerChipsSendCommand;

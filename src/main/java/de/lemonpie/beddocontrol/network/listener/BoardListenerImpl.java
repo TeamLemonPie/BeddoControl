@@ -1,8 +1,8 @@
 package de.lemonpie.beddocontrol.network.listener;
 
+import de.lemonpie.beddocommon.network.ControlSocket;
 import de.lemonpie.beddocontrol.listener.BoardListener;
 import de.lemonpie.beddocontrol.model.card.Card;
-import de.lemonpie.beddocontrol.network.ControlSocket;
 import de.lemonpie.beddocontrol.network.command.send.ReaderSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.ReaderSendCommand.ReaderType;
 

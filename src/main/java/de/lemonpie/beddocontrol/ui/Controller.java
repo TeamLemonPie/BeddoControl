@@ -1,9 +1,10 @@
 package de.lemonpie.beddocontrol.ui;
 
+import de.lemonpie.beddocommon.ServerConnectionSettings;
+import de.lemonpie.beddocommon.network.ControlSocket;
+import de.lemonpie.beddocommon.network.ControlSocketDelegate;
 import de.lemonpie.beddocontrol.model.*;
 import de.lemonpie.beddocontrol.model.card.Card;
-import de.lemonpie.beddocontrol.network.ControlSocket;
-import de.lemonpie.beddocontrol.network.ControlSocketDelegate;
 import de.lemonpie.beddocontrol.network.command.read.*;
 import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand.Option;
@@ -107,7 +108,7 @@ public class Controller extends NVC implements DataAccessable
 	public static StringProperty modalText;
 	private boolean isBoardLocked = false;
 	private boolean isAllLocked = false;
-	private Settings settings;
+	private ServerConnectionSettings settings;
 	PlayerTableView tableViewPlayer;
 
 	private int beddoFabrikCount = 0;
@@ -135,13 +136,13 @@ public class Controller extends NVC implements DataAccessable
 
 		updateStatusLabel(labelStatus, "Connecting...", StatusLabelType.WARNING);
 
-		Object possibleSettings = ObjectJSONHandler.loadObjectFromJSON(getBundle().getString("folder"), "settings", new Settings());
+		Object possibleSettings = ObjectJSONHandler.loadObjectFromJSON(getBundle().getString("folder"), "settings", new ServerConnectionSettings());
 		if(possibleSettings == null)
 		{
 			Logger.error("Missing or invalid settings.json - Created default JSON");
 			try
 			{
-				Settings s = new Settings();
+				ServerConnectionSettings s = new ServerConnectionSettings();
 				s.setHostName("localhost");
 				s.setPort(9998);
 				ObjectJSONHandler.saveObjectToJSON(getBundle().getString("folder"), "settings", s);
@@ -160,7 +161,7 @@ public class Controller extends NVC implements DataAccessable
 		MidiHandler midiHandler = new MidiHandler(this);
 		midiHandler.init(labelStatusMIDI);
 
-		settings = (Settings) possibleSettings;
+		settings = (ServerConnectionSettings) possibleSettings;
 		labelServer.setText(settings.getHostName() + ":" + settings.getPort());
 
 		buttonLockBoard.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
