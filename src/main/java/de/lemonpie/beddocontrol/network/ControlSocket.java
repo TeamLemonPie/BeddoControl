@@ -2,9 +2,7 @@ package de.lemonpie.beddocontrol.network;
 
 import com.google.gson.Gson;
 import de.lemonpie.beddocontrol.model.Settings;
-import de.lemonpie.beddocontrol.ui.Controller;
 import de.tobias.utils.net.DiscoveryClient;
-import javafx.application.Platform;
 import logger.Logger;
 
 import java.io.BufferedReader;
@@ -20,11 +18,10 @@ import java.util.Map;
 public class ControlSocket implements Runnable
 {
 
-	private static final int MAX = 10;
-	private static final int SLEEP_TIME = 5000;
+	public static final int MAX = 10;
+	public static final int SLEEP_TIME = 5000;
 
 	private static Gson gson;
-	private static String message;
 
 	static
 	{
@@ -82,10 +79,7 @@ public class ControlSocket implements Runnable
 			host = discoveryClient.discover().getHostAddress();
 		}
 
-		message = "Trying to connect to " + host + ":" + port + "...";
-
-		Logger.debug(message);
-		Platform.runLater(() -> Controller.modalText.set(message));
+		delegate.startConnecting(host, port);
 
 		int counter = 0;
 		while(counter < MAX)
@@ -102,9 +96,8 @@ public class ControlSocket implements Runnable
 			}
 			catch(IOException e)
 			{
-				message = e.getMessage() + " Retry " + (counter + 1) + "/" + MAX + ".\nNext Retry in " + (SLEEP_TIME / 1000) + " seconds...";
-				Logger.error(message);
-				Platform.runLater(() -> Controller.modalText.set(message));
+				delegate.onConnectionFailed(e, counter);
+
 				try
 				{
 					Thread.sleep(SLEEP_TIME);
@@ -122,8 +115,6 @@ public class ControlSocket implements Runnable
 
 	private void initConnection() throws IOException
 	{
-
-
 		socket = new Socket();
 		socket.connect(new InetSocketAddress(host, port));
 

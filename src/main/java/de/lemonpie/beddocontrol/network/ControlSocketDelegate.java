@@ -7,4 +7,8 @@ public interface ControlSocketDelegate
 	void onConnectionEstablished();
 
 	void onConnectionClosed();
+
+	void startConnecting(String host, int port);
+
+	void onConnectionFailed(Exception e, int retry);
 }

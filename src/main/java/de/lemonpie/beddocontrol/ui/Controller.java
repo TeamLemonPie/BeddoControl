@@ -326,6 +326,24 @@ public class Controller extends NVC implements DataAccessable
 				socket.addCommand(new PlayerWinProbabilityReadCommand(Controller.this));
 				socket.addCommand(new ReaderCountReadCommand(Controller.this));
 			}
+
+			@Override
+			public void startConnecting(String host, int port)
+			{
+				String message = "Trying to connect to " + host + ":" + port + "...";
+
+				Logger.debug(message);
+				Platform.runLater(() -> Controller.modalText.set(message));
+			}
+
+			@Override
+			public void onConnectionFailed(Exception e, int retry)
+			{
+				String message = e.getMessage() + " Retry " + (retry + 1) + "/" + ControlSocket.MAX +
+						".\nNext Retry in " + (ControlSocket.SLEEP_TIME / 1000) + " seconds...";
+				Logger.error(message);
+				Platform.runLater(() -> Controller.modalText.set(message));
+			}
 		});
 	}
 
