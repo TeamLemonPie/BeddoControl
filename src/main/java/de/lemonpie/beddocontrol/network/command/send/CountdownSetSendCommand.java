@@ -2,8 +2,8 @@ package de.lemonpie.beddocontrol.network.command.send;
 
 import com.google.gson.JsonPrimitive;
 import de.lemonpie.beddocommon.network.CommandName;
-import de.lemonpie.beddocommon.network.ControlCommandData;
 import de.lemonpie.beddocommon.network.Scope;
+import de.lemonpie.beddocommon.network.client.ControlCommandData;
 import de.lemonpie.beddocontrol.model.timeline.CountdownType;
 
 public class CountdownSetSendCommand extends ControlCommandData

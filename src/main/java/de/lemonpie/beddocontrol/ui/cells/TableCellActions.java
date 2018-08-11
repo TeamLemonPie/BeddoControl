@@ -3,6 +3,7 @@ package de.lemonpie.beddocontrol.ui.cells;
 import de.lemonpie.beddocontrol.model.Player;
 import de.lemonpie.beddocontrol.model.PlayerState;
 import de.lemonpie.beddocontrol.ui.Controller;
+import fontAwesome.FontIcon;
 import fontAwesome.FontIconType;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -32,7 +33,7 @@ public class TableCellActions extends TableCell<Player, PlayerState>
 			hboxButtons.setSpacing(10);
 
 			Button buttonActivate = new Button();
-			buttonActivate.setGraphic(controller.getFontIcon(FontIconType.PLAY, 16, Color.BLACK));
+			buttonActivate.setGraphic(new FontIcon(FontIconType.PLAY, 16, Color.BLACK));
 			buttonActivate.setStyle("-fx-background-color: #48DB5E;");
 			buttonActivate.setTooltip(new Tooltip("Activate"));
 			buttonActivate.setOnAction((e) -> {
@@ -42,7 +43,7 @@ public class TableCellActions extends TableCell<Player, PlayerState>
 			hboxButtons.getChildren().add(buttonActivate);
 
 			Button buttonOutOfRound = new Button();
-			buttonOutOfRound.setGraphic(controller.getFontIcon(FontIconType.PAUSE, 16, Color.BLACK));
+			buttonOutOfRound.setGraphic(new FontIcon(FontIconType.PAUSE, 16, Color.BLACK));
 			buttonOutOfRound.setStyle("-fx-background-color: orange;");
 			buttonOutOfRound.setTooltip(new Tooltip("Fold"));
 			buttonOutOfRound.setOnAction((e) -> {
@@ -52,7 +53,7 @@ public class TableCellActions extends TableCell<Player, PlayerState>
 			hboxButtons.getChildren().add(buttonOutOfRound);
 
 			Button buttonOutOfGame = new Button();
-			buttonOutOfGame.setGraphic(controller.getFontIcon(FontIconType.POWER_OFF, 16, Color.BLACK));
+			buttonOutOfGame.setGraphic(new FontIcon(FontIconType.POWER_OFF, 16, Color.BLACK));
 			buttonOutOfGame.setStyle("-fx-background-color: #CC0000;");
 			buttonOutOfGame.setTooltip(new Tooltip("Deactivate"));
 			buttonOutOfGame.setOnAction((e) -> {
@@ -62,7 +63,7 @@ public class TableCellActions extends TableCell<Player, PlayerState>
 			hboxButtons.getChildren().add(buttonOutOfGame);
 
 			Button buttonDelete = new Button();
-			buttonDelete.setGraphic(controller.getFontIcon(FontIconType.TRASH, 16, Color.BLACK));
+			buttonDelete.setGraphic(new FontIcon(FontIconType.TRASH, 16, Color.BLACK));
 			buttonDelete.setStyle("-fx-background-color: #CCCCCC;");
 			buttonDelete.setTooltip(new Tooltip("Delete"));
 			buttonDelete.setOnAction((e) -> {

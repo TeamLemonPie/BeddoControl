@@ -5,9 +5,9 @@ import com.google.gson.reflect.TypeToken;
 import de.lemonpie.beddocontrol.midi.Midi;
 import de.lemonpie.beddocontrol.midi.MidiAction;
 import de.lemonpie.beddocontrol.midi.PD12Handler;
+import de.tobias.logger.Logger;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
-import logger.Logger;
 import tools.PathUtils;
 
 import javax.sound.midi.MidiUnavailableException;

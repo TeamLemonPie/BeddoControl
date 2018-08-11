@@ -1,6 +1,6 @@
 package de.lemonpie.beddocontrol.ui;
 
-import de.lemonpie.beddocommon.network.ControlSocket;
+import de.lemonpie.beddocommon.network.client.ControlSocket;
 import de.lemonpie.beddocontrol.model.Board;
 import de.lemonpie.beddocontrol.network.command.send.AnteSendCommand;
 import de.tobias.utils.nui.NVC;

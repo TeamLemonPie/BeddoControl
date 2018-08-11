@@ -8,8 +8,8 @@ import de.lemonpie.beddocontrol.model.card.Card;
 import de.lemonpie.beddocontrol.model.listener.PlayerListener;
 import de.lemonpie.beddocontrol.network.command.send.player.PlayerOpSendCommand;
 import de.lemonpie.beddocontrol.network.listener.PlayerListenerImpl;
+import de.tobias.logger.Logger;
 import javafx.scene.control.Alert.AlertType;
-import logger.Logger;
 import tools.AlertGenerator;
 
 import java.net.SocketException;

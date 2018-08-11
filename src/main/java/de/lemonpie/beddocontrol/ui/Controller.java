@@ -1,8 +1,8 @@
 package de.lemonpie.beddocontrol.ui;
 
 import de.lemonpie.beddocommon.ServerConnectionSettings;
-import de.lemonpie.beddocommon.network.ControlSocket;
-import de.lemonpie.beddocommon.network.ControlSocketDelegate;
+import de.lemonpie.beddocommon.network.client.ControlSocket;
+import de.lemonpie.beddocommon.network.client.ControlSocketDelegate;
 import de.lemonpie.beddocontrol.model.*;
 import de.lemonpie.beddocontrol.model.card.Card;
 import de.lemonpie.beddocontrol.network.command.read.*;
@@ -13,6 +13,7 @@ import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.DataSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.player.PlayerOpSendCommand;
 import de.lemonpie.beddocontrol.network.listener.BoardListenerImpl;
+import de.tobias.logger.Logger;
 import de.tobias.utils.nui.NVC;
 import de.tobias.utils.nui.NVCStage;
 import fontAwesome.FontIcon;
@@ -34,7 +35,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import logger.Logger;
 import tools.AlertGenerator;
 import tools.NumberTextFormatter;
 import tools.ObjectJSONHandler;
@@ -346,15 +346,6 @@ public class Controller extends NVC implements DataAccessable
 				Platform.runLater(() -> Controller.modalText.set(message));
 			}
 		});
-	}
-
-	public FontIcon getFontIcon(FontIconType type, int size, Color color)
-	{
-		FontIcon icon = new FontIcon(type);
-		icon.setSize(size);
-		icon.setColor(color);
-
-		return icon;
 	}
 
 	private void initTableView()

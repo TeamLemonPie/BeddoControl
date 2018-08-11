@@ -2,8 +2,8 @@ package de.lemonpie.beddocontrol.network.command.send.player;
 
 import com.google.gson.JsonPrimitive;
 import de.lemonpie.beddocommon.network.CommandName;
-import de.lemonpie.beddocommon.network.ControlCommandData;
 import de.lemonpie.beddocommon.network.Scope;
+import de.lemonpie.beddocommon.network.client.ControlCommandData;
 
 public class PlayerNameSendCommand extends ControlCommandData
 {

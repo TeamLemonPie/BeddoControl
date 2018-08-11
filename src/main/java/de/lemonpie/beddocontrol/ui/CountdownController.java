@@ -1,10 +1,11 @@
 package de.lemonpie.beddocontrol.ui;
 
-import de.lemonpie.beddocommon.network.ControlSocket;
+import de.lemonpie.beddocommon.network.client.ControlSocket;
 import de.lemonpie.beddocontrol.model.timeline.CountdownType;
 import de.lemonpie.beddocontrol.model.timeline.TimelineHandler;
 import de.lemonpie.beddocontrol.model.timeline.TimelineInstance;
 import de.lemonpie.beddocontrol.network.command.send.CountdownSetSendCommand;
+import de.tobias.logger.Logger;
 import de.tobias.utils.nui.NVC;
 import fontAwesome.FontIcon;
 import fontAwesome.FontIconType;
@@ -19,7 +20,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-import logger.Logger;
 import tools.AlertGenerator;
 import tools.NumberTextFormatter;
 

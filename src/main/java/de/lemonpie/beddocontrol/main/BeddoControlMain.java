@@ -2,15 +2,17 @@ package de.lemonpie.beddocontrol.main;
 
 import de.lemonpie.beddocontrol.midi.Midi;
 import de.lemonpie.beddocontrol.ui.Controller;
+import de.tobias.logger.FileOutputOption;
+import de.tobias.logger.LogLevelFilter;
+import de.tobias.logger.Logger;
+import de.tobias.utils.application.App;
+import de.tobias.utils.application.ApplicationUtils;
+import de.tobias.utils.application.container.PathType;
 import de.tobias.utils.nui.NVCStage;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import logger.FileOutputMode;
-import logger.Logger;
-import tools.PathUtils;
 import tools.Worker;
 
-import java.io.File;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -21,6 +23,17 @@ public class BeddoControlMain extends Application
 	public static void main(String[] args)
 	{
 		launch(args);
+	}
+
+	private static void prepareLogger()
+	{
+		App app = ApplicationUtils.getApplication();
+		Logger.init(app.getPath(PathType.LOG));
+
+		Logger.setLevelFilter(LogLevelFilter.DEBUG);
+		Logger.setFileOutput(FileOutputOption.COMBINED);
+
+		Logger.info("Launching App: {0}, version: {1}, build: {2}, date: {3}", "BeddoMischer", "1.1.0", "3", "07.08.18");
 	}
 
 	@Override
@@ -41,15 +54,7 @@ public class BeddoControlMain extends Application
 	@Override
 	public void init()
 	{
-		Parameters params = getParameters();
-		String logLevelParam = params.getNamed().get("loglevel");
-		Logger.setLevel(logLevelParam);
-
-		File logFolder = new File(PathUtils.getOSindependentPath() + "LemonPie/" + bundle.getString("app.name"));
-		PathUtils.checkFolder(logFolder);
-		Logger.enableFileOutput(logFolder, System.out, System.err, FileOutputMode.COMBINED);
-
-		Logger.appInfo(bundle.getString("app.name"), bundle.getString("version.name"), bundle.getString("version.code"), bundle.getString("version.date"));
+		prepareLogger();
 	}
 
 	@Override

@@ -1,8 +1,8 @@
 package de.lemonpie.beddocontrol.ui;
 
 import de.lemonpie.beddocontrol.model.card.Card;
+import de.tobias.logger.Logger;
 import javafx.scene.image.Image;
-import logger.Logger;
 
 public class ImageHandler
 {
