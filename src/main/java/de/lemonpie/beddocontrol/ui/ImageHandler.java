@@ -22,7 +22,7 @@ public class ImageHandler
 		Image image = null;
 		try
 		{
-			String base = "/de/lemonpie/beddocontrol/cards/";
+			String base = "public/cards/";
 			if(card == null || card.equals(Card.EMPTY))
 			{
 				return new Image(base + "back.png");

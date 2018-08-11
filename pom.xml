@@ -7,7 +7,7 @@
     <parent>
         <artifactId>BeddoMaster</artifactId>
         <groupId>de.lemonpie</groupId>
-        <version>1.0.1</version>
+        <version>1.0.1-SNAPSHOT</version>
         <relativePath>../BeddoMaster</relativePath>
     </parent>
 
@@ -52,12 +52,7 @@
         <dependency>
             <groupId>de.lemonpie</groupId>
             <artifactId>BeddoCommon</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>de.tobias</groupId>
-            <artifactId>libNetwork</artifactId>
-            <version>1.0.0</version>
+            <version>${common.version}</version>
         </dependency>
 
         <dependency>
