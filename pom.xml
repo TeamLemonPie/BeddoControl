@@ -32,6 +32,10 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
+                    <outputDirectory>build/${project.version}</outputDirectory>
+                    <finalName>${project.artifactId}-v${project.version}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+
                     <archive>
                         <manifest>
                             <mainClass>de.lemonpie.beddocontrol.main.BeddoControlMain</mainClass>
