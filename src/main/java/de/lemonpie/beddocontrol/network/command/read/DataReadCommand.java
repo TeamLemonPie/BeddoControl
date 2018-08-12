@@ -14,7 +14,6 @@ import de.lemonpie.beddocontrol.model.card.Card;
 
 public class DataReadCommand implements Command
 {
-
 	private DataAccessable dataAccessable;
 
 	public DataReadCommand(DataAccessable dataAccessable)
@@ -56,6 +55,7 @@ public class DataReadCommand implements Command
 						Card cardLeft = Card.fromString(obj.getAsJsonPrimitive("cardLeft").getAsString());
 						Card cardRight = Card.fromString(obj.getAsJsonPrimitive("cardRight").getAsString());
 						int readerId = obj.getAsJsonPrimitive("readerId").getAsInt();
+						boolean isHighlighted = obj.getAsJsonPrimitive("isHighlighted").getAsBoolean();
 
 						Player player = new Player(id);
 						player.setName(name);
@@ -65,6 +65,7 @@ public class DataReadCommand implements Command
 						player.setCardLeft(cardLeft);
 						player.setCardRight(cardRight);
 						player.setReaderId(readerId);
+						player.setHighlighted(isHighlighted);
 
 						dataAccessable.addPlayer(player);
 					}

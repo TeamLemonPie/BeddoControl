@@ -25,6 +25,8 @@ public class Player
 
 	private int winprobability;
 
+	private boolean isHighlighted;
+
 	public Player(int id)
 	{
 		listeners = new LinkedList<>();
@@ -34,6 +36,7 @@ public class Player
 		this.name = "[Player]";
 		this.twitchName = "[TwitchName]";
 		this.playerState = PlayerState.ACTIVE;
+		this.isHighlighted = false;
 	}
 
 	public int getId()
@@ -116,6 +119,9 @@ public class Player
 	{
 		this.playerState = playerState;
 		fireListener(listener -> listener.stateDidChange(this, playerState));
+
+		this.isHighlighted = false;
+		fireListener(listener->listener.isHighlightedDidChange(this, isHighlighted));
 	}
 
 	public int getWinprobability()
@@ -127,6 +133,22 @@ public class Player
 	{
 		this.winprobability = winprobability;
 		fireListener(listener -> listener.winProbabilityDidChange(this, winprobability));
+	}
+
+	public boolean isHighlighted()
+	{
+		return isHighlighted;
+	}
+
+	public void setHighlighted(boolean highlighted)
+	{
+		if(!playerState.equals(PlayerState.ACTIVE))
+		{
+			return;
+		}
+
+		this.isHighlighted = highlighted;
+		fireListener(listener->listener.isHighlightedDidChange(this, isHighlighted));
 	}
 
 	public void addListener(PlayerListener playerListener)

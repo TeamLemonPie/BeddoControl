@@ -62,6 +62,25 @@ public class TableCellActions extends TableCell<Player, PlayerState>
 			});
 			hboxButtons.getChildren().add(buttonOutOfGame);
 
+			Button buttonHighlight = new Button();
+			buttonHighlight.setGraphic(new FontIcon(FontIconType.CHECK, 16, Color.BLACK));
+			buttonHighlight.setStyle("-fx-background-color: #339AF0;");
+			buttonHighlight.setTooltip(new Tooltip("Highlight"));
+			buttonHighlight.setOnAction((e)->{
+				Player currentPlayer = (Player) getTableRow().getItem();
+				for(Player player : controller.getPlayers())
+				{
+					if(player != currentPlayer && player.isHighlighted())
+					{
+						player.setHighlighted(false);
+					}
+				}
+
+				currentPlayer.setHighlighted(!currentPlayer.isHighlighted());
+				controller.getTableView().refresh();
+			});
+			hboxButtons.getChildren().add(buttonHighlight);
+
 			Button buttonDelete = new Button();
 			buttonDelete.setGraphic(new FontIcon(FontIconType.TRASH, 16, Color.BLACK));
 			buttonDelete.setStyle("-fx-background-color: #CCCCCC;");

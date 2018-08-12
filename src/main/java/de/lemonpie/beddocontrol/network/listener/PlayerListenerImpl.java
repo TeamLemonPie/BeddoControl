@@ -8,6 +8,7 @@ import de.lemonpie.beddocontrol.model.listener.PlayerListener;
 import de.lemonpie.beddocontrol.network.command.send.ReaderSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.ReaderSendCommand.ReaderType;
 import de.lemonpie.beddocontrol.network.command.send.player.PlayerChipsSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.player.PlayerHighlightSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.player.PlayerNameSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.player.PlayerStateSendCommand;
 
@@ -101,5 +102,19 @@ public class PlayerListenerImpl implements PlayerListener
 	@Override
 	public void winProbabilityDidChange(Player player, int value)
 	{
+	}
+
+	@Override
+	public void isHighlightedDidChange(Player player, boolean value)
+	{
+		PlayerHighlightSendCommand cmd = new PlayerHighlightSendCommand(player.getId(), value);
+		try
+		{
+			socket.write(cmd);
+		}
+		catch(SocketException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
