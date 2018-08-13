@@ -52,7 +52,9 @@ public class MidiHandler
 			}
 
 			BufferedReader inputStream = Files.newBufferedReader(midiSettingsPath);
-			Type type = new TypeToken<List<MidiAction>>(){}.getType();
+			Type type = new TypeToken<List<MidiAction>>()
+			{
+			}.getType();
 			midiActionList = new Gson().fromJson(inputStream, type);
 			Midi.getInstance().lookupMidiDevice("PD 12");
 			Midi.getInstance().setListener(new PD12Handler(controller, midiActionList));

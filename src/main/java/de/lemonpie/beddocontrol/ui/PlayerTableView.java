@@ -76,7 +76,7 @@ public class PlayerTableView extends TableView<Player>
 
 		TableColumn<Player, Integer> columnStatus = new TableColumn<>();
 		columnStatus.setCellValueFactory(new PropertyValueFactory<>("id"));
-		columnStatus.setCellFactory(param->new TableCellStatus(controller));
+		columnStatus.setCellFactory(param -> new TableCellStatus(controller));
 		columnStatus.setStyle("-fx-alignment: CENTER;");
 		columnStatus.setText("Status");
 		columnStatus.prefWidthProperty().bind(widthProperty().multiply(0.10).subtract(2));

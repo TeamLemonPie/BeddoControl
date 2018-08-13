@@ -66,7 +66,7 @@ public class TableCellActions extends TableCell<Player, PlayerState>
 			buttonHighlight.setGraphic(new FontIcon(FontIconType.CHECK, 16, Color.BLACK));
 			buttonHighlight.setStyle("-fx-background-color: #339AF0;");
 			buttonHighlight.setTooltip(new Tooltip("Highlight"));
-			buttonHighlight.setOnAction((e)->{
+			buttonHighlight.setOnAction((e) -> {
 				Player currentPlayer = (Player) getTableRow().getItem();
 				for(Player player : controller.getPlayers())
 				{

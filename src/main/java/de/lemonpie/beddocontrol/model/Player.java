@@ -121,7 +121,7 @@ public class Player
 		fireListener(listener -> listener.stateDidChange(this, playerState));
 
 		this.isHighlighted = false;
-		fireListener(listener->listener.isHighlightedDidChange(this, isHighlighted));
+		fireListener(listener -> listener.isHighlightedDidChange(this, isHighlighted));
 	}
 
 	public int getWinprobability()
@@ -148,7 +148,7 @@ public class Player
 		}
 
 		this.isHighlighted = highlighted;
-		fireListener(listener->listener.isHighlightedDidChange(this, isHighlighted));
+		fireListener(listener -> listener.isHighlightedDidChange(this, isHighlighted));
 	}
 
 	public void addListener(PlayerListener playerListener)
