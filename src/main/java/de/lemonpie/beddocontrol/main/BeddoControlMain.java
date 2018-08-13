@@ -33,7 +33,7 @@ public class BeddoControlMain extends Application
 		Logger.setLevelFilter(LogLevelFilter.DEBUG);
 		Logger.setFileOutput(FileOutputOption.COMBINED);
 
-		Logger.info("Launching App: {0}, version: {1}, build: {2}, date: {3}", "BeddoMischer", "1.1.0", "3", "07.08.18");
+		Logger.info("Launching App: {0}, version: {1}, build: {2}, date: {3}", bundle.getString("app.name"), bundle.getString("version.name"), bundle.getString("version.code"), bundle.getString("version.date"));
 	}
 
 	@Override

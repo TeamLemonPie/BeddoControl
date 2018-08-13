@@ -207,7 +207,7 @@ public class Controller extends NVC implements DataAccessable
 	@Override
 	public void initStage(Stage stage)
 	{
-		stage.setWidth(900);
+		stage.setWidth(1000);
 		stage.setHeight(800);
 
 		stage.getIcons().add(ImageHandler.getIcon());

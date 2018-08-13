@@ -61,10 +61,8 @@ public class MidiHandler
 		}
 		catch(MidiUnavailableException | IOException e)
 		{
-			Logger.error(e);
-			Platform.runLater(() -> {
-				controller.updateStatusLabel(labelStatusMIDI, "MIDI unavailable", StatusLabelType.ERROR);
-			});
+			Logger.error(e.getClass());
+			Platform.runLater(() -> controller.updateStatusLabel(labelStatusMIDI, "MIDI unavailable", StatusLabelType.ERROR));
 		}
 	}
 }

@@ -63,7 +63,7 @@ public class PlayerTableView extends TableView<Player>
 		columnChips.setCellFactory(param -> new TableCellChips());
 		columnChips.setStyle("-fx-alignment: CENTER;");
 		columnChips.setText("Chips");
-		columnChips.prefWidthProperty().bind(widthProperty().multiply(0.09).subtract(2));
+		columnChips.prefWidthProperty().bind(widthProperty().multiply(0.05).subtract(2));
 		getColumns().add(columnChips);
 
 		TableColumn<Player, Integer> columnWinProbability = new TableColumn<>();
@@ -87,7 +87,7 @@ public class PlayerTableView extends TableView<Player>
 		columnButtons.setCellFactory(param -> new TableCellActions(controller));
 		columnButtons.setStyle("-fx-alignment: CENTER;");
 		columnButtons.setText("Actions");
-		columnButtons.prefWidthProperty().bind(widthProperty().multiply(0.18).subtract(2));
+		columnButtons.prefWidthProperty().bind(widthProperty().multiply(0.22).subtract(2));
 		getColumns().add(columnButtons);
 	}
 }
