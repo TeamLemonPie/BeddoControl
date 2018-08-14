@@ -1,11 +1,11 @@
 package de.lemonpie.beddocontrol.network.command.send;
 
 import com.google.gson.JsonObject;
+import de.lemonpie.beddocommon.network.CommandData;
 import de.lemonpie.beddocommon.network.CommandName;
 import de.lemonpie.beddocommon.network.Scope;
-import de.lemonpie.beddocommon.network.client.ControlCommandData;
 
-public class ReaderSendCommand extends ControlCommandData
+public class ReaderSendCommand extends CommandData
 {
 
 	public enum ReaderType

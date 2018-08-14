@@ -1,8 +1,8 @@
 package de.lemonpie.beddocontrol.network.command.read;
 
+import de.lemonpie.beddocommon.network.Command;
+import de.lemonpie.beddocommon.network.CommandData;
 import de.lemonpie.beddocommon.network.CommandName;
-import de.lemonpie.beddocommon.network.client.Command;
-import de.lemonpie.beddocommon.network.client.ControlCommandData;
 import de.lemonpie.beddocontrol.model.DataAccessable;
 
 public class ReaderCountReadCommand implements Command
@@ -27,7 +27,7 @@ public class ReaderCountReadCommand implements Command
 	}
 
 	@Override
-	public void execute(ControlCommandData data)
+	public void execute(CommandData data)
 	{
 		Type type = Type.values()[data.getValue().getAsInt()];
 

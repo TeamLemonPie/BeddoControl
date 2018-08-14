@@ -1,9 +1,9 @@
 package de.lemonpie.beddocontrol.network.command.read;
 
 import com.google.gson.JsonObject;
+import de.lemonpie.beddocommon.network.Command;
+import de.lemonpie.beddocommon.network.CommandData;
 import de.lemonpie.beddocommon.network.CommandName;
-import de.lemonpie.beddocommon.network.client.Command;
-import de.lemonpie.beddocommon.network.client.ControlCommandData;
 import de.lemonpie.beddocontrol.model.DataAccessable;
 import de.lemonpie.beddocontrol.model.card.Card;
 
@@ -30,7 +30,7 @@ public class CardReadCommand implements Command
 	}
 
 	@Override
-	public void execute(ControlCommandData data)
+	public void execute(CommandData data)
 	{
 		int id = data.getKey();
 

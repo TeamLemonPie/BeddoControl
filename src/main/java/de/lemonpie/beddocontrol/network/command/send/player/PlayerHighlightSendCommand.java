@@ -1,11 +1,11 @@
 package de.lemonpie.beddocontrol.network.command.send.player;
 
 import com.google.gson.JsonPrimitive;
+import de.lemonpie.beddocommon.network.CommandData;
 import de.lemonpie.beddocommon.network.CommandName;
 import de.lemonpie.beddocommon.network.Scope;
-import de.lemonpie.beddocommon.network.client.ControlCommandData;
 
-public class PlayerHighlightSendCommand extends ControlCommandData
+public class PlayerHighlightSendCommand extends CommandData
 {
 
 	public PlayerHighlightSendCommand(int playerId, boolean value)

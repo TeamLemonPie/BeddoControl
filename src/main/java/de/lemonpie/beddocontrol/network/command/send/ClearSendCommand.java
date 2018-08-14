@@ -1,10 +1,10 @@
 package de.lemonpie.beddocontrol.network.command.send;
 
+import de.lemonpie.beddocommon.network.CommandData;
 import de.lemonpie.beddocommon.network.CommandName;
 import de.lemonpie.beddocommon.network.Scope;
-import de.lemonpie.beddocommon.network.client.ControlCommandData;
 
-public class ClearSendCommand extends ControlCommandData
+public class ClearSendCommand extends CommandData
 {
 
 	public ClearSendCommand()

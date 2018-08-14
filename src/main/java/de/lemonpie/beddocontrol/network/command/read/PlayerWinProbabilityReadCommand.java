@@ -1,8 +1,8 @@
 package de.lemonpie.beddocontrol.network.command.read;
 
+import de.lemonpie.beddocommon.network.Command;
+import de.lemonpie.beddocommon.network.CommandData;
 import de.lemonpie.beddocommon.network.CommandName;
-import de.lemonpie.beddocommon.network.client.Command;
-import de.lemonpie.beddocommon.network.client.ControlCommandData;
 import de.lemonpie.beddocontrol.model.DataAccessable;
 
 public class PlayerWinProbabilityReadCommand implements Command
@@ -22,7 +22,7 @@ public class PlayerWinProbabilityReadCommand implements Command
 	}
 
 	@Override
-	public void execute(ControlCommandData data)
+	public void execute(CommandData data)
 	{
 		dataAccessable.getPlayer(data.getKey()).ifPresent(player -> player.setWinprobability(data.getValue().getAsInt()));
 	}
