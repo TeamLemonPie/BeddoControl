@@ -58,10 +58,23 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>central</id>
+            <name>TheCodeLabs-releases</name>
+            <url>https://maven.thecodelabs.de/artifactory/TheCodeLabs-release</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>TheCodeLabs-snapshots</name>
+            <url>https://maven.thecodelabs.de/artifactory/TheCodeLabs-snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <repositories>
         <repository>
-            <id>releases</id>
-            <url>https://maven.thecodelabs.de/nexus/content/repositories/releases</url>
+            <id>central</id>
+            <url>https://maven.thecodelabs.de/artifactory/TheCodeLabs-release</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -71,7 +84,7 @@
         </repository>
         <repository>
             <id>snapshots</id>
-            <url>https://maven.thecodelabs.de/nexus/content/repositories/snapshots</url>
+            <url>https://maven.thecodelabs.de/artifactory/TheCodeLabs-snapshots</url>
             <releases>
                 <enabled>false</enabled>
             </releases>
