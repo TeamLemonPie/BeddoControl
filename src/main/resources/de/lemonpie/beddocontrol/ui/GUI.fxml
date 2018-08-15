@@ -114,7 +114,7 @@
                                                 <ImageView fx:id="imageViewBoard1" fitHeight="39.0" fitWidth="51.0"
                                                            pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
                                                     <image>
-                                                        <Image url="@../cards/back.png"/>
+                                                        <Image url="@../../../../public/cards/back.png"/>
                                                     </image>
                                                 </ImageView>
                                                 <TextField fx:id="textFieldBoard1" maxWidth="50.0" minWidth="50.0"
@@ -132,7 +132,7 @@
                                                 <ImageView fx:id="imageViewBoard2" fitHeight="39.0" fitWidth="51.0"
                                                            pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
                                                     <image>
-                                                        <Image url="@../cards/back.png"/>
+                                                        <Image url="@../../../../public/cards/back.png"/>
                                                     </image>
                                                 </ImageView>
                                                 <TextField fx:id="textFieldBoard2" maxWidth="50.0" minWidth="50.0"
@@ -150,7 +150,7 @@
                                                 <ImageView fx:id="imageViewBoard3" fitHeight="39.0" fitWidth="51.0"
                                                            pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
                                                     <image>
-                                                        <Image url="@../cards/back.png"/>
+                                                        <Image url="@../../../../public/cards/back.png"/>
                                                     </image>
                                                 </ImageView>
                                                 <TextField fx:id="textFieldBoard3" maxWidth="50.0" minWidth="50.0"
@@ -168,7 +168,7 @@
                                                 <ImageView fx:id="imageViewBoard4" fitHeight="39.0" fitWidth="51.0"
                                                            pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
                                                     <image>
-                                                        <Image url="@../cards/back.png"/>
+                                                        <Image url="@../../../../public/cards/back.png"/>
                                                     </image>
                                                 </ImageView>
                                                 <TextField fx:id="textFieldBoard4" maxWidth="50.0" minWidth="50.0"
@@ -186,7 +186,7 @@
                                                 <ImageView fx:id="imageViewBoard5" fitHeight="39.0" fitWidth="51.0"
                                                            pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
                                                     <image>
-                                                        <Image url="@../cards/back.png"/>
+                                                        <Image url="@../../../../public/cards/back.png"/>
                                                     </image>
                                                 </ImageView>
                                                 <TextField fx:id="textFieldBoard5" maxWidth="50.0" minWidth="50.0"
