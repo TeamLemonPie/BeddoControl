@@ -146,6 +146,8 @@ public class Controller extends NVC implements DataAccessable
 				s.setHostName("localhost");
 				s.setPort(9998);
 				ObjectJSONHandler.saveObjectToJSON(getBundle().getString("folder"), "settings", s);
+				possibleSettings = ObjectJSONHandler.loadObjectFromJSON(getBundle().getString("folder"), "settings", new ServerConnectionSettings());
+
 			}
 			catch(IOException e1)
 			{
@@ -154,7 +156,6 @@ public class Controller extends NVC implements DataAccessable
 
 			Platform.runLater(() -> {
 				AlertGenerator.showAlert(AlertType.ERROR, "Error", "", "Missing or invalid settings.json.\nA default settings.json has been created.", ImageHandler.getIcon(), getContainingWindow(), null, false);
-				System.exit(0);
 			});
 		}
 
