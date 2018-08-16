@@ -10,7 +10,7 @@
         <VBox alignment="TOP_CENTER" layoutX="14.0" layoutY="14.0" spacing="10.0" AnchorPane.bottomAnchor="14.0"
               AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
             <children>
-                <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="25.0">
+                <HBox fx:id="hboxMaster" alignment="CENTER_LEFT" prefWidth="200.0" spacing="25.0">
                     <children>
                         <Label text="Master-Section:">
                             <font>
@@ -30,36 +30,6 @@
                             </font>
                         </Button>
                         <Region HBox.hgrow="ALWAYS"/>
-                        <VBox alignment="CENTER">
-                            <children>
-                                <Label fx:id="labelConnectedBeddoFabriks">
-                                    <font>
-                                        <Font name="System Bold" size="13.0"/>
-                                    </font>
-                                </Label>
-                                <Label text="connected"/>
-                            </children>
-                        </VBox>
-                        <VBox alignment="CENTER">
-                            <children>
-                                <Label fx:id="labelStatus">
-                                    <font>
-                                        <Font name="System Bold" size="13.0"/>
-                                    </font>
-                                </Label>
-                                <Label fx:id="labelServer"/>
-                            </children>
-                        </VBox>
-                        <VBox alignment="CENTER">
-                            <children>
-                                <Label fx:id="labelStatusMIDI" text="MIDI">
-                                    <font>
-                                        <Font name="System Bold" size="13.0"/>
-                                    </font>
-                                </Label>
-                                <Label/>
-                            </children>
-                        </VBox>
                     </children>
                 </HBox>
                 <Separator prefWidth="200.0"/>
@@ -213,7 +183,7 @@
                             </children>
                         </VBox>
                         <Separator prefWidth="200.0"/>
-                        <HBox spacing="14.0" fx:id="hboxGameSettings"/>
+                        <HBox fx:id="hboxGameSettings" spacing="14.0"/>
                     </children>
                 </VBox>
             </children>

@@ -2,6 +2,7 @@ package de.lemonpie.beddocontrol.ui;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import de.lemonpie.beddocommon.ui.StatusTagType;
 import de.lemonpie.beddocontrol.midi.Midi;
 import de.lemonpie.beddocontrol.midi.MidiAction;
 import de.lemonpie.beddocontrol.midi.PD12Handler;
@@ -36,7 +37,8 @@ public class MidiHandler
 	{
 		try
 		{
-			controller.updateStatusLabel(labelStatusMIDI, "MIDI available", StatusLabelType.SUCCESS);
+			controller.getStatusTagBar().getTag("midi").setText("MIDI available");
+			controller.getStatusTagBar().getTag("status").setType(StatusTagType.SUCCESS);
 
 			Path midiSettingsPath = Paths.get(PathUtils.getOSindependentPath() + controller.getBundle().getString("folder") + "midi.json");
 
@@ -62,7 +64,10 @@ public class MidiHandler
 		catch(MidiUnavailableException | IOException e)
 		{
 			Logger.error(e.getClass());
-			Platform.runLater(() -> controller.updateStatusLabel(labelStatusMIDI, "MIDI unavailable", StatusLabelType.ERROR));
+			Platform.runLater(() -> {
+				controller.getStatusTagBar().getTag("midi").setText("MIDI unavailable");
+				controller.getStatusTagBar().getTag("status").setType(StatusTagType.ERROR);
+			});
 		}
 	}
 }

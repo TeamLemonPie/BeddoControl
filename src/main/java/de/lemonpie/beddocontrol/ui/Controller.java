@@ -3,6 +3,9 @@ package de.lemonpie.beddocontrol.ui;
 import de.lemonpie.beddocommon.ServerConnectionSettings;
 import de.lemonpie.beddocommon.network.client.ControlSocket;
 import de.lemonpie.beddocommon.network.client.ControlSocketDelegate;
+import de.lemonpie.beddocommon.ui.StatusTag;
+import de.lemonpie.beddocommon.ui.StatusTagBar;
+import de.lemonpie.beddocommon.ui.StatusTagType;
 import de.lemonpie.beddocontrol.model.*;
 import de.lemonpie.beddocontrol.model.card.Card;
 import de.lemonpie.beddocontrol.network.command.read.*;
@@ -57,15 +60,13 @@ public class Controller extends NVC implements DataAccessable
 	@FXML
 	private Label labelConnectedBeddoFabriks;
 	@FXML
-	private Label labelStatus;
-	@FXML
-	private Label labelServer;
-	@FXML
 	private Button buttonMasterLock;
 	@FXML
 	private VBox vboxAll;
 	@FXML
 	private Label labelStatusMIDI;
+	@FXML
+	private HBox hboxMaster;
 
 	@FXML
 	ImageView imageViewBoard1;
@@ -110,6 +111,7 @@ public class Controller extends NVC implements DataAccessable
 	private boolean isAllLocked = false;
 	private ServerConnectionSettings settings;
 	PlayerTableView tableViewPlayer;
+	private StatusTagBar statusTagBar;
 
 	private int beddoFabrikCount = 0;
 
@@ -134,7 +136,7 @@ public class Controller extends NVC implements DataAccessable
 
 		modalText = new SimpleStringProperty();
 
-		updateStatusLabel(labelStatus, "Connecting...", StatusLabelType.WARNING);
+		initStatusTagBar();
 
 		Object possibleSettings = ObjectJSONHandler.loadObjectFromJSON(getBundle().getString("folder"), "settings", new ServerConnectionSettings());
 		if(possibleSettings == null)
@@ -163,7 +165,7 @@ public class Controller extends NVC implements DataAccessable
 		midiHandler.init(labelStatusMIDI);
 
 		settings = (ServerConnectionSettings) possibleSettings;
-		labelServer.setText(settings.getHostName() + ":" + settings.getPort());
+		statusTagBar.getTag("status").setAdditionalText(settings.getHostName() + ":" + settings.getPort());
 
 		buttonLockBoard.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
 		buttonLockBoard.setOnAction((e) -> lockBoard(!isBoardLocked));
@@ -215,21 +217,19 @@ public class Controller extends NVC implements DataAccessable
 		stage.setTitle(getBundle().getString("app.name") + " - " + getBundle().getString("version.name") + " (" + getBundle().getString("version.code") + ")");
 	}
 
-	public void updateStatusLabel(Label label, String text, StatusLabelType statusLabeType)
+	private void initStatusTagBar()
 	{
-		label.setText(text);
-		switch(statusLabeType)
-		{
-			case ERROR:
-				label.setStyle("-fx-background-color: rgba(204, 0, 0, 0.5); -fx-padding: 5px 7px 5px 7px; -fx-background-radius: 3px");
-				break;
-			case WARNING:
-				label.setStyle("-fx-background-color: rgba(255, 165, 0, 0.5); -fx-padding: 5px 7px 5px 7px; -fx-background-radius: 3px");
-				break;
-			case SUCCESS:
-				label.setStyle("-fx-background-color: rgba(72, 219, 94, 0.5); -fx-padding: 5px 7px 5px 7px; -fx-background-radius: 3px");
-				break;
-		}
+		statusTagBar = new StatusTagBar();
+		statusTagBar.addTag("status", new StatusTag("Connecting...", StatusTagType.WARNING, null));
+		statusTagBar.addTag("beddofabriken", new StatusTag("0 BeddoFabriken", StatusTagType.ERROR, "connected"));
+		statusTagBar.addTag("midi", new StatusTag("MIDI unavailable", StatusTagType.ERROR, null));
+
+		hboxMaster.getChildren().add(statusTagBar);
+	}
+
+	public StatusTagBar getStatusTagBar()
+	{
+		return statusTagBar;
 	}
 
 	public ControlSocket getSocket()
@@ -305,7 +305,8 @@ public class Controller extends NVC implements DataAccessable
 			{
 				Logger.debug("Connection established.");
 				Platform.runLater(() -> {
-					updateStatusLabel(labelStatus, "Connected", StatusLabelType.SUCCESS);
+					statusTagBar.getTag("status").setText("Connected");
+					statusTagBar.getTag("status").setType(StatusTagType.SUCCESS);
 				});
 			}
 
@@ -314,7 +315,8 @@ public class Controller extends NVC implements DataAccessable
 			{
 				Logger.debug("Connection closed.");
 				Platform.runLater(() -> {
-					updateStatusLabel(labelStatus, "Disconnected", StatusLabelType.ERROR);
+					statusTagBar.getTag("status").setText("Disconnected");
+					statusTagBar.getTag("status").setType(StatusTagType.ERROR);
 					connect();
 				});
 			}
@@ -582,12 +584,13 @@ public class Controller extends NVC implements DataAccessable
 		Platform.runLater(() -> {
 			if(beddoFabrikCount <= 0)
 			{
-				updateStatusLabel(labelConnectedBeddoFabriks, String.valueOf(beddoFabrikCount) + " BeddoFabriken", StatusLabelType.ERROR);
+				statusTagBar.getTag("beddofabriken").setText(String.valueOf(beddoFabrikCount) + " BeddoFabriken");
+				statusTagBar.getTag("beddofabriken").setType(StatusTagType.ERROR);
 			}
 			else
 			{
-				updateStatusLabel(labelConnectedBeddoFabriks, String.valueOf(beddoFabrikCount) + " BeddoFabriken", StatusLabelType.SUCCESS);
-
+				statusTagBar.getTag("beddofabriken").setText(String.valueOf(beddoFabrikCount) + " BeddoFabriken");
+				statusTagBar.getTag("beddofabriken").setType(StatusTagType.SUCCESS);
 			}
 		});
 	}
