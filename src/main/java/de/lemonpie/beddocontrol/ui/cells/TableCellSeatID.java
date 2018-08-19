@@ -26,7 +26,6 @@ public class TableCellSeatID extends TableCell<Player, Integer>
 		{
 			TextField textFieldSeat = new TextField();
 			textFieldSeat.textProperty().addListener((a, b, c) -> textFieldSeat.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2"));
-			textFieldSeat.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
 			textFieldSeat.setTextFormatter(new NumberTextFormatter());
 
 			Object currentItem = getTableRow().getItem();
@@ -47,12 +46,18 @@ public class TableCellSeatID extends TableCell<Player, Integer>
 				textFieldSeat.setText("");
 			}
 
+			textFieldSeat.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
+
 			textFieldSeat.setOnKeyPressed(ke -> {
 				if(ke.getCode().equals(KeyCode.ENTER))
 				{
 					if(textFieldSeat.getText().trim().equals(""))
 					{
-						seat.get().setPlayerId(-1);
+						if(seat.isPresent())
+						{
+							seat.get().setPlayerId(-1);
+						}
+
 						return;
 					}
 
@@ -62,7 +67,11 @@ public class TableCellSeatID extends TableCell<Player, Integer>
 					}
 					else
 					{
-						textFieldSeat.setText(String.valueOf(controller.getSeats().getSeatByPlayerId(item).get().getId()));
+						Optional<Seat> oldSeat = controller.getSeats().getSeatByPlayerId(item);
+						if(oldSeat.isPresent())
+						{
+							textFieldSeat.setText(String.valueOf(oldSeat.get().getId()));
+						}
 						textFieldSeat.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
 					}
 				}
