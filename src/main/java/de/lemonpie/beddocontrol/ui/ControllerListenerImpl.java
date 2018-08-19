@@ -37,6 +37,7 @@ public class ControllerListenerImpl implements BoardListener, PlayerListener, Pl
 	{
 		try
 		{
+			//TODO: remove player from seat
 			controller.socket.write(new PlayerOpSendCommand(player.getId()));
 			controller.refreshTableView();
 		}
@@ -117,32 +118,6 @@ public class ControllerListenerImpl implements BoardListener, PlayerListener, Pl
 	@Override
 	public void boardReaderIdDidChange(int index, int readerId, int oldReaderId)
 	{
-		String style = readerId == -3 ? "-fx-border-color: #CC0000; -fx-border-width: 2" : "-fx-border-color: #48DB5E; -fx-border-width: 2";
-		switch(index)
-		{
-			case 0:
-				controller.textFieldBoard1.setText(String.valueOf(readerId));
-				controller.textFieldBoard1.setStyle(style);
-				break;
-			case 1:
-				controller.textFieldBoard2.setText(String.valueOf(readerId));
-				controller.textFieldBoard2.setStyle(style);
-				break;
-			case 2:
-				controller.textFieldBoard3.setText(String.valueOf(readerId));
-				controller.textFieldBoard3.setStyle(style);
-				break;
-			case 3:
-				controller.textFieldBoard4.setText(String.valueOf(readerId));
-				controller.textFieldBoard4.setStyle(style);
-				break;
-			case 4:
-				controller.textFieldBoard5.setText(String.valueOf(readerId));
-				controller.textFieldBoard5.setStyle(style);
-				break;
-			default:
-				break;
-		}
 	}
 
 	@Override

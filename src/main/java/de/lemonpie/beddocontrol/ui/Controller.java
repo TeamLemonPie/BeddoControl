@@ -1,6 +1,7 @@
 package de.lemonpie.beddocontrol.ui;
 
 import de.lemonpie.beddocommon.ServerConnectionSettings;
+import de.lemonpie.beddocommon.model.seat.Seat;
 import de.lemonpie.beddocommon.model.seat.SeatList;
 import de.lemonpie.beddocommon.network.client.ControlSocket;
 import de.lemonpie.beddocommon.network.client.ControlSocketDelegate;
@@ -17,6 +18,7 @@ import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.DataSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.player.PlayerOpSendCommand;
 import de.lemonpie.beddocontrol.network.listener.BoardListenerImpl;
+import de.lemonpie.beddocontrol.network.listener.SeatListListenerImpl;
 import de.tobias.logger.Logger;
 import de.tobias.utils.nui.NVC;
 import de.tobias.utils.nui.NVCStage;
@@ -78,16 +80,7 @@ public class Controller extends NVC implements DataAccessible
 	ImageView imageViewBoard4;
 	@FXML
 	ImageView imageViewBoard5;
-	@FXML
-	TextField textFieldBoard1;
-	@FXML
-	TextField textFieldBoard2;
-	@FXML
-	TextField textFieldBoard3;
-	@FXML
-	TextField textFieldBoard4;
-	@FXML
-	TextField textFieldBoard5;
+
 	@FXML
 	private HBox hboxBoard;
 
@@ -205,6 +198,8 @@ public class Controller extends NVC implements DataAccessible
 
 			connect();
 			board.addListener(new BoardListenerImpl(socket));
+
+			seats.addListener(new SeatListListenerImpl(socket));
 
 			buttonNewRound.requestFocus();
 		});
@@ -592,6 +587,34 @@ public class Controller extends NVC implements DataAccessible
 		modalController.showStage();
 		final Optional<NVCStage> stageContainer = modalController.getStageContainer();
 		return stageContainer.map(NVCStage::getStage).orElse(null);
+	}
+
+	public boolean setSeatIdForPlayer(int playerId, int newSeatId)
+	{
+		Optional<Seat> existingSeat = seats.getSeatByPlayerId(playerId);
+		if(existingSeat.isPresent())
+		{
+			if(existingSeat.get().getId() == newSeatId)
+			{
+				return true;
+			}
+		}
+
+		for(Seat seat : seats)
+		{
+			if(seat.getId() == newSeatId)
+			{
+				if(seat.getPlayerId() != -1)
+				{
+					AlertGenerator.showAlert(Alert.AlertType.ERROR, "Warning", "", "The seat ID \"" + newSeatId + "\" is already in use for player " + seat.getPlayerId(), ImageHandler.getIcon(), getContainingWindow(), null, false);
+					return false;
+				}
+			}
+		}
+
+		seats.getObject(newSeatId).get().setPlayerId(playerId);
+
+		return true;
 	}
 
 	@FXML

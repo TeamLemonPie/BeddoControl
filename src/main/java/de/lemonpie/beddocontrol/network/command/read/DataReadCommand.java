@@ -1,8 +1,8 @@
 package de.lemonpie.beddocontrol.network.command.read;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+import de.lemonpie.beddocommon.model.seat.Seat;
 import de.lemonpie.beddocommon.network.Command;
 import de.lemonpie.beddocommon.network.CommandData;
 import de.lemonpie.beddocommon.network.CommandName;
@@ -12,13 +12,17 @@ import de.lemonpie.beddocontrol.model.Player;
 import de.lemonpie.beddocontrol.model.PlayerState;
 import de.lemonpie.beddocontrol.model.card.Card;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
 public class DataReadCommand implements Command
 {
-	private DataAccessible dataAccessable;
+	private DataAccessible dataAccessible;
 
-	public DataReadCommand(DataAccessible dataAccessable)
+	public DataReadCommand(DataAccessible dataAccessible)
 	{
-		this.dataAccessable = dataAccessable;
+		this.dataAccessible = dataAccessible;
 	}
 
 	@Override
@@ -37,11 +41,21 @@ public class DataReadCommand implements Command
 			JsonArray board = values.getAsJsonArray("board");
 			JsonArray boardReader = values.getAsJsonArray("board-reader");
 			JsonPrimitive readerCount = values.getAsJsonPrimitive("reader-count");
+			JsonElement seats = values.get("seats");
+
+			if(seats != null)
+			{
+				Type listType = new TypeToken<ArrayList<Seat>>()
+				{
+				}.getType();
+				final List<Seat> list = new Gson().fromJson(seats, listType);
+				dataAccessible.getSeats().addAll(list);
+			}
 
 			if(players != null)
 			{
 				// Clear old data
-				dataAccessable.getPlayers().clear();
+				dataAccessible.getPlayers().clear();
 
 				players.forEach(elem -> {
 					if(elem instanceof JsonObject)
@@ -65,14 +79,14 @@ public class DataReadCommand implements Command
 						player.setCardRight(cardRight);
 						player.setHighlighted(isHighlighted);
 
-						dataAccessable.addPlayer(player);
+						dataAccessible.addPlayer(player);
 					}
 				});
 			}
 
 			if(board != null)
 			{
-				Board b = dataAccessable.getBoard();
+				Board b = dataAccessible.getBoard();
 
 				board.forEach(elem -> {
 					if(elem instanceof JsonObject)
@@ -93,7 +107,7 @@ public class DataReadCommand implements Command
 				boardReader.forEach(reader -> {
 					if(reader instanceof JsonPrimitive)
 					{
-						Board b = dataAccessable.getBoard();
+						Board b = dataAccessible.getBoard();
 						b.setReaderId(i[0], reader.getAsInt());
 						i[0] += 1;
 					}
@@ -103,7 +117,7 @@ public class DataReadCommand implements Command
 			if(readerCount != null)
 			{
 				int count = readerCount.getAsInt();
-				dataAccessable.setBeddoFabrikCount(count);
+				dataAccessible.setBeddoFabrikCount(count);
 			}
 		}
 	}
