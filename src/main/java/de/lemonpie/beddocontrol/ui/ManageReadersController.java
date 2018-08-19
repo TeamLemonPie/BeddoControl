@@ -76,7 +76,7 @@ public class ManageReadersController extends NVC
 
 	private HBox getReaderHBox(int ID, int value, boolean isBoard)
 	{
-		Label labelSeatNumber = new Label(String.valueOf(ID + 1));
+		Label labelSeatNumber = new Label(String.valueOf(ID));
 		labelSeatNumber.setStyle("-fx-font-size: 16; -fx-font-weight: bold");
 		labelSeatNumber.setPrefWidth(40);
 
