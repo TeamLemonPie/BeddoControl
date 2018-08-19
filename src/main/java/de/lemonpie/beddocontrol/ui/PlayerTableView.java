@@ -30,7 +30,7 @@ public class PlayerTableView extends TableView<Player>
 		columnReader.setCellValueFactory(new PropertyValueFactory<>("id"));
 		columnReader.setCellFactory(param -> new TableCellSeatID(controller));
 		columnReader.setStyle("-fx-alignment: CENTER;");
-		columnReader.setText("Reader ID");
+		columnReader.setText("Seat ID");
 		columnReader.prefWidthProperty().bind(widthProperty().multiply(0.05).subtract(2));
 		getColumns().add(columnReader);
 

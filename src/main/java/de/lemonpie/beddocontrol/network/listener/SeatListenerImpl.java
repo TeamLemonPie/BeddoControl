@@ -3,6 +3,7 @@ package de.lemonpie.beddocontrol.network.listener;
 import de.lemonpie.beddocommon.model.seat.Seat;
 import de.lemonpie.beddocommon.model.seat.SeatListener;
 import de.lemonpie.beddocommon.network.client.ControlSocket;
+import de.lemonpie.beddocontrol.network.command.send.ReaderSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.SeatSendCommand;
 
 import java.net.SocketException;
@@ -20,6 +21,15 @@ public class SeatListenerImpl implements SeatListener
 	@Override
 	public void readerIdDidChange(Seat seat, int readerId)
 	{
+		ReaderSendCommand cmd = new ReaderSendCommand(ReaderSendCommand.ReaderType.SEAT, readerId, seat.getId());
+		try
+		{
+			socket.write(cmd);
+		}
+		catch(SocketException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override

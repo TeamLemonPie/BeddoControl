@@ -40,13 +40,13 @@ public class TableCellSeatID extends TableCell<Player, Integer>
 			if(seat.isPresent())
 			{
 				textFieldSeat.setText(String.valueOf(seat.get().getId()));
+				textFieldSeat.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
 			}
 			else
 			{
 				textFieldSeat.setText("");
+				textFieldSeat.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
 			}
-
-			textFieldSeat.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
 
 			textFieldSeat.setOnKeyPressed(ke -> {
 				if(ke.getCode().equals(KeyCode.ENTER))

@@ -7,25 +7,24 @@ import de.lemonpie.beddocommon.network.Scope;
 
 public class ReaderSendCommand extends CommandData
 {
-
 	public enum ReaderType
 	{
-		PLAYER,
+		SEAT,
 		BOARD
 	}
 
-	public ReaderSendCommand(ReaderType type, int readerId, int playerId)
+	public ReaderSendCommand(ReaderType type, int readerId, int objectId)
 	{
 		super(Scope.ADMIN, CommandName.READER, readerId);
 		JsonObject object = new JsonObject();
 		object.addProperty("type", type.ordinal());
-		if(type == ReaderType.PLAYER)
+		if(type == ReaderType.SEAT)
 		{
-			object.addProperty("playerId", playerId);
+			object.addProperty("seatId", objectId);
 		}
 		else
 		{
-			object.addProperty("oldReaderId", playerId);
+			object.addProperty("oldReaderId", objectId);
 		}
 		setValue(object);
 	}

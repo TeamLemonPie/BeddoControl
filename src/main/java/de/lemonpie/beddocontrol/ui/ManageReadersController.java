@@ -1,6 +1,7 @@
 package de.lemonpie.beddocontrol.ui;
 
 import de.lemonpie.beddocommon.model.seat.Seat;
+import de.lemonpie.beddocontrol.model.Board;
 import de.lemonpie.beddocontrol.model.DataAccessible;
 import de.tobias.utils.nui.NVC;
 import javafx.fxml.FXML;
@@ -49,119 +50,152 @@ public class ManageReadersController extends NVC
 	public void initStage(Stage stage)
 	{
 		stage.setWidth(300);
-		stage.setHeight(350);
+		stage.setHeight(450);
+		stage.setMinHeight(450);
+		stage.setMinWidth(300);
 		stage.setTitle("Manage Readers");
 		stage.getIcons().add(ImageHandler.getIcon());
 	}
 
 	private void initSeats()
 	{
-		for(int i = 1; i <= 7; i++)
+		hboxSeats.getChildren().clear();
+		for(Seat seat : dataAccessible.getSeats())
 		{
-			hboxSeats.getChildren().add(getReaderHBox(i, i));
+			hboxSeats.getChildren().add(getReaderHBox(seat.getId(), seat.getReaderId(), false));
 		}
 	}
 
 	private void initBoard()
 	{
-		for(int i = 1; i <= 5; i++)
+		for(int i = 0; i < Board.NUMBER_OF_CARDS; i++)
 		{
-			hboxBoard.getChildren().add(getReaderHBox(i, i));
+			hboxBoard.getChildren().add(getReaderHBox(i, dataAccessible.getBoard().getReaderId(i), true));
 		}
 	}
 
-	private HBox getReaderHBox(int ID, int value)
+	private HBox getReaderHBox(int ID, int value, boolean isBoard)
 	{
-		Label labelSeatNumber = new Label(String.valueOf(ID));
+		Label labelSeatNumber = new Label(String.valueOf(ID + 1));
 		labelSeatNumber.setStyle("-fx-font-size: 16; -fx-font-weight: bold");
 		labelSeatNumber.setPrefWidth(40);
 
-		TextField textFieldReaderID = new TextField(String.valueOf(value));
-		textFieldReaderID.setPrefWidth(40);
+		TextField textField = isBoard ? createTextFieldBoard(ID, value) : createTextFieldSeat(ID, value);
 
 		HBox hbox = new HBox();
-		hbox.getChildren().addAll(labelSeatNumber, textFieldReaderID);
+		hbox.getChildren().addAll(labelSeatNumber, textField);
 		return hbox;
 	}
 
-
-	private void initTextFieldBoard(TextField textField, int position)
+	private TextField createTextFieldBoard(int ID, int value)
 	{
-		textField.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
-
-		textField.setTextFormatter(new NumberTextFormatter());
-
+		TextField textField = createBasicTextField(value);
 		textField.setOnKeyPressed(ke -> {
 			if(ke.getCode().equals(KeyCode.ENTER))
 			{
 				if(textField.getText().trim().equals(""))
 				{
-					dataAccessible.getBoard().setReaderId(position, -3);
+					dataAccessible.getBoard().setReaderId(ID, -3);
 					return;
 				}
 
-				if(setReaderIDForBoard(position, Integer.parseInt(textField.getText().trim())))
+				int newReaderID = Integer.parseInt(textField.getText().trim());
+				if(isReaderIdAlreadyUsed(ID, newReaderID))
 				{
-					textField.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
+					textField.setText(String.valueOf(dataAccessible.getBoard().getReaderId(ID)));
+					textField.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
 				}
 				else
 				{
-					textField.setText(String.valueOf(dataAccessible.getBoard().getReaderId(position)));
-					textField.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
+					dataAccessible.getBoard().setReaderId(ID, newReaderID);
+					textField.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
 				}
 			}
 		});
+
+		return textField;
 	}
 
-	private boolean checkNewReaderID(int ownReaderID, int newReaderID)
+	private TextField createTextFieldSeat(int ID, int value)
 	{
-		if(ownReaderID == newReaderID)
+		TextField textField = createBasicTextField(value);
+		textField.setOnKeyPressed(ke -> {
+			if(ke.getCode().equals(KeyCode.ENTER))
+			{
+				if(textField.getText().trim().equals(""))
+				{
+					dataAccessible.getSeats().getObject(ID).get().setReaderId(-3);
+					return;
+				}
+
+				int newReaderId = Integer.parseInt(textField.getText().trim());
+				if(isReaderIdAlreadyUsed(ID, newReaderId))
+				{
+					textField.setText(String.valueOf(dataAccessible.getSeats().getObject(ID).get().getReaderId()));
+					textField.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
+				}
+				else
+				{
+					dataAccessible.getSeats().getObject(ID).get().setReaderId(newReaderId);
+					textField.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
+				}
+			}
+		});
+
+		return textField;
+	}
+
+	private TextField createBasicTextField(int value)
+	{
+		TextField textField = new TextField();
+		if(value < 0)
+		{
+			textField.setText("");
+			textField.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
+		}
+		else
+		{
+			textField.setText(String.valueOf(value));
+			textField.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
+		}
+
+		textField.setPrefWidth(40);
+		textField.setTextFormatter(new NumberTextFormatter());
+		return textField;
+	}
+
+	private boolean isReaderIdAlreadyUsed(int oldReaderID, int newReaderId)
+	{
+		if(oldReaderID == newReaderId)
 		{
 			return true;
 		}
 
 
-		for(Seat currentPlayer : dataAccessible.getSeats())
+		for(Seat currentSeat : dataAccessible.getSeats())
 		{
-			if(currentPlayer.getReaderId() == newReaderID)
+			if(currentSeat.getReaderId() == newReaderId)
 			{
-				AlertGenerator.showAlert(Alert.AlertType.ERROR, "Warning", "", "The reader ID \"" + newReaderID + "\" is already in use for player " + currentPlayer.getId(), ImageHandler.getIcon(), getContainingWindow(), null, false);
-				return false;
+				AlertGenerator.showAlert(Alert.AlertType.ERROR, "Warning", "", "The reader ID \"" + newReaderId + "\" is already in use for player " + currentSeat.getId(), ImageHandler.getIcon(), getContainingWindow(), null, false);
+				return true;
 			}
 		}
 
-		for(int i = 0; i < 5; i++)
+		for(int i = 0; i < Board.NUMBER_OF_CARDS; i++)
 		{
-			if(dataAccessible.getBoard().getReaderId(i) == newReaderID)
+			if(dataAccessible.getBoard().getReaderId(i) == newReaderId)
 			{
-				AlertGenerator.showAlert(Alert.AlertType.ERROR, "Warning", "", "The reader ID \"" + newReaderID + "\" is already in use for board card " + i, ImageHandler.getIcon(), getContainingWindow(), null, false);
-				return false;
+				AlertGenerator.showAlert(Alert.AlertType.ERROR, "Warning", "", "The reader ID \"" + newReaderId + "\" is already in use for board card " + i, ImageHandler.getIcon(), getContainingWindow(), null, false);
+				return true;
 			}
-		}
-
-		return true;
-	}
-
-	public boolean setReaderIDForPlayer(Seat seat, int newReaderID)
-	{
-		if(checkNewReaderID(seat.getReaderId(), newReaderID))
-		{
-			seat.setReaderId(newReaderID);
-			return true;
 		}
 
 		return false;
 	}
 
-	public boolean setReaderIDForBoard(int boardIndex, int newReaderID)
+	@FXML
+	public void close()
 	{
-		if(checkNewReaderID(dataAccessible.getBoard().getReaderId(boardIndex), newReaderID))
-		{
-			dataAccessible.getBoard().setReaderId(boardIndex, newReaderID);
-			return true;
-		}
-
-		return false;
+		closeStage();
 	}
-
 }

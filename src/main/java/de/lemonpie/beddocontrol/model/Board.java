@@ -20,11 +20,13 @@ public class Board
 	private int bigBlind;
 	private int ante;
 
+	public static final int NUMBER_OF_CARDS = 5;
+
 	public Board()
 	{
 		listeners = new LinkedList<>();
-		cards = new Card[5];
-		readerIds = new int[5];
+		cards = new Card[NUMBER_OF_CARDS];
+		readerIds = new int[NUMBER_OF_CARDS];
 
 		Arrays.fill(cards, Card.EMPTY);
 		Arrays.fill(readerIds, -2);
