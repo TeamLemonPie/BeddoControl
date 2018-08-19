@@ -3,13 +3,13 @@ package de.lemonpie.beddocontrol.network.command.read;
 import de.lemonpie.beddocommon.network.Command;
 import de.lemonpie.beddocommon.network.CommandData;
 import de.lemonpie.beddocommon.network.CommandName;
-import de.lemonpie.beddocontrol.model.DataAccessable;
+import de.lemonpie.beddocontrol.model.DataAccessible;
 import de.lemonpie.beddocontrol.model.Player;
 
 public class PlayerOpReadCommand implements Command
 {
 
-	private DataAccessable dataAccessable;
+	private DataAccessible dataAccessable;
 
 	@Override
 	public CommandName name()
@@ -17,7 +17,7 @@ public class PlayerOpReadCommand implements Command
 		return CommandName.PLAYER_OP;
 	}
 
-	public PlayerOpReadCommand(DataAccessable dataAccessable)
+	public PlayerOpReadCommand(DataAccessible dataAccessable)
 	{
 		this.dataAccessable = dataAccessable;
 	}

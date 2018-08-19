@@ -78,12 +78,6 @@ public class ControllerListenerImpl implements BoardListener, PlayerListener, Pl
 	}
 
 	@Override
-	public void readerIdDidChange(Player player, int readerId)
-	{
-		controller.getTableView().refresh();
-	}
-
-	@Override
 	public void cardDidChangeAtIndex(int index, Card card)
 	{
 		switch(index)

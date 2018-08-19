@@ -9,11 +9,9 @@ import java.util.function.Consumer;
 
 public class Player
 {
-
 	private List<PlayerListener> listeners;
 
 	private final int id;
-	private int readerId;
 	private String name;
 	private String twitchName;
 
@@ -32,7 +30,6 @@ public class Player
 		listeners = new LinkedList<>();
 
 		this.id = id;
-		this.readerId = -3;
 		this.name = "[Player]";
 		this.twitchName = "[TwitchName]";
 		this.playerState = PlayerState.ACTIVE;
@@ -42,17 +39,6 @@ public class Player
 	public int getId()
 	{
 		return id;
-	}
-
-	public int getReaderId()
-	{
-		return readerId;
-	}
-
-	public void setReaderId(int readerId)
-	{
-		this.readerId = readerId;
-		fireListener(listener -> listener.readerIdDidChange(this, readerId));
 	}
 
 	public String getName()
@@ -188,6 +174,16 @@ public class Player
 	@Override
 	public String toString()
 	{
-		return "Player [listeners=" + listeners + ", id=" + id + ", readerId=" + readerId + ", name=" + name + ", twitchName=" + twitchName + ", cardLeft=" + cardLeft + ", cardRight=" + cardRight + ", chips=" + chips + ", playerState=" + playerState + "]";
+		return "Player{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", twitchName='" + twitchName + '\'' +
+				", cardLeft=" + cardLeft +
+				", cardRight=" + cardRight +
+				", chips=" + chips +
+				", playerState=" + playerState +
+				", winprobability=" + winprobability +
+				", isHighlighted=" + isHighlighted +
+				'}';
 	}
 }

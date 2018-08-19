@@ -3,14 +3,14 @@ package de.lemonpie.beddocontrol.network.command.read;
 import de.lemonpie.beddocommon.network.Command;
 import de.lemonpie.beddocommon.network.CommandData;
 import de.lemonpie.beddocommon.network.CommandName;
-import de.lemonpie.beddocontrol.model.DataAccessable;
+import de.lemonpie.beddocontrol.model.DataAccessible;
 
 public class PlayerWinProbabilityReadCommand implements Command
 {
 
-	private DataAccessable dataAccessable;
+	private DataAccessible dataAccessable;
 
-	public PlayerWinProbabilityReadCommand(DataAccessable dataAccessable)
+	public PlayerWinProbabilityReadCommand(DataAccessible dataAccessable)
 	{
 		this.dataAccessable = dataAccessable;
 	}

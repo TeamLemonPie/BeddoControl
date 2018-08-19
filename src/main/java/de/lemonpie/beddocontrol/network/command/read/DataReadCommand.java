@@ -7,16 +7,16 @@ import de.lemonpie.beddocommon.network.Command;
 import de.lemonpie.beddocommon.network.CommandData;
 import de.lemonpie.beddocommon.network.CommandName;
 import de.lemonpie.beddocontrol.model.Board;
-import de.lemonpie.beddocontrol.model.DataAccessable;
+import de.lemonpie.beddocontrol.model.DataAccessible;
 import de.lemonpie.beddocontrol.model.Player;
 import de.lemonpie.beddocontrol.model.PlayerState;
 import de.lemonpie.beddocontrol.model.card.Card;
 
 public class DataReadCommand implements Command
 {
-	private DataAccessable dataAccessable;
+	private DataAccessible dataAccessable;
 
-	public DataReadCommand(DataAccessable dataAccessable)
+	public DataReadCommand(DataAccessible dataAccessable)
 	{
 		this.dataAccessable = dataAccessable;
 	}
@@ -54,7 +54,6 @@ public class DataReadCommand implements Command
 						int chips = obj.getAsJsonPrimitive("chips").getAsInt();
 						Card cardLeft = Card.fromString(obj.getAsJsonPrimitive("cardLeft").getAsString());
 						Card cardRight = Card.fromString(obj.getAsJsonPrimitive("cardRight").getAsString());
-						int readerId = obj.getAsJsonPrimitive("readerId").getAsInt();
 						boolean isHighlighted = obj.getAsJsonPrimitive("isHighlighted").getAsBoolean();
 
 						Player player = new Player(id);
@@ -64,7 +63,6 @@ public class DataReadCommand implements Command
 						player.setChips(chips);
 						player.setCardLeft(cardLeft);
 						player.setCardRight(cardRight);
-						player.setReaderId(readerId);
 						player.setHighlighted(isHighlighted);
 
 						dataAccessable.addPlayer(player);

@@ -1,6 +1,7 @@
 package de.lemonpie.beddocontrol.ui;
 
 import de.lemonpie.beddocommon.ServerConnectionSettings;
+import de.lemonpie.beddocommon.model.seat.SeatList;
 import de.lemonpie.beddocommon.network.client.ControlSocket;
 import de.lemonpie.beddocommon.network.client.ControlSocketDelegate;
 import de.lemonpie.beddocommon.ui.StatusTag;
@@ -39,7 +40,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import tools.AlertGenerator;
-import tools.NumberTextFormatter;
 import tools.ObjectJSONHandler;
 import tools.Worker;
 
@@ -49,7 +49,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class Controller extends NVC implements DataAccessable
+public class Controller extends NVC implements DataAccessible
 {
 	@FXML
 	private AnchorPane mainPane;
@@ -104,6 +104,8 @@ public class Controller extends NVC implements DataAccessable
 
 	private Board board;
 	private PlayerList players;
+	private SeatList seats;
+
 	ControlSocket socket;
 	private Stage modalStage;
 	public static StringProperty modalText;
@@ -133,6 +135,8 @@ public class Controller extends NVC implements DataAccessable
 
 		players = new PlayerList();
 		players.addListener(listenerImpl);
+
+		seats = new SeatList();
 
 		modalText = new SimpleStringProperty();
 
@@ -189,7 +193,6 @@ public class Controller extends NVC implements DataAccessable
 		imageViewBoard5.setOnMouseClicked((e) -> showBoardCardGUI(4));
 
 		initTableView();
-		initBoard();
 
 		Platform.runLater(() -> {
 			initConnection();
@@ -358,49 +361,12 @@ public class Controller extends NVC implements DataAccessable
 		VBox.setVgrow(tableViewPlayer, Priority.ALWAYS);
 	}
 
-	private void initBoard()
-	{
-		initTextFieldBoard(textFieldBoard1, 0);
-		initTextFieldBoard(textFieldBoard2, 1);
-		initTextFieldBoard(textFieldBoard3, 2);
-		initTextFieldBoard(textFieldBoard4, 3);
-		initTextFieldBoard(textFieldBoard5, 4);
-	}
-
 	public void refreshTableView()
 	{
 		tableViewPlayer.getItems().clear();
 
 		ObservableList<Player> objectsForTable = FXCollections.observableArrayList(players.getPlayer());
 		tableViewPlayer.setItems(objectsForTable);
-	}
-
-	private void initTextFieldBoard(TextField textField, int position)
-	{
-		textField.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
-
-		textField.setTextFormatter(new NumberTextFormatter());
-
-		textField.setOnKeyPressed(ke -> {
-			if(ke.getCode().equals(KeyCode.ENTER))
-			{
-				if(textField.getText().trim().equals(""))
-				{
-					board.setReaderId(position, -3);
-					return;
-				}
-
-				if(setReaderIDForBoard(position, Integer.parseInt(textField.getText().trim())))
-				{
-					textField.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
-				}
-				else
-				{
-					textField.setText(String.valueOf(board.getReaderId(position)));
-					textField.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
-				}
-			}
-		});
 	}
 
 	@FXML
@@ -454,19 +420,19 @@ public class Controller extends NVC implements DataAccessable
 			{
 				currentPlayer.setPlayerState(PlayerState.ACTIVE);
 			}
-
-			try
-			{
-				socket.write(new ClearSendCommand(currentPlayer.getReaderId()));
-			}
-			catch(SocketException e1)
-			{
-				Logger.error(e1);
-				AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), ImageHandler.getIcon(), getContainingWindow(), null, false);
-			}
 		}
 
-		clearBoard();
+		board.clearCards(); // TODO is this necessary
+		try
+		{
+			socket.write(new ClearSendCommand(-1));
+		}
+		catch(SocketException | IndexOutOfBoundsException e)
+		{
+			Logger.error(e);
+			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), ImageHandler.getIcon(), getContainingWindow(), null, false);
+		}
+
 		lockBoard(true);
 	}
 
@@ -559,6 +525,12 @@ public class Controller extends NVC implements DataAccessable
 	}
 
 	@Override
+	public SeatList getSeats()
+	{
+		return seats;
+	}
+
+	@Override
 	public void increaseBeddoFabrikCount()
 	{
 		beddoFabrikCount = beddoFabrikCount + 1;
@@ -614,57 +586,6 @@ public class Controller extends NVC implements DataAccessable
 		}
 	}
 
-	private boolean checkNewReaderID(int ownReaderID, int newReaderID)
-	{
-		if(ownReaderID == newReaderID)
-		{
-			return true;
-		}
-
-
-		for(Player currentPlayer : players)
-		{
-			if(currentPlayer.getReaderId() == newReaderID)
-			{
-				AlertGenerator.showAlert(AlertType.ERROR, "Warning", "", "The reader ID \"" + newReaderID + "\" is already in use for player " + currentPlayer.getId(), ImageHandler.getIcon(), getContainingWindow(), null, false);
-				return false;
-			}
-		}
-
-		for(int i = 0; i < 5; i++)
-		{
-			if(board.getReaderId(i) == newReaderID)
-			{
-				AlertGenerator.showAlert(AlertType.ERROR, "Warning", "", "The reader ID \"" + newReaderID + "\" is already in use for board card " + i, ImageHandler.getIcon(), getContainingWindow(), null, false);
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	public boolean setReaderIDForPlayer(Player player, int newReaderID)
-	{
-		if(checkNewReaderID(player.getReaderId(), newReaderID))
-		{
-			player.setReaderId(newReaderID);
-			return true;
-		}
-
-		return false;
-	}
-
-	public boolean setReaderIDForBoard(int boardIndex, int newReaderID)
-	{
-		if(checkNewReaderID(board.getReaderId(boardIndex), newReaderID))
-		{
-			board.setReaderId(boardIndex, newReaderID);
-			return true;
-		}
-
-		return false;
-	}
-
 	public Stage showModal(String title)
 	{
 		ModalController modalController = new ModalController(getContainingWindow(), modalText, title);
@@ -676,7 +597,7 @@ public class Controller extends NVC implements DataAccessable
 	@FXML
 	public void manageReaders()
 	{
-		ManageReadersController manageReadersController = new ManageReadersController(getContainingWindow());
+		ManageReadersController manageReadersController = new ManageReadersController(this, getContainingWindow());
 		manageReadersController.showStage();
 	}
 }

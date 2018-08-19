@@ -1,15 +1,12 @@
 package de.lemonpie.beddocontrol.ui.cells;
 
 import de.lemonpie.beddocontrol.model.Player;
-import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
 import de.lemonpie.beddocontrol.ui.Controller;
 import de.lemonpie.beddocontrol.ui.ImageHandler;
-import de.tobias.logger.Logger;
 import fontAwesome.FontIcon;
 import fontAwesome.FontIconType;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -18,9 +15,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import tools.AlertGenerator;
 
-import java.net.SocketException;
 import java.util.Optional;
 
 public class TableCellCards extends TableCell<Player, Integer>
@@ -65,15 +60,15 @@ public class TableCellCards extends TableCell<Player, Integer>
 				buttonClear.setStyle("-fx-background-color: #CCCCCC;");
 				buttonClear.setTooltip(new Tooltip("Clear Cards"));
 				buttonClear.setOnAction((e) -> {
-					try
-					{
-						controller.getSocket().write(new ClearSendCommand(currentPlayer.getReaderId()));
-					}
-					catch(SocketException e1)
-					{
-						Logger.error(e1);
-						AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), ImageHandler.getIcon(), controller.getContainingWindow(), null, false);
-					}
+//					try
+//					{
+//						controller.getSocket().write(new ClearSendCommand(currentPlayer.getReaderId()));
+//					}
+//					catch(SocketException e1)
+//					{
+//						Logger.error(e1);
+//						AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e1.getMessage(), ImageHandler.getIcon(), controller.getContainingWindow(), null, false);
+//					}
 				});
 				hboxCards.getChildren().add(buttonClear);
 				HBox.setMargin(buttonClear, new Insets(0, 0, 0, 10));

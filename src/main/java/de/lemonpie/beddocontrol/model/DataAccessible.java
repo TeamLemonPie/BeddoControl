@@ -1,9 +1,11 @@
 package de.lemonpie.beddocontrol.model;
 
+import de.lemonpie.beddocommon.model.seat.SeatList;
+
 import java.util.List;
 import java.util.Optional;
 
-public interface DataAccessable
+public interface DataAccessible
 {
 	List<Player> getPlayers();
 
@@ -12,6 +14,8 @@ public interface DataAccessable
 	Optional<Player> getPlayer(int id);
 
 	Board getBoard();
+
+	SeatList getSeats();
 
 	void increaseBeddoFabrikCount();
 
