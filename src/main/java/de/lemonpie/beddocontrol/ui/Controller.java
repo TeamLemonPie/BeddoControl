@@ -617,6 +617,33 @@ public class Controller extends NVC implements DataAccessible
 		return true;
 	}
 
+	public boolean setManageCardIdForPlayer(int playerId, int newManageCardId)
+	{
+		Optional<Player> playerOptional = players.getPlayer(playerId);
+		if(!playerOptional.isPresent())
+		{
+			return false;
+		}
+
+		Player player = playerOptional.get();
+		if(player.getManageCardId() == newManageCardId)
+		{
+			return true;
+		}
+
+		for(Player currentPlayer : players)
+		{
+			if(currentPlayer.getManageCardId() == newManageCardId)
+			{
+				AlertGenerator.showAlert(Alert.AlertType.ERROR, "Warning", "", "The manageCard ID \"" + newManageCardId + "\" is already in use for player " + currentPlayer.getId(), ImageHandler.getIcon(), getContainingWindow(), null, false);
+				return false;
+			}
+		}
+
+		player.setManageCardId(newManageCardId);
+		return true;
+	}
+
 	@FXML
 	public void manageReaders()
 	{

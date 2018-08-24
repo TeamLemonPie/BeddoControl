@@ -15,6 +15,8 @@ public class Player
 	private String name;
 	private String twitchName;
 
+	private int manageCardId;
+
 	private Card cardLeft;
 	private Card cardRight;
 
@@ -61,6 +63,17 @@ public class Player
 	{
 		this.twitchName = twitchName;
 		fireListener(listener -> listener.twitchNameDidChange(this, twitchName));
+	}
+
+	public int getManageCardId()
+	{
+		return manageCardId;
+	}
+
+	public void setManageCardId(int manageCardId)
+	{
+		this.manageCardId = manageCardId;
+		fireListener(listener -> listener.manageCardIdDidChange(this, manageCardId));
 	}
 
 	public Card getCardLeft()

@@ -69,6 +69,7 @@ public class DataReadCommand implements Command
 						Card cardLeft = Card.fromString(obj.getAsJsonPrimitive("cardLeft").getAsString());
 						Card cardRight = Card.fromString(obj.getAsJsonPrimitive("cardRight").getAsString());
 						boolean isHighlighted = obj.getAsJsonPrimitive("isHighlighted").getAsBoolean();
+						int manageCardId = obj.getAsJsonPrimitive("manageCardId").getAsInt();
 
 						Player player = new Player(id);
 						player.setName(name);
@@ -78,6 +79,7 @@ public class DataReadCommand implements Command
 						player.setCardLeft(cardLeft);
 						player.setCardRight(cardRight);
 						player.setHighlighted(isHighlighted);
+						player.setManageCardId(manageCardId);
 
 						dataAccessible.addPlayer(player);
 					}

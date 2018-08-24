@@ -19,12 +19,20 @@ public class PlayerTableView extends TableView<Player>
 		setFixedCellSize(60);
 		setEditable(true);
 
-		TableColumn<Player, Integer> columnID = new TableColumn<>();
-		columnID.setCellValueFactory(new PropertyValueFactory<>("id"));
-		columnID.setStyle("-fx-alignment: CENTER;");
-		columnID.setText("Nr.");
-		columnID.prefWidthProperty().bind(widthProperty().multiply(0.03).subtract(2));
-		getColumns().add(columnID);
+		TableColumn<Player, Integer> columnId = new TableColumn<>();
+		columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
+		columnId.setStyle("-fx-alignment: CENTER;");
+		columnId.setText("Nr.");
+		columnId.prefWidthProperty().bind(widthProperty().multiply(0.04).subtract(2));
+		getColumns().add(columnId);
+
+		TableColumn<Player, Integer> columnManageCardId = new TableColumn<>();
+		columnManageCardId.setCellValueFactory(new PropertyValueFactory<>("id"));
+		columnManageCardId.setCellFactory(param -> new TableCellManageCardID(controller));
+		columnManageCardId.setStyle("-fx-alignment: CENTER;");
+		columnManageCardId.setText("Manage Card ID");
+		columnManageCardId.prefWidthProperty().bind(widthProperty().multiply(0.05).subtract(2));
+		getColumns().add(columnManageCardId);
 
 		TableColumn<Player, Integer> columnReader = new TableColumn<>();
 		columnReader.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -39,7 +47,7 @@ public class PlayerTableView extends TableView<Player>
 		columnName.setCellFactory(param -> new TableCellName());
 		columnName.setStyle("-fx-alignment: CENTER;");
 		columnName.setText("Name");
-		columnName.prefWidthProperty().bind(widthProperty().multiply(0.15).subtract(2));
+		columnName.prefWidthProperty().bind(widthProperty().multiply(0.12).subtract(2));
 		getColumns().add(columnName);
 
 		TableColumn<Player, String> columnTwitchName = new TableColumn<>();
@@ -48,7 +56,7 @@ public class PlayerTableView extends TableView<Player>
 		columnTwitchName.setStyle("-fx-alignment: CENTER;");
 		columnTwitchName.setText("Twitch Name");
 		getColumns().add(columnTwitchName);
-		columnTwitchName.prefWidthProperty().bind(widthProperty().multiply(0.15).subtract(2));
+		columnTwitchName.prefWidthProperty().bind(widthProperty().multiply(0.12).subtract(2));
 
 		TableColumn<Player, Integer> columnCards = new TableColumn<>();
 		columnCards.setCellValueFactory(new PropertyValueFactory<>("id"));

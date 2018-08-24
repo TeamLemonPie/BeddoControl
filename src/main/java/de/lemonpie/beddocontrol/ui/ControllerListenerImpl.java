@@ -116,6 +116,11 @@ public class ControllerListenerImpl implements BoardListener, PlayerListener, Pl
 	}
 
 	@Override
+	public void manageCardIdDidChange(Player player, int value)
+	{
+	}
+
+	@Override
 	public void boardReaderIdDidChange(int index, int readerId, int oldReaderId)
 	{
 	}

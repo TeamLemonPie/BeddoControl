@@ -25,4 +25,6 @@ public interface PlayerListener
 	void winProbabilityDidChange(Player player, int value);
 
 	void isHighlightedDidChange(Player player, boolean value);
+
+	void manageCardIdDidChange(Player player, int value);
 }
