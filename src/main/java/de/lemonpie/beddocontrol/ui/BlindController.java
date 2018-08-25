@@ -3,6 +3,8 @@ package de.lemonpie.beddocontrol.ui;
 import de.lemonpie.beddocommon.network.client.ControlSocket;
 import de.lemonpie.beddocontrol.model.Board;
 import de.lemonpie.beddocontrol.network.command.send.AnteSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.BigBlindSendCommand;
+import de.lemonpie.beddocontrol.network.command.send.SmallBlindSendCommand;
 import de.tobias.utils.nui.NVC;
 import fontAwesome.FontIcon;
 import fontAwesome.FontIconType;
@@ -82,18 +84,18 @@ public class BlindController extends NVC
 	@FXML
 	public void setSmallBlind()
 	{
-		set(textFieldAnte, "a small blind", value -> {
+		set(textFieldSmallBlind, "a small blind", value -> {
 			board.setAnte(value);
-			socket.write(new AnteSendCommand(value));
+			socket.write(new SmallBlindSendCommand(value));
 		});
 	}
 
 	@FXML
 	public void setBigBlind()
 	{
-		set(textFieldAnte, "a big blind", value -> {
+		set(textFieldBigBlind, "a big blind", value -> {
 			board.setAnte(value);
-			socket.write(new AnteSendCommand(value));
+			socket.write(new BigBlindSendCommand(value));
 		});
 	}
 
