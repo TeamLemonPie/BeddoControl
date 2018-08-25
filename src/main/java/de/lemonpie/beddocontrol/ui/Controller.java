@@ -327,6 +327,7 @@ public class Controller extends NVC implements DataAccessible
 				socket.addCommand(new DataReadCommand(Controller.this));
 				socket.addCommand(new PlayerWinProbabilityReadCommand(Controller.this));
 				socket.addCommand(new ReaderCountReadCommand(Controller.this));
+				socket.addCommand(new SeatPlayerReadCommand(Controller.this));
 			}
 
 			@Override
@@ -560,6 +561,13 @@ public class Controller extends NVC implements DataAccessible
 				statusTagBar.getTag("beddofabriken").setType(StatusTagType.SUCCESS);
 			}
 		});
+	}
+
+	@Override
+	public void seatAssignNewPlayerId(int seatId, int newPlayerId)
+	{
+		seats.getData().get(seatId).setPlayerId(newPlayerId);
+		refreshTableView();
 	}
 
 	private void showBoardCardGUI(int index)

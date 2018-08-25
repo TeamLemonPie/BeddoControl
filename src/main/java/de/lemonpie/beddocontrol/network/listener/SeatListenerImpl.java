@@ -17,7 +17,6 @@ public class SeatListenerImpl implements SeatListener
 		this.socket = socket;
 	}
 
-
 	@Override
 	public void readerIdDidChange(Seat seat, int readerId)
 	{

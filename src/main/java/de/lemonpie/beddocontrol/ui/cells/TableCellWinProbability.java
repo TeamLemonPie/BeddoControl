@@ -11,8 +11,8 @@ public class TableCellWinProbability extends TableCell<Player, Integer>
 	{
 		if(!empty)
 		{
-			Label labelStatus = new Label(item.toString() + "%");
-			setGraphic(labelStatus);
+			Label labelProbability = new Label(item.toString() + "%");
+			setGraphic(labelProbability);
 		}
 		else
 		{

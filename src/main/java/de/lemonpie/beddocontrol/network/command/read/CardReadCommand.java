@@ -15,7 +15,6 @@ import de.lemonpie.beddocontrol.model.card.Card;
  */
 public class CardReadCommand implements Command
 {
-
 	private DataAccessible dataAccessable;
 
 	@Override

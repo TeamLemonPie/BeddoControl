@@ -22,4 +22,6 @@ public interface DataAccessible
 	void decreaseBeddoFabrikCount();
 
 	void setBeddoFabrikCount(int count);
+
+	void seatAssignNewPlayerId(int seatId, int newPlayerId);
 }
