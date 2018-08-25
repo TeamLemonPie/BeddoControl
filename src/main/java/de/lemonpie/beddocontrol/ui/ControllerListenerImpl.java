@@ -37,7 +37,6 @@ public class ControllerListenerImpl implements BoardListener, PlayerListener, Pl
 	{
 		try
 		{
-			//TODO: remove player from seat
 			controller.socket.write(new PlayerOpSendCommand(player.getId()));
 			controller.refreshTableView();
 		}
