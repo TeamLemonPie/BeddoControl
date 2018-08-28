@@ -9,7 +9,7 @@ public class SeatSendCommand extends CommandData
 {
 	public SeatSendCommand(int seatId, int playerId)
 	{
-		super(Scope.ADMIN, CommandName.SEAT, seatId);
+		super(Scope.ADMIN, CommandName.SEAT_PLAYER_ID, seatId);
 		setValue(new JsonPrimitive(playerId));
 	}
 }
