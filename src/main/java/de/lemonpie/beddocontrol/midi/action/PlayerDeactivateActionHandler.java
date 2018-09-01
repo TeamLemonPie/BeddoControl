@@ -1,4 +1,4 @@
-package de.lemonpie.beddocontrol.midi;
+package de.lemonpie.beddocontrol.midi.action;
 
 import de.lemonpie.beddocontrol.model.DataAccessible;
 import de.lemonpie.beddocontrol.model.Player;
@@ -10,12 +10,12 @@ import de.tobias.midi.feedback.FeedbackType;
 
 import java.util.List;
 
-public class PlayerActivateActionHandler extends ActionHandler
+public class PlayerDeactivateActionHandler extends ActionHandler
 {
 
 	private DataAccessible controller;
 
-	public PlayerActivateActionHandler(DataAccessible controller)
+	public PlayerDeactivateActionHandler(DataAccessible controller)
 	{
 		this.controller = controller;
 	}
@@ -23,7 +23,7 @@ public class PlayerActivateActionHandler extends ActionHandler
 	@Override
 	public String actionType()
 	{
-		return "activate";
+		return "deactivate";
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class PlayerActivateActionHandler extends ActionHandler
 		if(players.size() > playerId && playerId >= 0)
 		{
 			Player player = players.get(playerId);
-			player.setPlayerState(PlayerState.ACTIVE);
+			player.setPlayerState(PlayerState.OUT_OF_GAME);
 		}
 		return FeedbackType.NONE;
 	}

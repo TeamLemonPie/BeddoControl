@@ -2,10 +2,10 @@ package de.lemonpie.beddocontrol.ui;
 
 import de.lemonpie.beddocontrol.listener.BoardListener;
 import de.lemonpie.beddocontrol.listener.PlayerListListener;
+import de.lemonpie.beddocontrol.listener.PlayerListener;
 import de.lemonpie.beddocontrol.model.Player;
 import de.lemonpie.beddocontrol.model.PlayerState;
 import de.lemonpie.beddocontrol.model.card.Card;
-import de.lemonpie.beddocontrol.model.listener.PlayerListener;
 import de.lemonpie.beddocontrol.network.command.send.player.PlayerOpSendCommand;
 import de.lemonpie.beddocontrol.network.listener.PlayerListenerImpl;
 import de.tobias.logger.Logger;

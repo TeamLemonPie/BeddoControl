@@ -1,4 +1,4 @@
-package de.lemonpie.beddocontrol.midi;
+package de.lemonpie.beddocontrol.midi.action;
 
 import de.tobias.midi.action.Action;
 import de.tobias.midi.action.ActionHandler;

@@ -1,8 +1,7 @@
-package de.lemonpie.beddocontrol.midi;
+package de.lemonpie.beddocontrol.midi.action;
 
 import de.lemonpie.beddocontrol.model.DataAccessible;
 import de.lemonpie.beddocontrol.model.Player;
-import de.lemonpie.beddocontrol.model.PlayerState;
 import de.tobias.midi.action.Action;
 import de.tobias.midi.action.ActionHandler;
 import de.tobias.midi.event.KeyEvent;
@@ -10,12 +9,12 @@ import de.tobias.midi.feedback.FeedbackType;
 
 import java.util.List;
 
-public class PlayerFoldActionHandler extends ActionHandler
+public class PlayerHighlightActionHandler extends ActionHandler
 {
 
 	private DataAccessible controller;
 
-	public PlayerFoldActionHandler(DataAccessible controller)
+	public PlayerHighlightActionHandler(DataAccessible controller)
 	{
 		this.controller = controller;
 	}
@@ -23,7 +22,7 @@ public class PlayerFoldActionHandler extends ActionHandler
 	@Override
 	public String actionType()
 	{
-		return "fold";
+		return "highlight";
 	}
 
 	@Override
@@ -35,7 +34,7 @@ public class PlayerFoldActionHandler extends ActionHandler
 		if(players.size() > playerId && playerId >= 0)
 		{
 			Player player = players.get(playerId);
-			player.setPlayerState(PlayerState.OUT_OF_ROUND);
+			player.setHighlighted(true);
 		}
 		return FeedbackType.NONE;
 	}

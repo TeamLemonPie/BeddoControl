@@ -1,4 +1,4 @@
-package de.lemonpie.beddocontrol.midi;
+package de.lemonpie.beddocontrol.midi.action;
 
 import de.lemonpie.beddocontrol.ui.Controller;
 import de.tobias.midi.action.Action;
@@ -7,11 +7,11 @@ import de.tobias.midi.event.KeyEvent;
 import de.tobias.midi.feedback.FeedbackType;
 import javafx.application.Platform;
 
-public class BoardClearActionHandler extends ActionHandler
+public class NewRoundActionHandler extends ActionHandler
 {
 	private Controller controller;
 
-	public BoardClearActionHandler(Controller controller)
+	public NewRoundActionHandler(Controller controller)
 	{
 		this.controller = controller;
 	}
@@ -19,13 +19,13 @@ public class BoardClearActionHandler extends ActionHandler
 	@Override
 	public String actionType()
 	{
-		return "board_clear";
+		return "new_round";
 	}
 
 	@Override
 	public FeedbackType handle(KeyEvent keyEvent, Action action)
 	{
-		Platform.runLater(() -> controller.clearBoard());
+		Platform.runLater(controller::newRound);
 		return FeedbackType.NONE;
 	}
 }

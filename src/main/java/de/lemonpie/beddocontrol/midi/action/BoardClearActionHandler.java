@@ -1,4 +1,4 @@
-package de.lemonpie.beddocontrol.midi;
+package de.lemonpie.beddocontrol.midi.action;
 
 import de.lemonpie.beddocontrol.ui.Controller;
 import de.tobias.midi.action.Action;
@@ -7,11 +7,11 @@ import de.tobias.midi.event.KeyEvent;
 import de.tobias.midi.feedback.FeedbackType;
 import javafx.application.Platform;
 
-public class LockAllToggleActionHandler extends ActionHandler
+public class BoardClearActionHandler extends ActionHandler
 {
 	private Controller controller;
 
-	public LockAllToggleActionHandler(Controller controller)
+	public BoardClearActionHandler(Controller controller)
 	{
 		this.controller = controller;
 	}
@@ -19,13 +19,13 @@ public class LockAllToggleActionHandler extends ActionHandler
 	@Override
 	public String actionType()
 	{
-		return "lock_all_toggle";
+		return "board_clear";
 	}
 
 	@Override
 	public FeedbackType handle(KeyEvent keyEvent, Action action)
 	{
-		Platform.runLater(() -> controller.lockAll(!controller.isAllLocked()));
+		Platform.runLater(() -> controller.clearBoard());
 		return FeedbackType.NONE;
 	}
 }
