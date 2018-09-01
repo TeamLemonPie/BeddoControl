@@ -33,7 +33,7 @@ public class MidiHandler
 		try
 		{
 			controller.getStatusTagBar().getTag("midi").setText("MIDI available");
-			controller.getStatusTagBar().getTag("status").setType(StatusTagType.SUCCESS);
+			controller.getStatusTagBar().getTag("midi").setType(StatusTagType.SUCCESS);
 
 			Path midiSettingsPath = Paths.get(PathUtils.getOSindependentPath() + controller.getBundle().getString("folder") + "midi.json");
 
@@ -68,7 +68,7 @@ public class MidiHandler
 			Logger.error(e.getClass());
 			Platform.runLater(() -> {
 				controller.getStatusTagBar().getTag("midi").setText("MIDI unavailable");
-				controller.getStatusTagBar().getTag("status").setType(StatusTagType.ERROR);
+				controller.getStatusTagBar().getTag("midi").setType(StatusTagType.ERROR);
 			});
 		}
 	}
