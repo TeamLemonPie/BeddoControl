@@ -21,9 +21,9 @@
         </dependency>
 
         <dependency>
-            <groupId>de.deadlocker8</groupId>
-            <artifactId>tools</artifactId>
-            <version>${tools.version}</version>
+            <groupId>de.tobias</groupId>
+            <artifactId>libMidi</artifactId>
+            <version>${libMidi.version}</version>
         </dependency>
     </dependencies>
 

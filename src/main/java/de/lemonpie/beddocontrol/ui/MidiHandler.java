@@ -1,39 +1,34 @@
 package de.lemonpie.beddocontrol.ui;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.JsonSyntaxException;
 import de.lemonpie.beddocommon.ui.StatusTagType;
-import de.lemonpie.beddocontrol.midi.Midi;
-import de.lemonpie.beddocontrol.midi.MidiAction;
-import de.lemonpie.beddocontrol.midi.PD12Handler;
+import de.lemonpie.beddocontrol.midi.*;
 import de.tobias.logger.Logger;
+import de.tobias.midi.Mapping;
+import de.tobias.midi.Midi;
+import de.tobias.midi.action.ActionRegistry;
 import javafx.application.Platform;
-import javafx.scene.control.Label;
 import tools.PathUtils;
 
 import javax.sound.midi.MidiUnavailableException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MidiHandler
 {
-	private List<MidiAction> midiActionList;
 	private Controller controller;
 
 	public MidiHandler(Controller controller)
 	{
-		this.midiActionList = new ArrayList<>();
 		this.controller = controller;
 	}
 
-	public void init(Label labelStatusMIDI)
+	public void init()
 	{
 		try
 		{
@@ -53,15 +48,22 @@ public class MidiHandler
 				Files.copy(iStr, midiSettingsPath);
 			}
 
+			ActionRegistry.registerActionHandler(new BoardClearActionHandler(controller));
+			ActionRegistry.registerActionHandler(new ConfirmActionHandler());
+			ActionRegistry.registerActionHandler(new LockAllToggleActionHandler(controller));
+			ActionRegistry.registerActionHandler(new NewRoundActionHandler(controller));
+			ActionRegistry.registerActionHandler(new PlayerActivateActionHandler(controller));
+			ActionRegistry.registerActionHandler(new PlayerDeactivateActionHandler(controller));
+			ActionRegistry.registerActionHandler(new PlayerFoldActionHandler(controller));
+			ActionRegistry.registerActionHandler(new PlayerHighlightActionHandler(controller));
+			ActionRegistry.registerActionHandler(new UnlockBoardActionHandler(controller));
+
 			BufferedReader inputStream = Files.newBufferedReader(midiSettingsPath);
-			Type type = new TypeToken<List<MidiAction>>()
-			{
-			}.getType();
-			midiActionList = new Gson().fromJson(inputStream, type);
-			Midi.getInstance().lookupMidiDevice("PD 12");
-			Midi.getInstance().setListener(new PD12Handler(controller, midiActionList));
+			Mapping.setCurrentMapping(new Gson().fromJson(inputStream, Mapping.class));
+
+			Midi.getInstance().lookupMidiDevice("PD 12", Midi.Mode.INPUT, Midi.Mode.OUTPUT);
 		}
-		catch(MidiUnavailableException | IOException e)
+		catch(MidiUnavailableException | IOException | JsonSyntaxException e)
 		{
 			Logger.error(e.getClass());
 			Platform.runLater(() -> {

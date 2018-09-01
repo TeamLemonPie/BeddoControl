@@ -159,7 +159,7 @@ public class Controller extends NVC implements DataAccessible
 		}
 
 		MidiHandler midiHandler = new MidiHandler(this);
-		midiHandler.init(labelStatusMIDI);
+		midiHandler.init();
 
 		settings = (ServerConnectionSettings) possibleSettings;
 		statusTagBar.getTag("status").setAdditionalText(settings.getHostName() + ":" + settings.getPort());

@@ -1,10 +1,10 @@
 package de.lemonpie.beddocontrol.main;
 
-import de.lemonpie.beddocontrol.midi.Midi;
 import de.lemonpie.beddocontrol.ui.Controller;
 import de.tobias.logger.FileOutputOption;
 import de.tobias.logger.LogLevelFilter;
 import de.tobias.logger.Logger;
+import de.tobias.midi.Midi;
 import de.tobias.utils.application.App;
 import de.tobias.utils.application.ApplicationUtils;
 import de.tobias.utils.application.container.PathType;
