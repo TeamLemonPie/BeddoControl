@@ -1,53 +1,619 @@
 [
     {
-        "key": 36,
-        "type": "PLAYER_FOLD",
-        "additionalInfo": 0
+        "keys": [
+            {
+                "value": 21,
+                "eventFeedback": {
+                    "value": 45,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 45,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "highlight",
+        "payload": {
+            "playerId": 0
+        }
     },
     {
-        "key": 37,
-        "type": "PLAYER_FOLD",
-        "additionalInfo": 1
+        "keys": [
+            {
+                "value": 31,
+                "eventFeedback": {
+                    "value": 17,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 17,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "activate",
+        "payload": {
+            "playerId": 0
+        }
     },
     {
-        "key": 38,
-        "type": "PLAYER_FOLD",
-        "additionalInfo": 2
+        "keys": [
+            {
+                "value": 41,
+                "eventFeedback": {
+                    "value": 13,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 13,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "fold",
+        "payload": {
+            "playerId": 0
+        }
     },
     {
-        "key": 39,
-        "type": "PLAYER_FOLD",
-        "additionalInfo": 3
+        "keys": [
+            {
+                "value": 51,
+                "eventFeedback": {
+                    "value": 5,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 5,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "deactivate",
+        "payload": {
+            "playerId": 0
+        }
     },
     {
-        "key": 40,
-        "type": "PLAYER_FOLD",
-        "additionalInfo": 4
+        "keys": [
+            {
+                "value": 22,
+                "eventFeedback": {
+                    "value": 45,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 45,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "highlight",
+        "payload": {
+            "playerId": 1
+        }
     },
     {
-        "key": 41,
-        "type": "PLAYER_FOLD",
-        "additionalInfo": 5
+        "keys": [
+            {
+                "value": 32,
+                "eventFeedback": {
+                    "value": 17,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 17,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "activate",
+        "payload": {
+            "playerId": 1
+        }
     },
     {
-        "key": 42,
-        "type": "PLAYER_FOLD",
-        "additionalInfo": 6
+        "keys": [
+            {
+                "value": 42,
+                "eventFeedback": {
+                    "value": 13,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 13,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "fold",
+        "payload": {
+            "playerId": 1
+        }
     },
     {
-        "key": 44,
-        "type": "CONFIRM"
+        "keys": [
+            {
+                "value": 52,
+                "eventFeedback": {
+                    "value": 5,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 5,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "deactivate",
+        "payload": {
+            "playerId": 1
+        }
     },
     {
-        "key": 45,
-        "type": "LOCK_ALL_TOGGLE"
+        "keys": [
+            {
+                "value": 23,
+                "eventFeedback": {
+                    "value": 45,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 45,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "highlight",
+        "payload": {
+            "playerId": 2
+        }
     },
     {
-        "key": 46,
-        "type": "UNLOCK_BOARD"
+        "keys": [
+            {
+                "value": 33,
+                "eventFeedback": {
+                    "value": 17,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 17,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "activate",
+        "payload": {
+            "playerId": 2
+        }
     },
     {
-        "key": 47,
-        "type": "NEW_ROUND"
+        "keys": [
+            {
+                "value": 43,
+                "eventFeedback": {
+                    "value": 13,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 13,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "fold",
+        "payload": {
+            "playerId": 2
+        }
+    },
+    {
+        "keys": [
+            {
+                "value": 53,
+                "eventFeedback": {
+                    "value": 5,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 5,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "deactivate",
+        "payload": {
+            "playerId": 2
+        }
+    },
+    {
+        "keys": [
+            {
+                "value": 24,
+                "eventFeedback": {
+                    "value": 45,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 45,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "highlight",
+        "payload": {
+            "playerId": 3
+        }
+    },
+    {
+        "keys": [
+            {
+                "value": 34,
+                "eventFeedback": {
+                    "value": 17,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 17,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "activate",
+        "payload": {
+            "playerId": 3
+        }
+    },
+    {
+        "keys": [
+            {
+                "value": 44,
+                "eventFeedback": {
+                    "value": 13,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 13,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "fold",
+        "payload": {
+            "playerId": 3
+        }
+    },
+    {
+        "keys": [
+            {
+                "value": 54,
+                "eventFeedback": {
+                    "value": 5,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 5,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "deactivate",
+        "payload": {
+            "playerId": 3
+        }
+    },
+    {
+        "keys": [
+            {
+                "value": 25,
+                "eventFeedback": {
+                    "value": 45,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 45,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "highlight",
+        "payload": {
+            "playerId": 4
+        }
+    },
+    {
+        "keys": [
+            {
+                "value": 35,
+                "eventFeedback": {
+                    "value": 17,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 17,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "activate",
+        "payload": {
+            "playerId": 4
+        }
+    },
+    {
+        "keys": [
+            {
+                "value": 45,
+                "eventFeedback": {
+                    "value": 13,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 13,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "fold",
+        "payload": {
+            "playerId": 4
+        }
+    },
+    {
+        "keys": [
+            {
+                "value": 55,
+                "eventFeedback": {
+                    "value": 5,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 5,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "deactivate",
+        "payload": {
+            "playerId": 4
+        }
+    },
+    {
+        "keys": [
+            {
+                "value": 26,
+                "eventFeedback": {
+                    "value": 45,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 45,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "highlight",
+        "payload": {
+            "playerId": 5
+        }
+    },
+    {
+        "keys": [
+            {
+                "value": 36,
+                "eventFeedback": {
+                    "value": 17,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 17,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "activate",
+        "payload": {
+            "playerId": 5
+        }
+    },
+    {
+        "keys": [
+            {
+                "value": 46,
+                "eventFeedback": {
+                    "value": 13,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 13,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "fold",
+        "payload": {
+            "playerId": 5
+        }
+    },
+    {
+        "keys": [
+            {
+                "value": 56,
+                "eventFeedback": {
+                    "value": 5,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 5,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "deactivate",
+        "payload": {
+            "playerId": 5
+        }
+    },
+    {
+        "keys": [
+            {
+                "value": 27,
+                "eventFeedback": {
+                    "value": 45,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 45,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "highlight",
+        "payload": {
+            "playerId": 6
+        }
+    },
+    {
+        "keys": [
+            {
+                "value": 37,
+                "eventFeedback": {
+                    "value": 17,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 17,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "activate",
+        "payload": {
+            "playerId": 6
+        }
+    },
+    {
+        "keys": [
+            {
+                "value": 47,
+                "eventFeedback": {
+                    "value": 13,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 13,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "fold",
+        "payload": {
+            "playerId": 6
+        }
+    },
+    {
+        "keys": [
+            {
+                "value": 57,
+                "eventFeedback": {
+                    "value": 5,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 5,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "deactivate",
+        "payload": {
+            "playerId": 6
+        }
+    },
+    {
+        "keys": [
+            {
+                "value": 71,
+                "eventFeedback": {
+                    "value": 5,
+                    "channel": 146
+                },
+                "defaultFeedback": {
+                    "value": 5,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "lock_all_toggle",
+        "payload": {}
+    },
+    {
+        "keys": [
+            {
+                "value": 72,
+                "eventFeedback": {
+                    "value": 29,
+                    "channel": 144
+                },
+                "defaultFeedback": {
+                    "value": 29,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "confirm",
+        "payload": {}
+    },
+    {
+        "keys": [
+            {
+                "value": 73,
+                "eventFeedback": {
+                    "value": 119,
+                    "channel": 144
+                },
+                "defaultFeedback": {
+                    "value": 119,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "unlock_board",
+        "payload": {}
+    },
+    {
+        "keys": [
+            {
+                "value": 74,
+                "eventFeedback": {
+                    "value": 84,
+                    "channel": 144
+                },
+                "defaultFeedback": {
+                    "value": 84,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "board_clear",
+        "payload": {}
+    },
+    {
+        "keys": [
+            {
+                "value": 75,
+                "eventFeedback": {
+                    "value": 57,
+                    "channel": 144
+                },
+                "defaultFeedback": {
+                    "value": 57,
+                    "channel": 144
+                }
+            }
+        ],
+        "actionType": "board_clear",
+        "payload": {}
     }
 ]
