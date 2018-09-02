@@ -8,6 +8,7 @@ import de.lemonpie.beddocommon.network.client.ControlSocketDelegate;
 import de.lemonpie.beddocommon.ui.StatusTag;
 import de.lemonpie.beddocommon.ui.StatusTagBar;
 import de.lemonpie.beddocommon.ui.StatusTagType;
+import de.lemonpie.beddocontrol.midi.MidiHandler;
 import de.lemonpie.beddocontrol.model.*;
 import de.lemonpie.beddocontrol.model.card.Card;
 import de.lemonpie.beddocontrol.network.command.read.*;

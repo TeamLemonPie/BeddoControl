@@ -1,9 +1,10 @@
-package de.lemonpie.beddocontrol.ui;
+package de.lemonpie.beddocontrol.midi;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import de.lemonpie.beddocommon.ui.StatusTagType;
 import de.lemonpie.beddocontrol.midi.action.*;
+import de.lemonpie.beddocontrol.ui.Controller;
 import de.tobias.logger.Logger;
 import de.tobias.midi.Mapping;
 import de.tobias.midi.Midi;
