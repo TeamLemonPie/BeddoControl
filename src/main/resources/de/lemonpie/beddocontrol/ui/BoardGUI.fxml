@@ -15,7 +15,7 @@
             <children>
                 <VBox alignment="CENTER" prefHeight="92.0" prefWidth="79.0" spacing="5.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="#1">
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="#0">
                             <font>
                                 <Font name="System Bold" size="14.0" />
                             </font>
@@ -29,7 +29,7 @@
                 </VBox>
                 <VBox alignment="CENTER" prefHeight="92.0" prefWidth="79.0" spacing="5.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="#2">
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="#1">
                             <font>
                                 <Font name="System Bold" size="14.0" />
                             </font>
@@ -43,7 +43,7 @@
                 </VBox>
                 <VBox alignment="CENTER" prefHeight="92.0" prefWidth="79.0" spacing="5.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="#3">
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="#2">
                             <font>
                                 <Font name="System Bold" size="14.0" />
                             </font>
@@ -57,7 +57,7 @@
                 </VBox>
                 <VBox alignment="CENTER" prefHeight="92.0" prefWidth="79.0" spacing="5.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="#4">
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="#3">
                             <font>
                                 <Font name="System Bold" size="14.0" />
                             </font>
@@ -71,7 +71,7 @@
                 </VBox>
                 <VBox alignment="CENTER" prefHeight="92.0" prefWidth="79.0" spacing="5.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="#5">
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="#4">
                             <font>
                                 <Font name="System Bold" size="14.0" />
                             </font>
