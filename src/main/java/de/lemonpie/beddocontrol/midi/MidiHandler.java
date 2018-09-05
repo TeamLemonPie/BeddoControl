@@ -66,7 +66,7 @@ public class MidiHandler
 		}
 		catch(MidiUnavailableException | IOException | JsonSyntaxException e)
 		{
-			Logger.error(e.getClass());
+			Logger.error(e.getClass() + ": " + e.getMessage());
 			Platform.runLater(() -> {
 				controller.getStatusTagBar().getTag("midi").setText("MIDI unavailable");
 				controller.getStatusTagBar().getTag("midi").setType(StatusTagType.ERROR);
