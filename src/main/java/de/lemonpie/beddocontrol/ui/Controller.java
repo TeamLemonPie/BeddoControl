@@ -405,6 +405,7 @@ public class Controller extends NVC implements DataAccessible
 			if(lock)
 			{
 				vboxAll.setDisable(true);
+				buttonManageReaders.setDisable(true);
 				buttonMasterLock.setGraphic(new FontIcon(FontIconType.UNLOCK, 16, Color.WHITE));
 				buttonMasterLock.setStyle("-fx-background-color: #CC0000; -fx-text-fill: white");
 				buttonMasterLock.setText("Unlock");
@@ -413,6 +414,7 @@ public class Controller extends NVC implements DataAccessible
 			else
 			{
 				vboxAll.setDisable(false);
+				buttonManageReaders.setDisable(false);
 				buttonMasterLock.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
 				buttonMasterLock.setStyle("");
 				buttonMasterLock.setText("Lock");
