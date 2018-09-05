@@ -133,9 +133,7 @@ public class Controller extends NVC implements DataAccessible
 				Logger.error(e1);
 			}
 
-			Platform.runLater(() -> {
-				AlertGenerator.showAlert(AlertType.ERROR, "Error", "", "Missing or invalid settings.json.\nA default settings.json has been created.", ImageHandler.getIcon(), getContainingWindow(), null, false);
-			});
+			Platform.runLater(() -> AlertGenerator.showAlert(AlertType.ERROR, "Error", "", "Missing or invalid settings.json.\nA default settings.json has been created.", ImageHandler.getIcon(), getContainingWindow(), null, false));
 		}
 
 		MidiHandler midiHandler = new MidiHandler(this);
@@ -265,7 +263,7 @@ public class Controller extends NVC implements DataAccessible
 					ButtonType buttonTypeOne = new ButtonType("Retry");
 					alert.getButtonTypes().setAll(buttonTypeOne);
 					Optional<ButtonType> result = alert.showAndWait();
-					if(result.get() == buttonTypeOne)
+					if(result.isPresent() && result.get() == buttonTypeOne)
 					{
 						connect();
 					}
@@ -541,7 +539,7 @@ public class Controller extends NVC implements DataAccessible
 			}
 		}
 
-		seats.getObject(newSeatId).get().setPlayerId(playerId);
+		seats.getObject(newSeatId).ifPresent(seat->seat.setPlayerId(playerId));
 
 		return true;
 	}

@@ -53,11 +53,7 @@ public class TableCellSeatID extends TableCell<Player, Integer>
 				{
 					if(textFieldSeat.getText().trim().equals(""))
 					{
-						if(seat.isPresent())
-						{
-							seat.get().setPlayerId(-1);
-						}
-
+						seat.ifPresent(seat1 -> seat1.setPlayerId(-1));
 						return;
 					}
 
@@ -68,10 +64,7 @@ public class TableCellSeatID extends TableCell<Player, Integer>
 					else
 					{
 						Optional<Seat> oldSeat = controller.getSeats().getSeatByPlayerId(item);
-						if(oldSeat.isPresent())
-						{
-							textFieldSeat.setText(String.valueOf(oldSeat.get().getId()));
-						}
+						oldSeat.ifPresent(seat1 -> textFieldSeat.setText(String.valueOf(seat1.getId())));
 						textFieldSeat.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
 					}
 				}

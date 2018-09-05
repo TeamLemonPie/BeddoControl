@@ -58,7 +58,7 @@ public class BeddoControlMain extends Application
 	}
 
 	@Override
-	public void stop() throws Exception
+	public void stop()
 	{
 		Midi.getInstance().close();
 		Worker.shutdown();

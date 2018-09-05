@@ -99,9 +99,7 @@ public class BoardController extends NVC
 		imageViewBoard3.setOnMouseClicked((e) -> showBoardCardGUI(3));
 		imageViewBoard4.setOnMouseClicked((e) -> showBoardCardGUI(4));
 
-		Platform.runLater(() -> {
-			board.addListener(new de.lemonpie.beddocontrol.network.listener.BoardListenerImpl(socket));
-		});
+		Platform.runLater(() -> board.addListener(new de.lemonpie.beddocontrol.network.listener.BoardListenerImpl(socket)));
 	}
 
 	public void setImageForImageView(Image image, int ID)

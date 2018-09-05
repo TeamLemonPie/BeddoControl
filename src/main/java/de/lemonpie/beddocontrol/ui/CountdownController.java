@@ -152,7 +152,7 @@ public class CountdownController extends NVC
 			message = "Please enter a next pause time";
 		}
 
-		if(pauseTime == null || pauseTime.equals(""))
+		if(pauseTime.equals(""))
 		{
 			AlertGenerator.showAlert(Alert.AlertType.WARNING, "Warning", "", message, ImageHandler.getIcon(), getContainingWindow(), null, false);
 			return;

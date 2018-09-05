@@ -18,6 +18,8 @@ import javafx.stage.Window;
 import tools.AlertGenerator;
 import tools.NumberTextFormatter;
 
+import java.util.Optional;
+
 
 public class ManageReadersController extends NVC
 {
@@ -122,21 +124,29 @@ public class ManageReadersController extends NVC
 		textField.setOnKeyPressed(ke -> {
 			if(ke.getCode().equals(KeyCode.ENTER))
 			{
+				Optional<Seat> seatOptional = dataAccessible.getSeats().getObject(ID);
 				if(textField.getText().trim().equals(""))
 				{
-					dataAccessible.getSeats().getObject(ID).get().setReaderId(-3);
+					seatOptional.ifPresent(seat -> seat.setReaderId(-3));
 					return;
 				}
 
 				int newReaderId = Integer.parseInt(textField.getText().trim());
 				if(isReaderIdAlreadyUsed(ID, newReaderId))
 				{
-					textField.setText(String.valueOf(dataAccessible.getSeats().getObject(ID).get().getReaderId()));
+					if(seatOptional.isPresent())
+					{
+						textField.setText(String.valueOf(seatOptional.get().getReaderId()));
+					}
+					else
+					{
+						textField.setText("");
+					}
 					textField.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
 				}
 				else
 				{
-					dataAccessible.getSeats().getObject(ID).get().setReaderId(newReaderId);
+					seatOptional.ifPresent(seat -> seat.setReaderId(newReaderId));
 					textField.setStyle("-fx-border-color: #48DB5E; -fx-border-width: 2");
 				}
 			}

@@ -87,7 +87,7 @@ public class TableCellActions extends TableCell<Player, PlayerState>
 				alert.setContentText("Do you really want to delete player " + player.getId() + "?");
 
 				Optional<ButtonType> result = alert.showAndWait();
-				if(result.get() == ButtonType.OK)
+				if(result.isPresent() && result.get() == ButtonType.OK)
 				{
 					controller.getPlayerList().remove(player);
 					controller.getTableView().refresh();
