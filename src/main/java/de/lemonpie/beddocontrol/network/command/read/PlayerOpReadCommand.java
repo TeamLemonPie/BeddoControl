@@ -8,8 +8,7 @@ import de.lemonpie.beddocontrol.model.Player;
 
 public class PlayerOpReadCommand implements Command
 {
-
-	private DataAccessible dataAccessable;
+	private DataAccessible dataAccessible;
 
 	@Override
 	public CommandName name()
@@ -17,9 +16,9 @@ public class PlayerOpReadCommand implements Command
 		return CommandName.PLAYER_OP;
 	}
 
-	public PlayerOpReadCommand(DataAccessible dataAccessable)
+	public PlayerOpReadCommand(DataAccessible dataAccessible)
 	{
-		this.dataAccessable = dataAccessable;
+		this.dataAccessible = dataAccessible;
 	}
 
 	@Override
@@ -31,7 +30,7 @@ public class PlayerOpReadCommand implements Command
 			int playerId = command.getKey();
 
 			Player player = new Player(playerId);
-			dataAccessable.addPlayer(player);
+			dataAccessible.addPlayer(player);
 		}
 	}
 }

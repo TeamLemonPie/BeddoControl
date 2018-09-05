@@ -23,7 +23,6 @@ public class ControllerListenerImpl implements BoardListener, PlayerListener, Pl
 		this.controller = controller;
 	}
 
-
 	// PlayerList Listener
 	@Override
 	public void addPlayerToList(Player player)

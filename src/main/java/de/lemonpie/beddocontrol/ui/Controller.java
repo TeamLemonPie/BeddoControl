@@ -92,6 +92,8 @@ public class Controller extends NVC implements DataAccessible
 	private Button buttonNewRound;
 	@FXML
 	private Button buttonLockBoard;
+	@FXML
+	private Button buttonManageReaders;
 
 	private CountdownController countdownController;
 	private BlindController blindController;
@@ -171,6 +173,8 @@ public class Controller extends NVC implements DataAccessible
 		buttonMasterLock.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
 		buttonMasterLock.setFocusTraversable(false);
 		buttonMasterLock.setOnAction((e) -> lockAll(!isAllLocked));
+
+		buttonManageReaders.setFocusTraversable(false);
 
 		mainPane.setOnKeyPressed((e) ->
 		{
