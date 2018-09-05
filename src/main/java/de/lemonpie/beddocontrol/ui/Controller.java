@@ -325,6 +325,7 @@ public class Controller extends NVC implements DataAccessible
 			{
 				socket.addCommand(new CardReadCommand(Controller.this));
 				socket.addCommand(new PlayerOpReadCommand(Controller.this));
+				socket.addCommand(new PlayerHighlightReadCommand(Controller.this));
 				socket.addCommand(new DataReadCommand(Controller.this));
 				socket.addCommand(new PlayerWinProbabilityReadCommand(Controller.this));
 				socket.addCommand(new ReaderCountReadCommand(Controller.this));

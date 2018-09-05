@@ -68,14 +68,6 @@ public class TableCellActions extends TableCell<Player, PlayerState>
 			buttonHighlight.setTooltip(new Tooltip("Highlight"));
 			buttonHighlight.setOnAction((e) -> {
 				Player currentPlayer = (Player) getTableRow().getItem();
-				for(Player player : controller.getPlayers())
-				{
-					if(player != currentPlayer && player.isHighlighted())
-					{
-						player.setHighlighted(false);
-					}
-				}
-
 				currentPlayer.setHighlighted(!currentPlayer.isHighlighted());
 				controller.getTableView().refresh();
 			});
