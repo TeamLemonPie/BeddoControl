@@ -1,6 +1,5 @@
 package de.lemonpie.beddocontrol.ui;
 
-import de.lemonpie.beddocontrol.listener.BoardListener;
 import de.lemonpie.beddocontrol.listener.PlayerListListener;
 import de.lemonpie.beddocontrol.listener.PlayerListener;
 import de.lemonpie.beddocontrol.model.Player;
@@ -14,7 +13,7 @@ import tools.AlertGenerator;
 
 import java.net.SocketException;
 
-public class ControllerListenerImpl implements BoardListener, PlayerListener, PlayerListListener
+public class ControllerListenerImpl implements PlayerListener, PlayerListListener
 {
 	private Controller controller;
 
@@ -77,31 +76,6 @@ public class ControllerListenerImpl implements BoardListener, PlayerListener, Pl
 	}
 
 	@Override
-	public void cardDidChangeAtIndex(int index, Card card)
-	{
-		switch(index)
-		{
-			case 0:
-				controller.imageViewBoard1.setImage(ImageHandler.getImageForCard(card));
-				break;
-			case 1:
-				controller.imageViewBoard2.setImage(ImageHandler.getImageForCard(card));
-				break;
-			case 2:
-				controller.imageViewBoard3.setImage(ImageHandler.getImageForCard(card));
-				break;
-			case 3:
-				controller.imageViewBoard4.setImage(ImageHandler.getImageForCard(card));
-				break;
-			case 4:
-				controller.imageViewBoard5.setImage(ImageHandler.getImageForCard(card));
-				break;
-			default:
-				break;
-		}
-	}
-
-	@Override
 	public void winProbabilityDidChange(Player player, int value)
 	{
 		controller.getTableView().refresh();
@@ -115,26 +89,6 @@ public class ControllerListenerImpl implements BoardListener, PlayerListener, Pl
 
 	@Override
 	public void manageCardIdDidChange(Player player, int value)
-	{
-	}
-
-	@Override
-	public void boardReaderIdDidChange(int index, int readerId, int oldReaderId)
-	{
-	}
-
-	@Override
-	public void smallBlindDidChange(int newValue)
-	{
-	}
-
-	@Override
-	public void bigBlindDidChange(int newValue)
-	{
-	}
-
-	@Override
-	public void anteDidChange(int newValue)
 	{
 	}
 }

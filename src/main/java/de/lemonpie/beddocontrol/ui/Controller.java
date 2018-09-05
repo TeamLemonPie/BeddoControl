@@ -10,15 +10,12 @@ import de.lemonpie.beddocommon.ui.StatusTagBar;
 import de.lemonpie.beddocommon.ui.StatusTagType;
 import de.lemonpie.beddocontrol.midi.MidiHandler;
 import de.lemonpie.beddocontrol.model.*;
-import de.lemonpie.beddocontrol.model.card.Card;
 import de.lemonpie.beddocontrol.network.command.read.*;
 import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand.Option;
-import de.lemonpie.beddocontrol.network.command.send.BoardCardSetSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.DataSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.player.PlayerOpSendCommand;
-import de.lemonpie.beddocontrol.network.listener.BoardListenerImpl;
 import de.lemonpie.beddocontrol.network.listener.SeatListListenerImpl;
 import de.tobias.logger.Logger;
 import de.tobias.utils.nui.NVC;
@@ -33,7 +30,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -70,42 +66,26 @@ public class Controller extends NVC implements DataAccessible
 	private Label labelStatusMIDI;
 	@FXML
 	private HBox hboxMaster;
-
-	@FXML
-	ImageView imageViewBoard1;
-	@FXML
-	ImageView imageViewBoard2;
-	@FXML
-	ImageView imageViewBoard3;
-	@FXML
-	ImageView imageViewBoard4;
-	@FXML
-	ImageView imageViewBoard5;
-
 	@FXML
 	private HBox hboxBoard;
-
 	@FXML
 	private HBox hboxGameSettings;
 
 	@FXML
 	private Button buttonNewRound;
 	@FXML
-	private Button buttonLockBoard;
-	@FXML
 	private Button buttonManageReaders;
 
+	private BoardController boardController;
 	private CountdownController countdownController;
 	private BlindController blindController;
 
-	private Board board;
 	private PlayerList players;
 	private SeatList seats;
 
 	ControlSocket socket;
 	private Stage modalStage;
 	public static StringProperty modalText;
-	private boolean isBoardLocked = false;
 	private boolean isAllLocked = false;
 	private ServerConnectionSettings settings;
 	PlayerTableView tableViewPlayer;
@@ -125,9 +105,6 @@ public class Controller extends NVC implements DataAccessible
 	public void init()
 	{
 		this.listenerImpl = new ControllerListenerImpl(this);
-
-		board = new Board();
-		board.addListener(listenerImpl);
 
 		players = new PlayerList();
 		players.addListener(listenerImpl);
@@ -167,9 +144,6 @@ public class Controller extends NVC implements DataAccessible
 		settings = (ServerConnectionSettings) possibleSettings;
 		statusTagBar.getTag("status").setAdditionalText(settings.getHostName() + ":" + settings.getPort());
 
-		buttonLockBoard.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
-		buttonLockBoard.setOnAction((e) -> lockBoard(!isBoardLocked));
-
 		buttonMasterLock.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
 		buttonMasterLock.setFocusTraversable(false);
 		buttonMasterLock.setOnAction((e) -> lockAll(!isAllLocked));
@@ -184,25 +158,21 @@ public class Controller extends NVC implements DataAccessible
 			}
 		});
 
-		imageViewBoard1.setOnMouseClicked((e) -> showBoardCardGUI(0));
-		imageViewBoard2.setOnMouseClicked((e) -> showBoardCardGUI(1));
-		imageViewBoard3.setOnMouseClicked((e) -> showBoardCardGUI(2));
-		imageViewBoard4.setOnMouseClicked((e) -> showBoardCardGUI(3));
-		imageViewBoard5.setOnMouseClicked((e) -> showBoardCardGUI(4));
-
 		initTableView();
 
 		Platform.runLater(() -> {
 			initConnection();
 
-			countdownController = new CountdownController(socket);
-			blindController = new BlindController(socket, board);
+			boardController = new BoardController(socket, this);
 
+			countdownController = new CountdownController(socket);
+			blindController = new BlindController(socket, boardController);
+
+			hboxBoard.getChildren().add(boardController.getParent());
 			hboxGameSettings.getChildren().add(countdownController.getParent());
 			hboxGameSettings.getChildren().add(blindController.getParent());
 
 			connect();
-			board.addListener(new BoardListenerImpl(socket));
 
 			seats.addListener(new SeatListListenerImpl(socket));
 
@@ -248,6 +218,11 @@ public class Controller extends NVC implements DataAccessible
 	public PlayerList getPlayerList()
 	{
 		return players;
+	}
+
+	public BoardController getBoardController()
+	{
+		return boardController;
 	}
 
 	private void connect()
@@ -386,21 +361,6 @@ public class Controller extends NVC implements DataAccessible
 	}
 
 	@FXML
-	public void clearBoard()
-	{
-		board.clearCards();
-		try
-		{
-			socket.write(new ClearSendCommand(-2));
-		}
-		catch(SocketException | IndexOutOfBoundsException e)
-		{
-			Logger.error(e);
-			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), ImageHandler.getIcon(), getContainingWindow(), null, false);
-		}
-	}
-
-	@FXML
 	public void newRound()
 	{
 		Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -411,7 +371,7 @@ public class Controller extends NVC implements DataAccessible
 		alert.setContentText("Do you really want to start a new round?");
 
 		Optional<ButtonType> result = alert.showAndWait();
-		if(result.get() != ButtonType.OK)
+		if(!result.isPresent() || result.get() != ButtonType.OK)
 		{
 			return;
 		}
@@ -424,7 +384,7 @@ public class Controller extends NVC implements DataAccessible
 			}
 		}
 
-		board.clearCards(); // TODO is this necessary
+		boardController.getBoard().clearCards(); // TODO is this necessary
 		try
 		{
 			socket.write(new ClearSendCommand(-1));
@@ -435,35 +395,7 @@ public class Controller extends NVC implements DataAccessible
 			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), ImageHandler.getIcon(), getContainingWindow(), null, false);
 		}
 
-		lockBoard(true);
-	}
-
-	public void lockBoard(boolean lock)
-	{
-		try
-		{
-			if(lock)
-			{
-				hboxBoard.setDisable(true);
-				buttonLockBoard.setGraphic(new FontIcon(FontIconType.UNLOCK, 16, Color.BLACK));
-				buttonLockBoard.setText("Unlock");
-				socket.write(new BlockSendCommand(Option.BOARD));
-			}
-			else
-			{
-				hboxBoard.setDisable(false);
-				buttonLockBoard.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
-				buttonLockBoard.setText("Lock");
-				socket.write(new BlockSendCommand(Option.NONE));
-			}
-
-			isBoardLocked = lock;
-		}
-		catch(SocketException e)
-		{
-			Logger.error(e);
-			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), ImageHandler.getIcon(), getContainingWindow(), null, false);
-		}
+		boardController.lockBoard(true);
 	}
 
 	public void lockAll(boolean lock)
@@ -523,7 +455,7 @@ public class Controller extends NVC implements DataAccessible
 	@Override
 	public Board getBoard()
 	{
-		return board;
+		return boardController.getBoard();
 	}
 
 	@Override
@@ -574,25 +506,6 @@ public class Controller extends NVC implements DataAccessible
 	{
 		seats.getData().get(seatId).setPlayerId(newPlayerId);
 		refreshTableView();
-	}
-
-	private void showBoardCardGUI(int index)
-	{
-		BoardCardController boardCardController = new BoardCardController(getContainingWindow(), this, index);
-		boardCardController.showStage();
-	}
-
-	public void overrideBoardCard(int index, Card card)
-	{
-		try
-		{
-			socket.write(new BoardCardSetSendCommand(index, card));
-		}
-		catch(SocketException e)
-		{
-			Logger.error(e);
-			AlertGenerator.showAlert(AlertType.ERROR, "Error", "An error occurred", e.getMessage(), ImageHandler.getIcon(), getContainingWindow(), null, false);
-		}
 	}
 
 	public Stage showModal(String title)

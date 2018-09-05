@@ -25,7 +25,7 @@ public class BoardClearActionHandler extends ActionHandler
 	@Override
 	public FeedbackType handle(KeyEvent keyEvent, Action action)
 	{
-		Platform.runLater(() -> controller.clearBoard());
+		Platform.runLater(() -> controller.getBoardController().clearBoard());
 		return FeedbackType.NONE;
 	}
 }

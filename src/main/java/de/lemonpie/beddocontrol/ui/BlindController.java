@@ -1,7 +1,6 @@
 package de.lemonpie.beddocontrol.ui;
 
 import de.lemonpie.beddocommon.network.client.ControlSocket;
-import de.lemonpie.beddocontrol.model.Board;
 import de.lemonpie.beddocontrol.network.command.send.AnteSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.BigBlindSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.SmallBlindSendCommand;
@@ -22,7 +21,6 @@ import java.net.SocketException;
 
 public class BlindController extends NVC
 {
-
 	private interface ValueHandler
 	{
 		void handle(int value) throws SocketException;
@@ -42,12 +40,12 @@ public class BlindController extends NVC
 	private Button buttonAnte;
 
 	private ControlSocket socket;
-	private Board board;
+	private BoardController boardController;
 
-	public BlindController(ControlSocket socket, Board board)
+	public BlindController(ControlSocket socket, BoardController boardController)
 	{
 		this.socket = socket;
-		this.board = board;
+		this.boardController = boardController;
 
 		load("de/lemonpie/beddocontrol/ui", "BlindGUI");
 	}
@@ -85,7 +83,7 @@ public class BlindController extends NVC
 	public void setSmallBlind()
 	{
 		set(textFieldSmallBlind, "a small blind", value -> {
-			board.setAnte(value);
+			boardController.getBoard().setAnte(value);
 			socket.write(new SmallBlindSendCommand(value));
 		});
 	}
@@ -94,7 +92,7 @@ public class BlindController extends NVC
 	public void setBigBlind()
 	{
 		set(textFieldBigBlind, "a big blind", value -> {
-			board.setAnte(value);
+			boardController.getBoard().setAnte(value);
 			socket.write(new BigBlindSendCommand(value));
 		});
 	}
@@ -103,7 +101,7 @@ public class BlindController extends NVC
 	public void setAnte()
 	{
 		set(textFieldAnte, "an ante", value -> {
-			board.setAnte(value);
+			boardController.getBoard().setAnte(value);
 			socket.write(new AnteSendCommand(value));
 		});
 	}

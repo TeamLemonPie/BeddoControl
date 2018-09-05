@@ -25,7 +25,7 @@ public class UnlockBoardActionHandler extends ActionHandler
 	@Override
 	public FeedbackType handle(KeyEvent keyEvent, Action action)
 	{
-		Platform.runLater(() -> controller.lockBoard(false));
+		Platform.runLater(() -> controller.getBoardController().lockBoard(false));
 		return FeedbackType.NONE;
 	}
 }

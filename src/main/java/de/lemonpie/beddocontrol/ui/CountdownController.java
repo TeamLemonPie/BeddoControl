@@ -61,6 +61,7 @@ public class CountdownController extends NVC
 		load("de/lemonpie/beddocontrol/ui", "CountdownGUI");
 	}
 
+	@Override
 	public void init()
 	{
 		timelineHandler = new TimelineHandler();
