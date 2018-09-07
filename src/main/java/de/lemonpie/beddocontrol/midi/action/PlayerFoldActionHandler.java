@@ -37,6 +37,6 @@ public class PlayerFoldActionHandler extends ActionHandler
 			Player player = players.get(playerId);
 			player.setPlayerState(PlayerState.OUT_OF_ROUND);
 		}
-		return FeedbackType.NONE;
+		return FeedbackType.DEFAULT;
 	}
 }

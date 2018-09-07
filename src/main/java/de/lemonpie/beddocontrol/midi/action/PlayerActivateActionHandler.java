@@ -37,6 +37,6 @@ public class PlayerActivateActionHandler extends ActionHandler
 			Player player = players.get(playerId);
 			player.setPlayerState(PlayerState.ACTIVE);
 		}
-		return FeedbackType.NONE;
+		return FeedbackType.DEFAULT;
 	}
 }

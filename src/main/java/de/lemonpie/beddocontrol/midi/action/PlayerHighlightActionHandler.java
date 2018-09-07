@@ -36,6 +36,6 @@ public class PlayerHighlightActionHandler extends ActionHandler
 			Player player = players.get(playerId);
 			player.setHighlighted(true);
 		}
-		return FeedbackType.NONE;
+		return FeedbackType.DEFAULT;
 	}
 }

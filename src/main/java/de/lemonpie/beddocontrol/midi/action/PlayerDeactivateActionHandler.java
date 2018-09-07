@@ -37,6 +37,6 @@ public class PlayerDeactivateActionHandler extends ActionHandler
 			Player player = players.get(playerId);
 			player.setPlayerState(PlayerState.OUT_OF_GAME);
 		}
-		return FeedbackType.NONE;
+		return FeedbackType.DEFAULT;
 	}
 }

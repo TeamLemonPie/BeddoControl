@@ -2,6 +2,7 @@ package de.lemonpie.beddocontrol.midi;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import de.lemonpie.beddocommon.midi.MidiSettings;
 import de.lemonpie.beddocommon.ui.StatusTagType;
 import de.lemonpie.beddocontrol.midi.action.*;
 import de.lemonpie.beddocontrol.ui.Controller;
@@ -16,6 +17,7 @@ import javax.sound.midi.MidiUnavailableException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,6 +25,7 @@ import java.nio.file.Paths;
 public class MidiHandler
 {
 	private Controller controller;
+	private MidiSettings midiSettings;
 
 	public MidiHandler(Controller controller)
 	{
@@ -46,8 +49,16 @@ public class MidiHandler
 				}
 
 				InputStream iStr = getClass().getClassLoader().getResourceAsStream("de/lemonpie/beddocontrol/midi.json");
-				Files.copy(iStr, midiSettingsPath);
+				Mapping mapping = new Gson().fromJson(new InputStreamReader(iStr), Mapping.class);
+				midiSettings = new MidiSettings("Launchpad MK2", mapping);
 			}
+			else
+			{
+				BufferedReader inputStream = Files.newBufferedReader(midiSettingsPath);
+				midiSettings = new Gson().fromJson(inputStream, MidiSettings.class);
+			}
+
+			Mapping.setCurrentMapping(midiSettings.getMapping());
 
 			ActionRegistry.registerActionHandler(new BoardClearActionHandler(controller));
 			ActionRegistry.registerActionHandler(new ConfirmActionHandler());
@@ -59,10 +70,7 @@ public class MidiHandler
 			ActionRegistry.registerActionHandler(new PlayerHighlightActionHandler(controller));
 			ActionRegistry.registerActionHandler(new UnlockBoardActionHandler(controller));
 
-			BufferedReader inputStream = Files.newBufferedReader(midiSettingsPath);
-			Mapping.setCurrentMapping(new Gson().fromJson(inputStream, Mapping.class));
-
-			Midi.getInstance().lookupMidiDevice("PD 12", Midi.Mode.INPUT, Midi.Mode.OUTPUT);
+			Midi.getInstance().lookupMidiDevice(midiSettings.getDevice(), Midi.Mode.INPUT, Midi.Mode.OUTPUT);
 		}
 		catch(MidiUnavailableException | IOException | JsonSyntaxException e)
 		{
