@@ -49,8 +49,9 @@ public class MidiHandler
 				}
 
 				InputStream iStr = getClass().getClassLoader().getResourceAsStream("de/lemonpie/beddocontrol/midi.json");
-				Mapping mapping = new Gson().fromJson(new InputStreamReader(iStr), Mapping.class);
-				midiSettings = new MidiSettings("Launchpad MK2", mapping);
+				midiSettings = new Gson().fromJson(new InputStreamReader(iStr), MidiSettings.class);
+
+				Files.write(midiSettingsPath, new Gson().toJson(midiSettings).getBytes());
 			}
 			else
 			{

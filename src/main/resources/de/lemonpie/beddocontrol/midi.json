@@ -1,5 +1,5 @@
 {
-    "device": "PD-12",
+    "device": "Launchpad MK2",
     "mapping": {
         "actions": [
             {
@@ -10,7 +10,7 @@
                             "value": 45
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 45
                         },
                         "value": 21
@@ -29,7 +29,7 @@
                             "value": 17
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 17
                         },
                         "value": 31
@@ -48,7 +48,7 @@
                             "value": 13
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 13
                         },
                         "value": 41
@@ -67,7 +67,7 @@
                             "value": 5
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 5
                         },
                         "value": 51
@@ -86,7 +86,7 @@
                             "value": 45
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 45
                         },
                         "value": 22
@@ -105,7 +105,7 @@
                             "value": 17
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 17
                         },
                         "value": 32
@@ -124,7 +124,7 @@
                             "value": 13
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 13
                         },
                         "value": 42
@@ -143,7 +143,7 @@
                             "value": 5
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 5
                         },
                         "value": 52
@@ -162,7 +162,7 @@
                             "value": 45
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 45
                         },
                         "value": 23
@@ -181,7 +181,7 @@
                             "value": 17
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 17
                         },
                         "value": 33
@@ -200,7 +200,7 @@
                             "value": 13
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 13
                         },
                         "value": 43
@@ -219,7 +219,7 @@
                             "value": 5
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 5
                         },
                         "value": 53
@@ -238,7 +238,7 @@
                             "value": 45
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 45
                         },
                         "value": 24
@@ -257,7 +257,7 @@
                             "value": 17
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 17
                         },
                         "value": 34
@@ -276,7 +276,7 @@
                             "value": 13
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 13
                         },
                         "value": 44
@@ -295,7 +295,7 @@
                             "value": 5
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 5
                         },
                         "value": 54
@@ -314,7 +314,7 @@
                             "value": 45
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 45
                         },
                         "value": 25
@@ -333,7 +333,7 @@
                             "value": 17
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 17
                         },
                         "value": 35
@@ -352,7 +352,7 @@
                             "value": 13
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 13
                         },
                         "value": 45
@@ -371,7 +371,7 @@
                             "value": 5
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 5
                         },
                         "value": 55
@@ -390,7 +390,7 @@
                             "value": 45
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 45
                         },
                         "value": 26
@@ -409,7 +409,7 @@
                             "value": 17
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 17
                         },
                         "value": 36
@@ -428,7 +428,7 @@
                             "value": 13
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 13
                         },
                         "value": 46
@@ -447,7 +447,7 @@
                             "value": 5
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 5
                         },
                         "value": 56
@@ -466,7 +466,7 @@
                             "value": 45
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 45
                         },
                         "value": 27
@@ -485,7 +485,7 @@
                             "value": 17
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 17
                         },
                         "value": 37
@@ -504,7 +504,7 @@
                             "value": 13
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 13
                         },
                         "value": 47
@@ -523,7 +523,7 @@
                             "value": 5
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 5
                         },
                         "value": 57
@@ -542,7 +542,7 @@
                             "value": 5
                         },
                         "eventFeedback": {
-                            "channel": 146,
+                            "channel": 145,
                             "value": 5
                         },
                         "value": 71
