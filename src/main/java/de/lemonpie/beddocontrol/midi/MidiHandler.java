@@ -10,6 +10,7 @@ import de.tobias.logger.Logger;
 import de.tobias.midi.Mapping;
 import de.tobias.midi.Midi;
 import de.tobias.midi.action.ActionRegistry;
+import de.tobias.midi.serialize.MappingSerializer;
 import javafx.application.Platform;
 import tools.PathUtils;
 
@@ -36,6 +37,8 @@ public class MidiHandler
 	{
 		try
 		{
+			Gson gson = MappingSerializer.getSerializer();
+
 			controller.getStatusTagBar().getTag("midi").setText("MIDI available");
 			controller.getStatusTagBar().getTag("midi").setType(StatusTagType.SUCCESS);
 
@@ -49,14 +52,14 @@ public class MidiHandler
 				}
 
 				InputStream iStr = getClass().getClassLoader().getResourceAsStream("de/lemonpie/beddocontrol/midi.json");
-				midiSettings = new Gson().fromJson(new InputStreamReader(iStr), MidiSettings.class);
+				midiSettings = gson.fromJson(new InputStreamReader(iStr), MidiSettings.class);
 
-				Files.write(midiSettingsPath, new Gson().toJson(midiSettings).getBytes());
+				Files.write(midiSettingsPath, gson.toJson(midiSettings).getBytes());
 			}
 			else
 			{
 				BufferedReader inputStream = Files.newBufferedReader(midiSettingsPath);
-				midiSettings = new Gson().fromJson(inputStream, MidiSettings.class);
+				midiSettings = gson.fromJson(inputStream, MidiSettings.class);
 			}
 
 			Mapping.setCurrentMapping(midiSettings.getMapping());
