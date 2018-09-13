@@ -1,5 +1,7 @@
 package de.lemonpie.beddocontrol.midi.action;
 
+import de.lemonpie.beddocommon.model.seat.Seat;
+import de.lemonpie.beddocommon.model.seat.SeatList;
 import de.lemonpie.beddocontrol.model.DataAccessible;
 import de.lemonpie.beddocontrol.model.Player;
 import de.tobias.midi.action.Action;
@@ -8,6 +10,7 @@ import de.tobias.midi.event.KeyEvent;
 import de.tobias.midi.feedback.FeedbackType;
 
 import java.util.List;
+import java.util.Optional;
 
 public class PlayerHighlightActionHandler extends ActionHandler
 {
@@ -28,13 +31,22 @@ public class PlayerHighlightActionHandler extends ActionHandler
 	@Override
 	public FeedbackType handle(KeyEvent keyEvent, Action action)
 	{
-		int playerId = Integer.valueOf(action.getPayload().get("playerId"));
+		int seatId = Integer.valueOf(action.getPayload().get("seatId"));
 		final List<Player> players = controller.getPlayers();
+		final SeatList seats = controller.getSeats();
 
-		if(players.size() > playerId && playerId >= 0)
+		if(seats.size() > seatId && seatId >= 0)
 		{
-			Player player = players.get(playerId);
-			player.setHighlighted(true);
+			Optional<Seat> seatOptional = seats.getObject(seatId);
+			if(seatOptional.isPresent())
+			{
+				int playerId = seatOptional.get().getPlayerId();
+				if(playerId != -1)
+				{
+					Player player = players.get(playerId-1);
+					player.setHighlighted(true);
+				}
+			}
 		}
 		return FeedbackType.DEFAULT;
 	}

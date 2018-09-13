@@ -4,560 +4,560 @@
             {
                 "actionType": "highlight",
                 "payload": {
-                    "playerId": 0
+                    "seatId": 0
                 },
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 45,
+                            "channel": 146
+                        },
+                        "type": "MIDI",
                         "value": 21,
                         "defaultFeedback": {
                             "value": 45,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 45,
-                            "channel": 146
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
             {
                 "actionType": "activate",
                 "payload": {
-                    "playerId": 0
+                    "seatId": 0
                 },
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 17,
+                            "channel": 146
+                        },
+                        "type": "MIDI",
                         "value": 31,
                         "defaultFeedback": {
                             "value": 17,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 17,
-                            "channel": 146
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
             {
                 "actionType": "fold",
                 "payload": {
-                    "playerId": 0
+                    "seatId": 0
                 },
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 13,
+                            "channel": 146
+                        },
+                        "type": "MIDI",
                         "value": 41,
                         "defaultFeedback": {
                             "value": 13,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 13,
-                            "channel": 146
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
             {
                 "actionType": "deactivate",
                 "payload": {
-                    "playerId": 0
+                    "seatId": 0
                 },
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 5,
+                            "channel": 146
+                        },
+                        "type": "MIDI",
                         "value": 51,
                         "defaultFeedback": {
                             "value": 5,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 5,
-                            "channel": 146
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
             {
                 "actionType": "highlight",
                 "payload": {
-                    "playerId": 1
+                    "seatId": 1
                 },
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 45,
+                            "channel": 146
+                        },
+                        "type": "MIDI",
                         "value": 22,
                         "defaultFeedback": {
                             "value": 45,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 45,
-                            "channel": 146
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
             {
                 "actionType": "activate",
                 "payload": {
-                    "playerId": 1
+                    "seatId": 1
                 },
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 17,
+                            "channel": 146
+                        },
+                        "type": "MIDI",
                         "value": 32,
                         "defaultFeedback": {
                             "value": 17,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 17,
-                            "channel": 146
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
             {
                 "actionType": "fold",
                 "payload": {
-                    "playerId": 1
+                    "seatId": 1
                 },
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 13,
+                            "channel": 146
+                        },
+                        "type": "MIDI",
                         "value": 42,
                         "defaultFeedback": {
                             "value": 13,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 13,
-                            "channel": 146
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
             {
                 "actionType": "deactivate",
                 "payload": {
-                    "playerId": 1
+                    "seatId": 1
                 },
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 5,
+                            "channel": 146
+                        },
+                        "type": "MIDI",
                         "value": 52,
                         "defaultFeedback": {
                             "value": 5,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 5,
-                            "channel": 146
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
             {
                 "actionType": "highlight",
                 "payload": {
-                    "playerId": 2
+                    "seatId": 2
                 },
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 45,
+                            "channel": 146
+                        },
+                        "type": "MIDI",
                         "value": 23,
                         "defaultFeedback": {
                             "value": 45,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 45,
-                            "channel": 146
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
             {
                 "actionType": "activate",
                 "payload": {
-                    "playerId": 2
+                    "seatId": 2
                 },
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 17,
+                            "channel": 146
+                        },
+                        "type": "MIDI",
                         "value": 33,
                         "defaultFeedback": {
                             "value": 17,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 17,
-                            "channel": 146
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
             {
                 "actionType": "fold",
                 "payload": {
-                    "playerId": 2
+                    "seatId": 2
                 },
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 13,
+                            "channel": 146
+                        },
+                        "type": "MIDI",
                         "value": 43,
                         "defaultFeedback": {
                             "value": 13,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 13,
-                            "channel": 146
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
             {
                 "actionType": "deactivate",
                 "payload": {
-                    "playerId": 2
+                    "seatId": 2
                 },
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 5,
+                            "channel": 146
+                        },
+                        "type": "MIDI",
                         "value": 53,
                         "defaultFeedback": {
                             "value": 5,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 5,
-                            "channel": 146
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
             {
                 "actionType": "highlight",
                 "payload": {
-                    "playerId": 3
+                    "seatId": 3
                 },
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 45,
+                            "channel": 146
+                        },
+                        "type": "MIDI",
                         "value": 24,
                         "defaultFeedback": {
                             "value": 45,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 45,
-                            "channel": 146
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
             {
                 "actionType": "activate",
                 "payload": {
-                    "playerId": 3
+                    "seatId": 3
                 },
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 17,
+                            "channel": 146
+                        },
+                        "type": "MIDI",
                         "value": 34,
                         "defaultFeedback": {
                             "value": 17,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 17,
-                            "channel": 146
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
             {
                 "actionType": "fold",
                 "payload": {
-                    "playerId": 3
+                    "seatId": 3
                 },
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 13,
+                            "channel": 146
+                        },
+                        "type": "MIDI",
                         "value": 44,
                         "defaultFeedback": {
                             "value": 13,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 13,
-                            "channel": 146
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
             {
                 "actionType": "deactivate",
                 "payload": {
-                    "playerId": 3
+                    "seatId": 3
                 },
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 5,
+                            "channel": 146
+                        },
+                        "type": "MIDI",
                         "value": 54,
                         "defaultFeedback": {
                             "value": 5,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 5,
-                            "channel": 146
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
             {
                 "actionType": "highlight",
                 "payload": {
-                    "playerId": 4
+                    "seatId": 4
                 },
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 45,
+                            "channel": 146
+                        },
+                        "type": "MIDI",
                         "value": 25,
                         "defaultFeedback": {
                             "value": 45,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 45,
-                            "channel": 146
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
             {
                 "actionType": "activate",
                 "payload": {
-                    "playerId": 4
+                    "seatId": 4
                 },
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 17,
+                            "channel": 146
+                        },
+                        "type": "MIDI",
                         "value": 35,
                         "defaultFeedback": {
                             "value": 17,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 17,
-                            "channel": 146
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
             {
                 "actionType": "fold",
                 "payload": {
-                    "playerId": 4
+                    "seatId": 4
                 },
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 13,
+                            "channel": 146
+                        },
+                        "type": "MIDI",
                         "value": 45,
                         "defaultFeedback": {
                             "value": 13,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 13,
-                            "channel": 146
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
             {
                 "actionType": "deactivate",
                 "payload": {
-                    "playerId": 4
+                    "seatId": 4
                 },
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 5,
+                            "channel": 146
+                        },
+                        "type": "MIDI",
                         "value": 55,
                         "defaultFeedback": {
                             "value": 5,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 5,
-                            "channel": 146
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
             {
                 "actionType": "highlight",
                 "payload": {
-                    "playerId": 5
+                    "seatId": 5
                 },
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 45,
+                            "channel": 146
+                        },
+                        "type": "MIDI",
                         "value": 26,
                         "defaultFeedback": {
                             "value": 45,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 45,
-                            "channel": 146
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
             {
                 "actionType": "activate",
                 "payload": {
-                    "playerId": 5
+                    "seatId": 5
                 },
                 "keys": [
                     {
-                        "value": 36,
-                        "defaultFeedback": {
-                            "value": 17,
-                            "channel": 144
-                        },
                         "eventFeedback": {
                             "value": 17,
                             "channel": 146
                         },
-                        "type": "MIDI"
+                        "type": "MIDI",
+                        "value": 36,
+                        "defaultFeedback": {
+                            "value": 17,
+                            "channel": 144
+                        }
                     }
                 ]
             },
             {
                 "actionType": "fold",
                 "payload": {
-                    "playerId": 5
+                    "seatId": 5
                 },
                 "keys": [
                     {
-                        "value": 46,
-                        "defaultFeedback": {
-                            "value": 13,
-                            "channel": 144
-                        },
                         "eventFeedback": {
                             "value": 13,
                             "channel": 146
                         },
-                        "type": "MIDI"
+                        "type": "MIDI",
+                        "value": 46,
+                        "defaultFeedback": {
+                            "value": 13,
+                            "channel": 144
+                        }
                     }
                 ]
             },
             {
                 "actionType": "deactivate",
                 "payload": {
-                    "playerId": 5
+                    "seatId": 5
                 },
                 "keys": [
                     {
-                        "value": 56,
-                        "defaultFeedback": {
-                            "value": 5,
-                            "channel": 144
-                        },
                         "eventFeedback": {
                             "value": 5,
                             "channel": 146
                         },
-                        "type": "MIDI"
+                        "type": "MIDI",
+                        "value": 56,
+                        "defaultFeedback": {
+                            "value": 5,
+                            "channel": 144
+                        }
                     }
                 ]
             },
             {
                 "actionType": "highlight",
                 "payload": {
-                    "playerId": 6
+                    "seatId": 6
                 },
                 "keys": [
                     {
-                        "value": 27,
-                        "defaultFeedback": {
-                            "value": 45,
-                            "channel": 144
-                        },
                         "eventFeedback": {
                             "value": 45,
                             "channel": 146
                         },
-                        "type": "MIDI"
+                        "type": "MIDI",
+                        "value": 27,
+                        "defaultFeedback": {
+                            "value": 45,
+                            "channel": 144
+                        }
                     }
                 ]
             },
             {
                 "actionType": "activate",
                 "payload": {
-                    "playerId": 6
+                    "seatId": 6
                 },
                 "keys": [
                     {
-                        "value": 37,
-                        "defaultFeedback": {
-                            "value": 17,
-                            "channel": 144
-                        },
                         "eventFeedback": {
                             "value": 17,
                             "channel": 146
                         },
-                        "type": "MIDI"
+                        "type": "MIDI",
+                        "value": 37,
+                        "defaultFeedback": {
+                            "value": 17,
+                            "channel": 144
+                        }
                     }
                 ]
             },
             {
                 "actionType": "fold",
                 "payload": {
-                    "playerId": 6
+                    "seatId": 6
                 },
                 "keys": [
                     {
-                        "value": 47,
-                        "defaultFeedback": {
-                            "value": 13,
-                            "channel": 144
-                        },
                         "eventFeedback": {
                             "value": 13,
                             "channel": 146
                         },
-                        "type": "MIDI"
+                        "type": "MIDI",
+                        "value": 47,
+                        "defaultFeedback": {
+                            "value": 13,
+                            "channel": 144
+                        }
                     }
                 ]
             },
             {
                 "actionType": "deactivate",
                 "payload": {
-                    "playerId": 6
+                    "seatId": 6
                 },
                 "keys": [
                     {
-                        "value": 57,
-                        "defaultFeedback": {
-                            "value": 5,
-                            "channel": 144
-                        },
                         "eventFeedback": {
                             "value": 5,
                             "channel": 146
                         },
-                        "type": "MIDI"
+                        "type": "MIDI",
+                        "value": 57,
+                        "defaultFeedback": {
+                            "value": 5,
+                            "channel": 144
+                        }
                     }
                 ]
             },
@@ -566,16 +566,16 @@
                 "payload": {},
                 "keys": [
                     {
-                        "value": 71,
-                        "defaultFeedback": {
-                            "value": 5,
-                            "channel": 144
-                        },
                         "eventFeedback": {
                             "value": 5,
                             "channel": 146
                         },
-                        "type": "MIDI"
+                        "type": "MIDI",
+                        "value": 71,
+                        "defaultFeedback": {
+                            "value": 5,
+                            "channel": 144
+                        }
                     }
                 ]
             },
@@ -584,16 +584,16 @@
                 "payload": {},
                 "keys": [
                     {
-                        "value": 72,
-                        "defaultFeedback": {
-                            "value": 29,
-                            "channel": 144
-                        },
                         "eventFeedback": {
                             "value": 29,
                             "channel": 144
                         },
-                        "type": "MIDI"
+                        "type": "MIDI",
+                        "value": 72,
+                        "defaultFeedback": {
+                            "value": 29,
+                            "channel": 144
+                        }
                     }
                 ]
             },
@@ -602,16 +602,16 @@
                 "payload": {},
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 119,
+                            "channel": 144
+                        },
+                        "type": "MIDI",
                         "value": 73,
                         "defaultFeedback": {
                             "value": 119,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 119,
-                            "channel": 144
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
@@ -620,16 +620,16 @@
                 "payload": {},
                 "keys": [
                     {
+                        "eventFeedback": {
+                            "value": 84,
+                            "channel": 144
+                        },
+                        "type": "MIDI",
                         "value": 74,
                         "defaultFeedback": {
                             "value": 84,
                             "channel": 144
-                        },
-                        "eventFeedback": {
-                            "value": 84,
-                            "channel": 144
-                        },
-                        "type": "MIDI"
+                        }
                     }
                 ]
             },
@@ -638,16 +638,16 @@
                 "payload": {},
                 "keys": [
                     {
-                        "value": 75,
-                        "defaultFeedback": {
-                            "value": 57,
-                            "channel": 144
-                        },
                         "eventFeedback": {
                             "value": 57,
                             "channel": 144
                         },
-                        "type": "MIDI"
+                        "type": "MIDI",
+                        "value": 75,
+                        "defaultFeedback": {
+                            "value": 57,
+                            "channel": 144
+                        }
                     }
                 ]
             }
