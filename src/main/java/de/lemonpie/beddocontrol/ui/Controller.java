@@ -376,9 +376,9 @@ public class Controller extends NVC implements DataAccessible
 
 		for(Player currentPlayer : players)
 		{
-			if(currentPlayer.getPlayerState().equals(PlayerState.OUT_OF_ROUND))
+			if(currentPlayer.getState().equals(PlayerState.OUT_OF_ROUND))
 			{
-				currentPlayer.setPlayerState(PlayerState.ACTIVE);
+				currentPlayer.setState(PlayerState.ACTIVE);
 			}
 		}
 

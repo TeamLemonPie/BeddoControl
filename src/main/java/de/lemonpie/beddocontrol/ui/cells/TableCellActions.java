@@ -37,7 +37,7 @@ public class TableCellActions extends TableCell<Player, PlayerState>
 			buttonActivate.setStyle("-fx-background-color: #48DB5E;");
 			buttonActivate.setTooltip(new Tooltip("Activate"));
 			buttonActivate.setOnAction((e) -> {
-				((Player) getTableRow().getItem()).setPlayerState(PlayerState.ACTIVE);
+				((Player) getTableRow().getItem()).setState(PlayerState.ACTIVE);
 				controller.getTableView().refresh();
 			});
 			hboxButtons.getChildren().add(buttonActivate);
@@ -47,7 +47,7 @@ public class TableCellActions extends TableCell<Player, PlayerState>
 			buttonOutOfRound.setStyle("-fx-background-color: orange;");
 			buttonOutOfRound.setTooltip(new Tooltip("Fold"));
 			buttonOutOfRound.setOnAction((e) -> {
-				((Player) getTableRow().getItem()).setPlayerState(PlayerState.OUT_OF_ROUND);
+				((Player) getTableRow().getItem()).setState(PlayerState.OUT_OF_ROUND);
 				controller.getTableView().refresh();
 			});
 			hboxButtons.getChildren().add(buttonOutOfRound);
@@ -57,7 +57,7 @@ public class TableCellActions extends TableCell<Player, PlayerState>
 			buttonOutOfGame.setStyle("-fx-background-color: #CC0000;");
 			buttonOutOfGame.setTooltip(new Tooltip("Deactivate"));
 			buttonOutOfGame.setOnAction((e) -> {
-				((Player) getTableRow().getItem()).setPlayerState(PlayerState.OUT_OF_GAME);
+				((Player) getTableRow().getItem()).setState(PlayerState.OUT_OF_GAME);
 				controller.getTableView().refresh();
 			});
 			hboxButtons.getChildren().add(buttonOutOfGame);

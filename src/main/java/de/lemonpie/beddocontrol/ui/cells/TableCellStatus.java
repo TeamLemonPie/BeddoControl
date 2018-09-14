@@ -27,7 +27,7 @@ public class TableCellStatus extends TableCell<Player, Integer>
 			{
 				Player currentPlayer = playerOptional.get();
 
-				Label labelStatus = new Label(currentPlayer.getPlayerState().getName());
+				Label labelStatus = new Label(currentPlayer.getState().getName());
 				labelStatus.setPadding(new Insets(5, 10, 5, 10));
 
 				if(currentPlayer.isHighlighted())
@@ -37,7 +37,7 @@ public class TableCellStatus extends TableCell<Player, Integer>
 					return;
 				}
 
-				switch(currentPlayer.getPlayerState())
+				switch(currentPlayer.getState())
 				{
 					case ACTIVE:
 						labelStatus.setStyle("-fx-background-color: #48DB5E; -fx-text-fill: black; -fx-font-weight: bold; -fx-alignment: center;");

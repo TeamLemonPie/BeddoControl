@@ -45,7 +45,7 @@ public class PlayerDeactivateActionHandler extends ActionHandler
 				if(playerId != -1)
 				{
 					Player player = players.get(playerId-1);
-					player.setPlayerState(PlayerState.OUT_OF_GAME);
+					player.setState(PlayerState.OUT_OF_GAME);
 				}
 			}
 		}
