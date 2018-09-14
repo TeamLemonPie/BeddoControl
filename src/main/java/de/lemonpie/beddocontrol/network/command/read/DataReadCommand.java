@@ -9,7 +9,6 @@ import de.lemonpie.beddocommon.network.CommandName;
 import de.lemonpie.beddocontrol.model.Board;
 import de.lemonpie.beddocontrol.model.DataAccessible;
 import de.lemonpie.beddocontrol.model.Player;
-import de.lemonpie.beddocontrol.model.PlayerState;
 import de.lemonpie.beddocontrol.model.card.Card;
 
 import java.lang.reflect.Type;
@@ -45,6 +44,8 @@ public class DataReadCommand implements Command
 
 			if(seats != null)
 			{
+				dataAccessible.getSeats().clear();
+
 				Type listType = new TypeToken<ArrayList<Seat>>()
 				{
 				}.getType();
