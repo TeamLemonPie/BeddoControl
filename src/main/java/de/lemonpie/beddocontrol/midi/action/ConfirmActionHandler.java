@@ -39,4 +39,10 @@ public class ConfirmActionHandler extends ActionHandler
 		}
 		return FeedbackType.NONE;
 	}
+
+	@Override
+	public FeedbackType getCurrentFeedbackType(Action action)
+	{
+		return null;
+	}
 }

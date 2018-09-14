@@ -28,4 +28,10 @@ public class LockAllToggleActionHandler extends ActionHandler
 		Platform.runLater(() -> controller.lockAll(!controller.isAllLocked()));
 		return FeedbackType.NONE;
 	}
+
+	@Override
+	public FeedbackType getCurrentFeedbackType(Action action)
+	{
+		return null;
+	}
 }

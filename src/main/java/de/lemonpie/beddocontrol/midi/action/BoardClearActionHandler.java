@@ -28,4 +28,10 @@ public class BoardClearActionHandler extends ActionHandler
 		Platform.runLater(() -> controller.getBoardController().clearBoard());
 		return FeedbackType.NONE;
 	}
+
+	@Override
+	public FeedbackType getCurrentFeedbackType(Action action)
+	{
+		return null;
+	}
 }
