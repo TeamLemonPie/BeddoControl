@@ -28,4 +28,10 @@ public class UnlockBoardActionHandler extends ActionHandler
 		Platform.runLater(() -> controller.getBoardController().lockBoard(false));
 		return FeedbackType.NONE;
 	}
+
+	@Override
+	public FeedbackType getCurrentFeedbackType(Action action)
+	{
+		return null;
+	}
 }

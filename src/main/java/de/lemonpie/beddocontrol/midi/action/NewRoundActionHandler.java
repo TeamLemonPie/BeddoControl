@@ -28,4 +28,10 @@ public class NewRoundActionHandler extends ActionHandler
 		Platform.runLater(controller::newRound);
 		return FeedbackType.NONE;
 	}
+
+	@Override
+	public FeedbackType getCurrentFeedbackType(Action action)
+	{
+		return null;
+	}
 }

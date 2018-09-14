@@ -50,4 +50,10 @@ public class PlayerHighlightActionHandler extends ActionHandler
 		}
 		return FeedbackType.DEFAULT;
 	}
+
+	@Override
+	public FeedbackType getCurrentFeedbackType(Action action)
+	{
+		return null;
+	}
 }
