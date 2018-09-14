@@ -44,7 +44,7 @@ public class PlayerActivateActionHandler extends ActionHandler
 				if(playerId != -1)
 				{
 					Player player = players.get(playerId-1);
-					player.setPlayerState(PlayerState.ACTIVE);
+					player.setState(PlayerState.ACTIVE);
 				}
 			}
 		}

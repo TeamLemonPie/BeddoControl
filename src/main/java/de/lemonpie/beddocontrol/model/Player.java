@@ -9,9 +9,9 @@ import java.util.function.Consumer;
 
 public class Player
 {
-	private List<PlayerListener> listeners;
+	private transient List<PlayerListener> listeners;
 
-	private final int id;
+	private int id;
 	private String name;
 	private String twitchName;
 
@@ -21,11 +21,17 @@ public class Player
 	private Card cardRight;
 
 	private int chips;
-	private PlayerState playerState;
+	private PlayerState state;
 
 	private int winprobability;
 
 	private boolean isHighlighted;
+
+	public Player()
+	{
+		id = -1;
+		listeners = new LinkedList<>();
+	}
 
 	public Player(int id)
 	{
@@ -34,7 +40,7 @@ public class Player
 		this.id = id;
 		this.name = "[Player]";
 		this.twitchName = "[TwitchName]";
-		this.playerState = PlayerState.ACTIVE;
+		this.state = PlayerState.ACTIVE;
 		this.isHighlighted = false;
 	}
 
@@ -109,15 +115,15 @@ public class Player
 		fireListener(listener -> listener.chipsDidChange(this, chips));
 	}
 
-	public PlayerState getPlayerState()
+	public PlayerState getState()
 	{
-		return playerState;
+		return state;
 	}
 
-	public void setPlayerState(PlayerState playerState)
+	public void setState(PlayerState state)
 	{
-		this.playerState = playerState;
-		fireListener(listener -> listener.stateDidChange(this, playerState));
+		this.state = state;
+		fireListener(listener -> listener.stateDidChange(this, state));
 
 		if(this.isHighlighted)
 		{
@@ -144,7 +150,7 @@ public class Player
 
 	public void setHighlighted(boolean highlighted)
 	{
-		if(!playerState.equals(PlayerState.ACTIVE))
+		if(!state.equals(PlayerState.ACTIVE))
 		{
 			return;
 		}
@@ -201,7 +207,7 @@ public class Player
 				", cardLeft=" + cardLeft +
 				", cardRight=" + cardRight +
 				", chips=" + chips +
-				", playerState=" + playerState +
+				", state=" + state +
 				", winprobability=" + winprobability +
 				", isHighlighted=" + isHighlighted +
 				'}';

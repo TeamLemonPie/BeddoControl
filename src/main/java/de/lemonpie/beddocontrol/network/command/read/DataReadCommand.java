@@ -36,7 +36,7 @@ public class DataReadCommand implements Command
 		if(data.getValue() instanceof JsonObject)
 		{
 			JsonObject values = (JsonObject) data.getValue();
-			JsonArray players = values.getAsJsonArray("players");
+			JsonElement players = values.get("players");
 			JsonArray board = values.getAsJsonArray("board");
 			JsonArray boardReader = values.getAsJsonArray("board-reader");
 			JsonPrimitive readerCount = values.getAsJsonPrimitive("reader-count");
@@ -57,34 +57,15 @@ public class DataReadCommand implements Command
 			{
 				// Clear old data
 				dataAccessible.getPlayers().clear();
+				Type listType = new TypeToken<ArrayList<Player>>()
+				{
+				}.getType();
+				final List<Player> list = new Gson().fromJson(players, listType);
 
-				players.forEach(elem -> {
-					if(elem instanceof JsonObject)
-					{
-						JsonObject obj = (JsonObject) elem;
-						int id = obj.getAsJsonPrimitive("id").getAsInt();
-						String name = obj.getAsJsonPrimitive("name").getAsString();
-						String twitchName = obj.getAsJsonPrimitive("twitchName").getAsString();
-						PlayerState state = PlayerState.valueOf(obj.getAsJsonPrimitive("state").getAsString());
-						int chips = obj.getAsJsonPrimitive("chips").getAsInt();
-						Card cardLeft = Card.fromString(obj.getAsJsonPrimitive("cardLeft").getAsString());
-						Card cardRight = Card.fromString(obj.getAsJsonPrimitive("cardRight").getAsString());
-						boolean isHighlighted = obj.getAsJsonPrimitive("isHighlighted").getAsBoolean();
-						int manageCardId = obj.getAsJsonPrimitive("manageCardId").getAsInt();
-
-						Player player = new Player(id);
-						player.setName(name);
-						player.setTwitchName(twitchName);
-						player.setPlayerState(state);
-						player.setChips(chips);
-						player.setCardLeft(cardLeft);
-						player.setCardRight(cardRight);
-						player.setHighlighted(isHighlighted);
-						player.setManageCardId(manageCardId);
-
-						dataAccessible.addPlayer(player);
-					}
-				});
+				for(Player player : list)
+				{
+					dataAccessible.addPlayer(player);
+				}
 			}
 
 			if(board != null)
