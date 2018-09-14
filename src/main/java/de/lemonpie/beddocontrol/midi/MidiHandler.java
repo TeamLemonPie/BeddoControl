@@ -1,7 +1,6 @@
 package de.lemonpie.beddocontrol.midi;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import de.lemonpie.beddocommon.midi.MidiSettings;
 import de.lemonpie.beddocommon.ui.StatusTagType;
@@ -55,8 +54,7 @@ public class MidiHandler
 				InputStream iStr = getClass().getClassLoader().getResourceAsStream("de/lemonpie/beddocontrol/midi.json");
 				midiSettings = gson.fromJson(new InputStreamReader(iStr), MidiSettings.class);
 
-				Gson gsonWriter = new GsonBuilder().setPrettyPrinting().create();
-				Files.write(midiSettingsPath, gsonWriter.toJson(midiSettings).getBytes());
+				Files.write(midiSettingsPath, gson.toJson(midiSettings).getBytes());
 			}
 			else
 			{
