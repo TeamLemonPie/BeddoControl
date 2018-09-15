@@ -6,6 +6,7 @@ import de.lemonpie.beddocontrol.listener.PlayerListener;
 import de.lemonpie.beddocontrol.model.Player;
 import de.lemonpie.beddocontrol.model.PlayerState;
 import de.lemonpie.beddocontrol.network.command.send.player.*;
+import de.tobias.logger.Logger;
 
 import java.net.SocketException;
 
@@ -28,7 +29,7 @@ public class PlayerListenerImpl implements PlayerListener
 		}
 		catch(SocketException e)
 		{
-			e.printStackTrace();
+			Logger.error(e);
 		}
 	}
 
@@ -42,7 +43,7 @@ public class PlayerListenerImpl implements PlayerListener
 		}
 		catch(SocketException e)
 		{
-			e.printStackTrace();
+			Logger.error(e);
 		}
 	}
 
@@ -56,7 +57,7 @@ public class PlayerListenerImpl implements PlayerListener
 		}
 		catch(SocketException e)
 		{
-			e.printStackTrace();
+			Logger.error(e);
 		}
 	}
 
@@ -75,7 +76,7 @@ public class PlayerListenerImpl implements PlayerListener
 		}
 		catch(SocketException e)
 		{
-			e.printStackTrace();
+			Logger.error(e);
 		}
 	}
 
@@ -94,7 +95,7 @@ public class PlayerListenerImpl implements PlayerListener
 		}
 		catch(SocketException e)
 		{
-			e.printStackTrace();
+			Logger.error(e);
 		}
 	}
 
@@ -108,7 +109,7 @@ public class PlayerListenerImpl implements PlayerListener
 		}
 		catch(SocketException e)
 		{
-			e.printStackTrace();
+			Logger.error(e);
 		}
 	}
 }

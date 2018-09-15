@@ -1,5 +1,6 @@
 package de.lemonpie.beddocontrol.midi.action;
 
+import de.tobias.logger.Logger;
 import de.tobias.midi.action.Action;
 import de.tobias.midi.action.ActionHandler;
 import de.tobias.midi.event.KeyEvent;
@@ -19,7 +20,7 @@ public class ConfirmActionHandler extends ActionHandler
 		}
 		catch(AWTException e)
 		{
-			e.printStackTrace();
+			Logger.error(e);
 		}
 	}
 

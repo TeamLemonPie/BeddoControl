@@ -5,6 +5,7 @@ import de.lemonpie.beddocommon.network.client.ControlSocket;
 import de.lemonpie.beddocontrol.listener.BoardListener;
 import de.lemonpie.beddocontrol.network.command.send.ReaderSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.ReaderSendCommand.ReaderType;
+import de.tobias.logger.Logger;
 
 import java.net.SocketException;
 
@@ -33,7 +34,7 @@ public class BoardListenerImpl implements BoardListener
 		}
 		catch(SocketException e)
 		{
-			e.printStackTrace();
+			Logger.error(e);
 		}
 	}
 
