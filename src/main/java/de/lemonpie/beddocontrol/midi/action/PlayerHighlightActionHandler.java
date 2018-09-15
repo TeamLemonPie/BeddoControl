@@ -30,7 +30,7 @@ public class PlayerHighlightActionHandler extends ActionHandler
 		Player player = controller.getPlayerBySeat(seatId);
 		if(player != null)
 		{
-			player.setHighlighted(true);
+			player.setHighlighted(!player.isHighlighted());
 			if(player.isHighlighted())
 			{
 				return FeedbackType.EVENT;
