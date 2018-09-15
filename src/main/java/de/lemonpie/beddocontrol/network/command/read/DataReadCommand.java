@@ -10,6 +10,7 @@ import de.lemonpie.beddocontrol.model.Board;
 import de.lemonpie.beddocontrol.model.DataAccessible;
 import de.lemonpie.beddocontrol.model.Player;
 import de.lemonpie.beddocontrol.model.card.Card;
+import de.tobias.midi.Mapping;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -104,5 +105,7 @@ public class DataReadCommand implements Command
 				dataAccessible.setBeddoFabrikCount(count);
 			}
 		}
+
+		Mapping.getCurrentMapping().showFeedback();
 	}
 }

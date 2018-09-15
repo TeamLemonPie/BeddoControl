@@ -9,6 +9,7 @@ import de.lemonpie.beddocommon.ui.StatusTag;
 import de.lemonpie.beddocommon.ui.StatusTagBar;
 import de.lemonpie.beddocommon.ui.StatusTagType;
 import de.lemonpie.beddocontrol.midi.MidiHandler;
+import de.lemonpie.beddocontrol.midi.listener.MidiPlayerListener;
 import de.lemonpie.beddocontrol.model.*;
 import de.lemonpie.beddocontrol.network.command.read.*;
 import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand;
@@ -443,6 +444,7 @@ public class Controller extends NVC implements DataAccessible
 	public void addPlayer(Player player)
 	{
 		players.add(player);
+		player.addListener(new MidiPlayerListener(this));
 		refreshTableView();
 	}
 
@@ -462,6 +464,25 @@ public class Controller extends NVC implements DataAccessible
 	public SeatList getSeats()
 	{
 		return seats;
+	}
+
+	@Override
+	public Player getPlayerBySeat(int seatId)
+	{
+		if(seats.size() > seatId && seatId >= 0)
+		{
+			Optional<Seat> seatOptional = seats.getObject(seatId);
+			if(seatOptional.isPresent())
+			{
+				int playerId = seatOptional.get().getPlayerId();
+				if(playerId != -1)
+				{
+					return getPlayers().get(playerId - 1);
+				}
+			}
+		}
+
+		return null;
 	}
 
 	@Override
@@ -577,4 +598,5 @@ public class Controller extends NVC implements DataAccessible
 		ManageReadersController manageReadersController = new ManageReadersController(this, getContainingWindow());
 		manageReadersController.showStage();
 	}
+
 }

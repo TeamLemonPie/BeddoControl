@@ -11,7 +11,6 @@ import java.net.SocketException;
 
 public class PlayerListenerImpl implements PlayerListener
 {
-
 	private ControlSocket socket;
 
 	public PlayerListenerImpl(ControlSocket socket)

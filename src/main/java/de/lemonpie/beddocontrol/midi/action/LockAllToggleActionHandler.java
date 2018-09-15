@@ -26,12 +26,19 @@ public class LockAllToggleActionHandler extends ActionHandler
 	public FeedbackType handle(KeyEvent keyEvent, Action action)
 	{
 		Platform.runLater(() -> controller.lockAll(!controller.isAllLocked()));
-		return FeedbackType.NONE;
+		if(controller.isAllLocked())
+		{
+			return  FeedbackType.DEFAULT;
+		}
+		else
+		{
+			return FeedbackType.EVENT;
+		}
 	}
 
 	@Override
 	public FeedbackType getCurrentFeedbackType(Action action)
 	{
-		return null;
+		return FeedbackType.DEFAULT;
 	}
 }

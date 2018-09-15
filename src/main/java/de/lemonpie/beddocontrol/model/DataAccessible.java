@@ -17,6 +17,8 @@ public interface DataAccessible
 
 	SeatList getSeats();
 
+	Player getPlayerBySeat(int seatId);
+
 	void increaseBeddoFabrikCount();
 
 	void decreaseBeddoFabrikCount();

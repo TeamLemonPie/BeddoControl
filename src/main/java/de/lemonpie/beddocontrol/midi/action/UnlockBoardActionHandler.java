@@ -32,6 +32,6 @@ public class UnlockBoardActionHandler extends ActionHandler
 	@Override
 	public FeedbackType getCurrentFeedbackType(Action action)
 	{
-		return null;
+		return FeedbackType.DEFAULT;
 	}
 }

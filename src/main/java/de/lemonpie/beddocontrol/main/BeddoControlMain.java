@@ -4,6 +4,7 @@ import de.lemonpie.beddocontrol.ui.Controller;
 import de.tobias.logger.FileOutputOption;
 import de.tobias.logger.LogLevelFilter;
 import de.tobias.logger.Logger;
+import de.tobias.midi.Mapping;
 import de.tobias.midi.Midi;
 import de.tobias.utils.application.App;
 import de.tobias.utils.application.ApplicationUtils;
@@ -60,6 +61,8 @@ public class BeddoControlMain extends Application
 	@Override
 	public void stop()
 	{
+		Mapping mapping = Mapping.getCurrentMapping();
+		mapping.clearFeedback();
 		Midi.getInstance().close();
 		Worker.shutdown();
 		System.exit(0);
