@@ -1,5 +1,6 @@
 package de.lemonpie.beddocontrol.ui;
 
+import de.lemonpie.beddocommon.model.seat.Seat;
 import de.lemonpie.beddocontrol.model.Player;
 import de.lemonpie.beddocontrol.model.PlayerState;
 import de.lemonpie.beddocontrol.ui.cells.*;
@@ -7,6 +8,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.util.Optional;
 
 public class PlayerTableView extends TableView<Player>
 {
@@ -34,13 +37,23 @@ public class PlayerTableView extends TableView<Player>
 		columnManageCardId.prefWidthProperty().bind(widthProperty().multiply(0.05).subtract(2));
 		getColumns().add(columnManageCardId);
 
-		TableColumn<Player, Integer> columnReader = new TableColumn<>();
-		columnReader.setCellValueFactory(new PropertyValueFactory<>("id"));
-		columnReader.setCellFactory(param -> new TableCellSeatID(controller));
-		columnReader.setStyle("-fx-alignment: CENTER;");
-		columnReader.setText("Seat ID");
-		columnReader.prefWidthProperty().bind(widthProperty().multiply(0.05).subtract(2));
-		getColumns().add(columnReader);
+		TableColumn<Player, Integer> columnSeatID = new TableColumn<>();
+		columnSeatID.setCellValueFactory(new PropertyValueFactory<>("id"));
+		columnSeatID.setCellFactory(param -> new TableCellSeatID(controller));
+		columnSeatID.setStyle("-fx-alignment: CENTER;");
+		columnSeatID.setText("Seat ID");
+		columnSeatID.prefWidthProperty().bind(widthProperty().multiply(0.05).subtract(2));
+		getColumns().add(columnSeatID);
+		columnSeatID.setComparator((t, t1) -> {
+
+			Optional<Seat> seat1 = controller.getSeats().getSeatByPlayerId(t);
+			Optional<Seat> seat2 = controller.getSeats().getSeatByPlayerId(t1);
+			if(seat1.isPresent() && seat2.isPresent())
+			{
+				return Integer.compare(seat1.get().getId(), seat2.get().getId());
+			}
+			return 0;
+		});
 
 		TableColumn<Player, String> columnName = new TableColumn<>();
 		columnName.setCellValueFactory(new PropertyValueFactory<>("name"));
