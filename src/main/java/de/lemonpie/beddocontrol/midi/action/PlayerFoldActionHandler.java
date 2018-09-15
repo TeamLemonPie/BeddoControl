@@ -26,18 +26,18 @@ public class PlayerFoldActionHandler extends ActionHandler
 	@Override
 	public FeedbackType handle(KeyEvent keyEvent, Action action)
 	{
-		if(!controller.isAllLocked())
+		int seatId = Integer.valueOf(action.getPayload().get("seatId"));
+		Player player = controller.getPlayerBySeat(seatId);
+		if(player != null)
 		{
-			int seatId = Integer.valueOf(action.getPayload().get("seatId"));
-			Player player = controller.getPlayerBySeat(seatId);
-			if(player != null)
+			if(!controller.isAllLocked())
 			{
 				player.setState(PlayerState.OUT_OF_ROUND);
+			}
 
-				if(player.getState().getMidiActionName().equalsIgnoreCase(action.getActionType()))
-				{
-					return FeedbackType.EVENT;
-				}
+			if(player.getState().getMidiActionName().equalsIgnoreCase(action.getActionType()))
+			{
+				return FeedbackType.EVENT;
 			}
 		}
 		return FeedbackType.DEFAULT;

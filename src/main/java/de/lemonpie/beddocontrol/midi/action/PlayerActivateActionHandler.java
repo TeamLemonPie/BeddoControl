@@ -28,9 +28,12 @@ public class PlayerActivateActionHandler extends ActionHandler
 	{
 		int seatId = Integer.valueOf(action.getPayload().get("seatId"));
 		Player player = controller.getPlayerBySeat(seatId);
-		if(player != null && !controller.isAllLocked())
+		if(player != null)
 		{
-			player.setState(PlayerState.ACTIVE);
+			if(!controller.isAllLocked())
+			{
+				player.setState(PlayerState.ACTIVE);
+			}
 
 			if(player.getState().getMidiActionName().equalsIgnoreCase(action.getActionType()))
 			{
