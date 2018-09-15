@@ -25,7 +25,10 @@ public class NewRoundActionHandler extends ActionHandler
 	@Override
 	public FeedbackType handle(KeyEvent keyEvent, Action action)
 	{
-		Platform.runLater(controller::newRound);
+		if(!controller.isAllLocked())
+		{
+			Platform.runLater(controller::newRound);
+		}
 		return FeedbackType.NONE;
 	}
 
