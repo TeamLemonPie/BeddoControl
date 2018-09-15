@@ -5,6 +5,7 @@ import de.lemonpie.beddocommon.model.seat.SeatListener;
 import de.lemonpie.beddocommon.network.client.ControlSocket;
 import de.lemonpie.beddocontrol.network.command.send.ReaderSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.SeatSendCommand;
+import de.tobias.logger.Logger;
 
 import java.net.SocketException;
 
@@ -27,7 +28,7 @@ public class SeatListenerImpl implements SeatListener
 		}
 		catch(SocketException e)
 		{
-			e.printStackTrace();
+			Logger.error(e);
 		}
 	}
 
@@ -41,7 +42,7 @@ public class SeatListenerImpl implements SeatListener
 		}
 		catch(SocketException e)
 		{
-			e.printStackTrace();
+			Logger.error(e);
 		}
 	}
 }

@@ -93,7 +93,6 @@ public class MidiPlayerListener implements PlayerListener
 	@Override
 	public void isHighlightedDidChange(Player player, boolean value)
 	{
-		System.out.println(player);
 		Optional<Seat> seatOptional = dataAccessible.getSeats().getSeatByPlayerId(player.getId());
 		if(!seatOptional.isPresent())
 		{

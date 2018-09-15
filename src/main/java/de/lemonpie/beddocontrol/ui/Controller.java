@@ -173,7 +173,7 @@ public class Controller extends NVC implements DataAccessible
 
 			connect();
 
-			seats.addListener(new SeatListListenerImpl(socket));
+			seats.addListener(new SeatListListenerImpl(socket, this));
 
 			buttonNewRound.requestFocus();
 		});
