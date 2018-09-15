@@ -1,9 +1,9 @@
 package de.lemonpie.beddocontrol.ui;
 
+import de.lemonpie.beddocommon.model.card.Card;
+import de.lemonpie.beddocommon.model.card.CardSymbol;
+import de.lemonpie.beddocommon.model.card.CardValue;
 import de.lemonpie.beddocontrol.model.Player;
-import de.lemonpie.beddocontrol.model.card.Card;
-import de.lemonpie.beddocontrol.model.card.CardSymbol;
-import de.lemonpie.beddocontrol.model.card.CardValue;
 import de.lemonpie.beddocontrol.network.command.send.BoardCardSetSendCommand;
 import de.tobias.logger.Logger;
 import de.tobias.utils.nui.NVC;

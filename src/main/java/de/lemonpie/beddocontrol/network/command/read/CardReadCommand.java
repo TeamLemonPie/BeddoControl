@@ -1,11 +1,11 @@
 package de.lemonpie.beddocontrol.network.command.read;
 
 import com.google.gson.JsonObject;
+import de.lemonpie.beddocommon.model.card.Card;
 import de.lemonpie.beddocommon.network.Command;
 import de.lemonpie.beddocommon.network.CommandData;
 import de.lemonpie.beddocommon.network.CommandName;
 import de.lemonpie.beddocontrol.model.DataAccessible;
-import de.lemonpie.beddocontrol.model.card.Card;
 
 /**
  * Format:

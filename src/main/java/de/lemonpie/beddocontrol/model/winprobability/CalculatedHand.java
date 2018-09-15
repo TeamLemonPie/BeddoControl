@@ -1,7 +1,7 @@
 package de.lemonpie.beddocontrol.model.winprobability;
 
+import de.lemonpie.beddocommon.model.card.Card;
 import de.lemonpie.beddocontrol.model.HandType;
-import de.lemonpie.beddocontrol.model.card.Card;
 
 import java.util.ArrayList;
 

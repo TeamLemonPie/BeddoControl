@@ -1,7 +1,7 @@
 package de.lemonpie.beddocontrol.model;
 
+import de.lemonpie.beddocommon.model.card.Card;
 import de.lemonpie.beddocontrol.listener.PlayerListener;
-import de.lemonpie.beddocontrol.model.card.Card;
 
 import java.util.LinkedList;
 import java.util.List;

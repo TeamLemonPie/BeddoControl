@@ -1,8 +1,8 @@
 package de.lemonpie.beddocontrol.listener;
 
+import de.lemonpie.beddocommon.model.card.Card;
 import de.lemonpie.beddocontrol.model.Player;
 import de.lemonpie.beddocontrol.model.PlayerState;
-import de.lemonpie.beddocontrol.model.card.Card;
 
 public interface PlayerListener
 {

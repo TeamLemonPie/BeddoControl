@@ -1,10 +1,10 @@
 package de.lemonpie.beddocontrol.network.listener;
 
+import de.lemonpie.beddocommon.model.card.Card;
 import de.lemonpie.beddocommon.network.client.ControlSocket;
 import de.lemonpie.beddocontrol.listener.PlayerListener;
 import de.lemonpie.beddocontrol.model.Player;
 import de.lemonpie.beddocontrol.model.PlayerState;
-import de.lemonpie.beddocontrol.model.card.Card;
 import de.lemonpie.beddocontrol.network.command.send.player.*;
 
 import java.net.SocketException;

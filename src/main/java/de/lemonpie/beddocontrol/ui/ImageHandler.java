@@ -1,6 +1,6 @@
 package de.lemonpie.beddocontrol.ui;
 
-import de.lemonpie.beddocontrol.model.card.Card;
+import de.lemonpie.beddocommon.model.card.Card;
 import de.tobias.logger.Logger;
 import javafx.scene.image.Image;
 

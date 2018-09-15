@@ -1,6 +1,6 @@
 package de.lemonpie.beddocontrol.listener;
 
-import de.lemonpie.beddocontrol.model.card.Card;
+import de.lemonpie.beddocommon.model.card.Card;
 
 public interface BoardListener
 {

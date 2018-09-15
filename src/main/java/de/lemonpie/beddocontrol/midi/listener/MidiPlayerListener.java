@@ -1,11 +1,11 @@
 package de.lemonpie.beddocontrol.midi.listener;
 
+import de.lemonpie.beddocommon.model.card.Card;
 import de.lemonpie.beddocommon.model.seat.Seat;
 import de.lemonpie.beddocontrol.listener.PlayerListener;
 import de.lemonpie.beddocontrol.model.DataAccessible;
 import de.lemonpie.beddocontrol.model.Player;
 import de.lemonpie.beddocontrol.model.PlayerState;
-import de.lemonpie.beddocontrol.model.card.Card;
 import de.tobias.midi.Mapping;
 import de.tobias.midi.action.Action;
 import de.tobias.midi.feedback.FeedbackType;

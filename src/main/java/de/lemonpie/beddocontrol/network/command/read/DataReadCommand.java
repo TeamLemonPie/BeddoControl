@@ -2,6 +2,7 @@ package de.lemonpie.beddocontrol.network.command.read;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import de.lemonpie.beddocommon.model.card.Card;
 import de.lemonpie.beddocommon.model.seat.Seat;
 import de.lemonpie.beddocommon.network.Command;
 import de.lemonpie.beddocommon.network.CommandData;
@@ -9,7 +10,6 @@ import de.lemonpie.beddocommon.network.CommandName;
 import de.lemonpie.beddocontrol.model.Board;
 import de.lemonpie.beddocontrol.model.DataAccessible;
 import de.lemonpie.beddocontrol.model.Player;
-import de.lemonpie.beddocontrol.model.card.Card;
 import de.tobias.midi.Mapping;
 
 import java.lang.reflect.Type;

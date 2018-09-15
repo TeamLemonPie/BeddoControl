@@ -1,7 +1,7 @@
 package de.lemonpie.beddocontrol.ui;
 
+import de.lemonpie.beddocommon.model.card.Card;
 import de.lemonpie.beddocontrol.listener.BoardListener;
-import de.lemonpie.beddocontrol.model.card.Card;
 
 public class BoardListenerImpl implements BoardListener
 {
