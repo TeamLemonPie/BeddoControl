@@ -4,6 +4,7 @@ import de.lemonpie.beddocommon.network.client.ControlSocket;
 import de.lemonpie.beddocontrol.network.command.send.AnteSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.BigBlindSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.SmallBlindSendCommand;
+import de.tobias.logger.Logger;
 import de.tobias.utils.nui.NVC;
 import fontAwesome.FontIcon;
 import fontAwesome.FontIconType;
@@ -13,7 +14,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import logger.Logger;
 import tools.AlertGenerator;
 import tools.NumberTextFormatter;
 
