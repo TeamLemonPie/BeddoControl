@@ -82,6 +82,7 @@ public class BoardController extends NVC
 
 		board = new Board();
 		board.addListener(listenerImpl);
+		board.addListener(new de.lemonpie.beddocontrol.network.listener.BoardListenerImpl(socket));
 
 		buttonLockBoard.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
 		buttonLockBoard.setOnAction((e) -> lockBoard(!isBoardLocked));
@@ -98,8 +99,6 @@ public class BoardController extends NVC
 		imageViewBoard2.setOnMouseClicked((e) -> showBoardCardGUI(2));
 		imageViewBoard3.setOnMouseClicked((e) -> showBoardCardGUI(3));
 		imageViewBoard4.setOnMouseClicked((e) -> showBoardCardGUI(4));
-
-		Platform.runLater(() -> board.addListener(new de.lemonpie.beddocontrol.network.listener.BoardListenerImpl(socket)));
 	}
 
 	public void setImageForImageView(Image image, int ID)
