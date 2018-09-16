@@ -4,6 +4,7 @@ import de.lemonpie.beddocommon.network.Command;
 import de.lemonpie.beddocommon.network.CommandData;
 import de.lemonpie.beddocommon.network.CommandName;
 import de.lemonpie.beddocontrol.model.DataAccessible;
+import javafx.application.Platform;
 
 
 public class SeatPlayerReadCommand implements Command
@@ -25,6 +26,6 @@ public class SeatPlayerReadCommand implements Command
 	public void execute(CommandData data)
 	{
 		int id = data.getKey();
-		dataAccessible.seatAssignNewPlayerId(id, data.getValue().getAsInt());
+		Platform.runLater(() -> dataAccessible.seatAssignNewPlayerId(id, data.getValue().getAsInt()));
 	}
 }
