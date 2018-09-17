@@ -14,11 +14,11 @@ import de.tobias.midi.mapping.MidiKey;
 import java.util.List;
 import java.util.Optional;
 
-public class SeatMidiListener implements SeatListener
+public class MidiSeatListener implements SeatListener
 {
 	private DataAccessible dataAccessible;
 
-	public SeatMidiListener(DataAccessible dataAccessible)
+	public MidiSeatListener(DataAccessible dataAccessible)
 	{
 		this.dataAccessible = dataAccessible;
 	}

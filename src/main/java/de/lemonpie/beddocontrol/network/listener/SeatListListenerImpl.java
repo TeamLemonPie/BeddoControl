@@ -3,7 +3,7 @@ package de.lemonpie.beddocontrol.network.listener;
 import de.lemonpie.beddocommon.model.ObservableListListener;
 import de.lemonpie.beddocommon.model.seat.Seat;
 import de.lemonpie.beddocommon.network.client.ControlSocket;
-import de.lemonpie.beddocontrol.midi.listener.SeatMidiListener;
+import de.lemonpie.beddocontrol.midi.listener.MidiSeatListener;
 import de.lemonpie.beddocontrol.model.DataAccessible;
 
 public class SeatListListenerImpl implements ObservableListListener<Seat>
@@ -21,7 +21,7 @@ public class SeatListListenerImpl implements ObservableListListener<Seat>
 	public void addObjectToList(Seat obj)
 	{
 		obj.addListener(new SeatListenerImpl(socket));
-		obj.addListener(new SeatMidiListener(dataAccessible));
+		obj.addListener(new MidiSeatListener(dataAccessible));
 	}
 
 	@Override
