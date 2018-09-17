@@ -22,6 +22,8 @@ public class Board
 
 	public static final int NUMBER_OF_CARDS = 5;
 
+	private boolean isLocked;
+
 	public Board()
 	{
 		listeners = new LinkedList<>();
@@ -122,5 +124,16 @@ public class Board
 		{
 			setCard(i, Card.EMPTY);
 		}
+	}
+
+	public boolean isLocked()
+	{
+		return isLocked;
+	}
+
+	public void setLocked(boolean locked)
+	{
+		isLocked = locked;
+		fireListener(listener -> listener.lockDidChange(locked));
 	}
 }

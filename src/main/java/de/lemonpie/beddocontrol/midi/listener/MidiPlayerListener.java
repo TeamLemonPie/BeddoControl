@@ -53,7 +53,6 @@ public class MidiPlayerListener implements PlayerListener
 			{
 				if(!action.getPayload().containsKey("seatId"))
 				{
-					key.sendFeedback(FeedbackType.DEFAULT);
 					continue;
 				}
 

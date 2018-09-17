@@ -2,6 +2,7 @@ package de.lemonpie.beddocontrol.ui;
 
 import de.lemonpie.beddocommon.model.BlockOption;
 import de.lemonpie.beddocommon.network.client.ControlSocket;
+import de.lemonpie.beddocontrol.midi.listener.MidiBoardListener;
 import de.lemonpie.beddocontrol.model.Board;
 import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
@@ -56,7 +57,6 @@ public class BoardController extends NVC
 
 	private ControlSocket socket;
 	private Controller controller;
-	private boolean isBoardLocked = false;
 	private Board board;
 	private BoardListenerImpl listenerImpl;
 	private Map<Integer, ImageView> imageViewMap;
@@ -83,10 +83,11 @@ public class BoardController extends NVC
 
 		board = new Board();
 		board.addListener(listenerImpl);
+		board.addListener(new MidiBoardListener());
 		board.addListener(new de.lemonpie.beddocontrol.network.listener.BoardListenerImpl(socket));
 
 		buttonLockBoard.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
-		buttonLockBoard.setOnAction((e) -> lockBoard(!isBoardLocked));
+		buttonLockBoard.setOnAction((e) -> lockBoard(!board.isLocked()));
 
 		imageViewMap = new HashMap<>();
 		imageViewMap.put(0, imageViewBoard0);
@@ -120,7 +121,8 @@ public class BoardController extends NVC
 			if(lock)
 			{
 				hboxBoard.setDisable(true);
-				buttonLockBoard.setGraphic(new FontIcon(FontIconType.UNLOCK, 16, Color.BLACK));
+				buttonLockBoard.setGraphic(new FontIcon(FontIconType.UNLOCK, 16, Color.WHITE));
+				buttonLockBoard.setStyle("-fx-background-color: #CC0000; -fx-text-fill: white");
 				buttonLockBoard.setText("Unlock");
 				socket.write(new BlockSendCommand(BlockOption.BOARD));
 			}
@@ -128,11 +130,12 @@ public class BoardController extends NVC
 			{
 				hboxBoard.setDisable(false);
 				buttonLockBoard.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
+				buttonLockBoard.setStyle("");
 				buttonLockBoard.setText("Lock");
 				socket.write(new BlockSendCommand(BlockOption.NONE));
 			}
 
-			isBoardLocked = lock;
+			board.setLocked(lock);
 		}
 		catch(SocketException e)
 		{
@@ -143,7 +146,7 @@ public class BoardController extends NVC
 
 	public boolean isBoardLocked()
 	{
-		return isBoardLocked;
+		return board.isLocked();
 	}
 
 	@FXML

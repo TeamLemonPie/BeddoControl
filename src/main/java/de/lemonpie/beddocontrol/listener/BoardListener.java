@@ -13,4 +13,6 @@ public interface BoardListener
 	void bigBlindDidChange(int newValue);
 
 	void anteDidChange(int newValue);
+
+	void lockDidChange(boolean newValue);
 }

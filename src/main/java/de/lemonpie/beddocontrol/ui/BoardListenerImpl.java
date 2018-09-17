@@ -37,4 +37,9 @@ public class BoardListenerImpl implements BoardListener
 	public void anteDidChange(int newValue)
 	{
 	}
+
+	@Override
+	public void lockDidChange(boolean newValue)
+	{
+	}
 }

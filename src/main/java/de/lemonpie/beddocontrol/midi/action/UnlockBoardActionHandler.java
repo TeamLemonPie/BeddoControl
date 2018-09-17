@@ -27,14 +27,29 @@ public class UnlockBoardActionHandler extends ActionHandler
 	{
 		if(!controller.isAllLocked())
 		{
-			Platform.runLater(() -> controller.getBoardController().lockBoard(false));
+			Platform.runLater(() -> controller.getBoardController().lockBoard(!controller.getBoardController().isBoardLocked()));
 		}
-		return FeedbackType.NONE;
+
+		if(controller.getBoardController().isBoardLocked())
+		{
+			return  FeedbackType.EVENT;
+		}
+		else
+		{
+			return FeedbackType.DEFAULT;
+		}
 	}
 
 	@Override
 	public FeedbackType getCurrentFeedbackType(Action action)
 	{
-		return FeedbackType.DEFAULT;
+		if(controller.getBoardController().isBoardLocked())
+		{
+			return  FeedbackType.EVENT;
+		}
+		else
+		{
+			return FeedbackType.DEFAULT;
+		}
 	}
 }
