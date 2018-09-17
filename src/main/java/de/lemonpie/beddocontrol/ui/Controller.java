@@ -1,6 +1,7 @@
 package de.lemonpie.beddocontrol.ui;
 
 import de.lemonpie.beddocommon.ServerConnectionSettings;
+import de.lemonpie.beddocommon.model.BlockOption;
 import de.lemonpie.beddocommon.model.seat.Seat;
 import de.lemonpie.beddocommon.model.seat.SeatList;
 import de.lemonpie.beddocommon.network.client.ControlSocket;
@@ -13,7 +14,6 @@ import de.lemonpie.beddocontrol.midi.listener.MidiPlayerListener;
 import de.lemonpie.beddocontrol.model.*;
 import de.lemonpie.beddocontrol.network.command.read.*;
 import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand;
-import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand.Option;
 import de.lemonpie.beddocontrol.network.command.send.ClearSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.DataSendCommand;
 import de.lemonpie.beddocontrol.network.command.send.player.PlayerOpSendCommand;
@@ -87,10 +87,10 @@ public class Controller extends NVC implements DataAccessible
 	ControlSocket socket;
 	private Stage modalStage;
 	public static StringProperty modalText;
-	private boolean isAllLocked = false;
 	private ServerConnectionSettings settings;
 	PlayerTableView tableViewPlayer;
 	private StatusTagBar statusTagBar;
+	private boolean isAllLocked;
 
 	private int beddoFabrikCount = 0;
 
@@ -408,7 +408,9 @@ public class Controller extends NVC implements DataAccessible
 				buttonMasterLock.setGraphic(new FontIcon(FontIconType.UNLOCK, 16, Color.WHITE));
 				buttonMasterLock.setStyle("-fx-background-color: #CC0000; -fx-text-fill: white");
 				buttonMasterLock.setText("Unlock");
-				socket.write(new BlockSendCommand(Option.ALL));
+				socket.write(new BlockSendCommand(BlockOption.ALL));
+
+				isAllLocked = true;
 			}
 			else
 			{
@@ -417,10 +419,18 @@ public class Controller extends NVC implements DataAccessible
 				buttonMasterLock.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
 				buttonMasterLock.setStyle("");
 				buttonMasterLock.setText("Lock");
-				socket.write(new BlockSendCommand(Option.NONE));
-			}
 
-			isAllLocked = lock;
+				if(boardController.isBoardLocked())
+				{
+					socket.write(new BlockSendCommand(BlockOption.BOARD));
+				}
+				else
+				{
+					socket.write(new BlockSendCommand(BlockOption.NONE));
+				}
+
+				isAllLocked = false;
+			}
 		}
 		catch(SocketException e)
 		{

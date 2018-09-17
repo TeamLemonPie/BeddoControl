@@ -1,5 +1,6 @@
 package de.lemonpie.beddocontrol.ui;
 
+import de.lemonpie.beddocommon.model.BlockOption;
 import de.lemonpie.beddocommon.network.client.ControlSocket;
 import de.lemonpie.beddocontrol.model.Board;
 import de.lemonpie.beddocontrol.network.command.send.BlockSendCommand;
@@ -121,14 +122,14 @@ public class BoardController extends NVC
 				hboxBoard.setDisable(true);
 				buttonLockBoard.setGraphic(new FontIcon(FontIconType.UNLOCK, 16, Color.BLACK));
 				buttonLockBoard.setText("Unlock");
-				socket.write(new BlockSendCommand(BlockSendCommand.Option.BOARD));
+				socket.write(new BlockSendCommand(BlockOption.BOARD));
 			}
 			else
 			{
 				hboxBoard.setDisable(false);
 				buttonLockBoard.setGraphic(new FontIcon(FontIconType.LOCK, 16, Color.BLACK));
 				buttonLockBoard.setText("Lock");
-				socket.write(new BlockSendCommand(BlockSendCommand.Option.NONE));
+				socket.write(new BlockSendCommand(BlockOption.NONE));
 			}
 
 			isBoardLocked = lock;
@@ -138,6 +139,11 @@ public class BoardController extends NVC
 			Logger.error(e);
 			AlertGenerator.showAlert(Alert.AlertType.ERROR, "Error", "An error occurred", e.getMessage(), ImageHandler.getIcon(), getContainingWindow(), null, false);
 		}
+	}
+
+	public boolean isBoardLocked()
+	{
+		return isBoardLocked;
 	}
 
 	@FXML
