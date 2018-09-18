@@ -87,17 +87,18 @@ public class DataReadCommand implements Command
 				});
 			}
 
-			int[] i = {0};
+			int i = 0;
 			if(boardReader != null)
 			{
-				boardReader.forEach(reader -> {
+				for(JsonElement reader : boardReader)
+				{
 					if(reader instanceof JsonPrimitive)
 					{
 						Board b = dataAccessible.getBoard();
-						b.setReaderId(i[0], reader.getAsInt());
-						i[0] += 1;
+						b.setReaderId(i, reader.getAsInt());
+						i += 1;
 					}
-				});
+				}
 			}
 
 			if(readerCount != null)
