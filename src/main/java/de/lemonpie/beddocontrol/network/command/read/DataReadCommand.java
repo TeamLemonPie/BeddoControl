@@ -11,6 +11,7 @@ import de.lemonpie.beddocontrol.model.Board;
 import de.lemonpie.beddocontrol.model.DataAccessible;
 import de.lemonpie.beddocontrol.model.Player;
 import de.tobias.midi.Mapping;
+import de.tobias.midi.Midi;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -106,6 +107,9 @@ public class DataReadCommand implements Command
 			}
 		}
 
-		Mapping.getCurrentMapping().showFeedback();
+		if(Midi.getInstance().isModeSupported(Midi.Mode.OUTPUT))
+		{
+			Mapping.getCurrentMapping().showFeedback();
+		}
 	}
 }
