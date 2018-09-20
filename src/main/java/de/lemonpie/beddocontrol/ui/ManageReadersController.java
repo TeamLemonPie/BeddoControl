@@ -102,7 +102,7 @@ public class ManageReadersController extends NVC
 				}
 
 				int newReaderID = Integer.parseInt(textField.getText().trim());
-				if(isReaderIdAlreadyUsed(ID, newReaderID))
+				if(isReaderIdAlreadyUsed(value, newReaderID))
 				{
 					textField.setText(String.valueOf(dataAccessible.getBoard().getReaderId(ID)));
 					textField.setStyle("-fx-border-color: #CC0000; -fx-border-width: 2");
@@ -132,7 +132,7 @@ public class ManageReadersController extends NVC
 				}
 
 				int newReaderId = Integer.parseInt(textField.getText().trim());
-				if(isReaderIdAlreadyUsed(ID, newReaderId))
+				if(isReaderIdAlreadyUsed(value, newReaderId))
 				{
 					if(seatOptional.isPresent())
 					{
