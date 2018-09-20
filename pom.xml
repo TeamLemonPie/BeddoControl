@@ -7,7 +7,7 @@
     <parent>
         <artifactId>BeddoMaster</artifactId>
         <groupId>de.lemonpie</groupId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.1.0</version>
         <relativePath>../BeddoMaster</relativePath>
     </parent>
 
