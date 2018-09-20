@@ -490,7 +490,11 @@ public class Controller extends NVC implements DataAccessible
 				int playerId = seatOptional.get().getPlayerId();
 				if(playerId != -1)
 				{
-					return getPlayers().get(playerId - 1);
+					final Optional<Player> player = players.getPlayer(playerId);
+					if(player.isPresent())
+					{
+						return player.get();
+					}
 				}
 			}
 		}
@@ -573,7 +577,7 @@ public class Controller extends NVC implements DataAccessible
 			}
 		}
 
-		seats.getObject(newSeatId).ifPresent(seat->seat.setPlayerId(playerId));
+		seats.getObject(newSeatId).ifPresent(seat -> seat.setPlayerId(playerId));
 
 		return true;
 	}
