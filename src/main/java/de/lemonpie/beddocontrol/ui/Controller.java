@@ -226,8 +226,8 @@ public class Controller extends NVC implements DataAccessible
 
 	private void connect()
 	{
-		modalText.set("Trying to connect to " + settings.getHostName() + ":" + settings.getPort());
-		modalStage = showModal("Connect to server...");
+		modalText.set("Trying to discover BeddoMischer");
+		modalStage = showModal("Discover server...");
 
 		Worker.runLater(() -> {
 			if(socket.connect())
@@ -316,7 +316,10 @@ public class Controller extends NVC implements DataAccessible
 				String message = "Trying to connect to " + host + ":" + port + "...";
 
 				Logger.debug(message);
-				Platform.runLater(() -> Controller.modalText.set(message));
+				Platform.runLater(() -> {
+					Controller.modalText.set(message);
+					statusTagBar.getTag("status").setAdditionalText(host + ":" + port);
+				});
 			}
 
 			@Override
