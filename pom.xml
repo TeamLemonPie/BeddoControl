@@ -8,7 +8,7 @@
         <artifactId>BeddoMaster</artifactId>
         <groupId>de.lemonpie</groupId>
         <version>1.1.0</version>
-        <relativePath>../BeddoMaster</relativePath>
+        <relativePath>../BeddoMaster/pom.xml</relativePath>
     </parent>
 
     <properties>
