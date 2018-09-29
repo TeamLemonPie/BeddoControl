@@ -71,3 +71,6 @@ All important actions are mapped to the Launchpad including a color feedback by 
   - a column on the Launchpad represents one player
   - the color codes represents the action buttons in the BeddoControl UI (green = active; yellow = fold; red = out of game; blue = highlight)
 
+![Launchpad](/uploads/7062d40150a5f101151d03f861bb310a/Launchpad.JPG)
+
+![Launchpad_2](/uploads/93c661063f520ba370ad3a5c69caa9e3/Launchpad_2.jpg)
