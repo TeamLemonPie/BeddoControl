@@ -28,8 +28,8 @@ It's main purpose is to manage and control all important settings for the overla
 - delete players
 
 #### Board
-- see all scanned public cards
-- clear all scanned public cards (replaces the cards with default images in the overlay and sends a clear command to all connected BeddoFabrik systems.)
+- see all scanned community cards
+- clear all scanned community cards (replaces the cards with default images in the overlay and sends a clear command to all connected BeddoFabrik systems.)
 - manually set cards for all five board positions (This is useful if a NFC scanner fails to detect one or more cards. In order to manually set board cards the BeddoControl operator needs to see a top view of the poker table to recognize the cards.)
 - lock board NFC scanners (Instructs BeddoMischer to reject any incoming messages regarding scanned board cards. Locking the board input is necessary in order to avoid accidently scanning any cards while the dealer is shuffling or dealing the cards to the players.)
 - unlock board (re-enables the scanning of board cards.)
@@ -46,19 +46,19 @@ It's main purpose is to manage and control all important settings for the overla
 
 #### Manage Readers
 "Reader" is a synonym for one of the NFC scanners.
-- map readers to sets
-- map readers for board cards
+- assign readers to sets
+- assign readers for board cards
 
 #### Status Labels
-- visualize if a connection to BeddoMischer is established shows specific IP address and port of that connection
-- visualize if a MIDI device is successfully connected
+- visualize whether a connection to BeddoMischer is established, shows specific IP address and port of that connection
+- visualize whether a MIDI device is successfully connected
 - visualize the number of BeddoFabrik systems that are connected to BeddoMischer
 
 #### Master Lock Button
 - locks all input (Instructs BeddoMischer to reject any incoming messages regarding scanned cards.)
 - unlocks all input (re-enables the scanning of cards.)
 
-#### New Round Buttton
+#### New Round Button
 - clears the scanned cards for all players and board (replaces the cards with default images in the overlay and sends a clear command to all connected BeddoFabrik systems.)
 - resets the win probability for all players
 - changes the state of all players that are marked as "fold" to "active" (This will add the players to the overlay again)
