@@ -78,3 +78,15 @@ All important actions are mapped to the Launchpad including a color feedback by 
 ![](/build/resources/Launchpad.JPG) 
 
 ![](/build/resources/Launchpad_2.jpg) 
+
+#### Third Party Libraries
+
+* com.google.code.gson:gson:2.8.0 (Apache 2.0)
+
+
+* de.lemonpie:BeddoCommon:1.1.0
+* de.tobias:libMidi:1.1.4
+* de.tobias:libUtils:1.6.7
+* de.tobias:libNetwork:1.0.1
+* de.tobias:libStorage:1.3.0
+* de.deadlocker8:tools:1.1.0
